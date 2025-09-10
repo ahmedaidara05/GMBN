@@ -11,6 +11,45 @@
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
     <script src="https://unpkg.com/feather-icons"></script>
+    
+    <!-- Intégration Firebase -->
+    <script type="module">
+        // Import the functions you need from the SDKs you need
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
+        import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-analytics.js";
+        import { getFirestore, collection, addDoc, getDocs, updateDoc, deleteDoc, doc, onSnapshot, query, where, orderBy } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
+        
+        // Your web app's Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyCX1Q0i-L33RNZIVsJ8V1iRsDY6CJm1Lmc",
+            authDomain: "gmbn-9ba54.firebaseapp.com",
+            projectId: "gmbn-9ba54",
+            storageBucket: "gmbn-9ba54.firebasestorage.app",
+            messagingSenderId: "968684169673",
+            appId: "1:968684169673:web:d6b2796b396f8e62eda018",
+            measurementId: "G-MQXSQQQHBC"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const analytics = getAnalytics(app);
+        const db = getFirestore(app);
+        
+        // Make Firebase available globally
+        window.firebase = {
+            db,
+            collection,
+            addDoc,
+            getDocs,
+            updateDoc,
+            deleteDoc,
+            doc,
+            onSnapshot,
+            query,
+            where,
+            orderBy
+        };
+    </script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
         body {
@@ -70,7 +109,7 @@
    <header class="bg-blue-800 text-white p-4 shadow-md">
     <div class="container mx-auto flex justify-between items-center">
         <div class="flex items-center space-x-2">
-            <img src="http://static.photos/automotive/200x200/1" alt="Logo GMBN" class="w-10 h-10 rounded-full">
+            <img src="https://i.postimg.cc/vBxynkc6/Design-sans-titre-2.png" alt="Logo GMBN" class="w-10 h-10 rounded-full">
             <h1 class="text-xl font-bold">GMBN</h1>
         </div>
         <div class="flex items-center space-x-4">
@@ -539,13 +578,109 @@
         </div>
               <!-- bOUTIQUE ahmed said aidara -->
 
+<!-- Boutique Page -->
 <div id="boutique" class="page">
-    <h2 class="text-2xl font-bold mb-6">Boutique</h2>
+    <div class="flex items-center justify-between mb-6 bg-white p-4 rounded-lg shadow-md">
+        <button onclick="showPage('home')" class="text-blue-600">
+            <i data-feather="arrow-left"></i>
+        </button>
+        <div class="flex-1 mx-4">
+            <input type="text" placeholder="Rechercher un produit..." class="w-full p-2 border rounded">
+        </div>
+        <button onclick="showPage('panier')" class="relative">
+            <i data-feather="shopping-cart"></i>
+            <span id="cart-count" class="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs">0</span>
+        </button>
+    </div>
+
+    <div class="mb-6">
+        <h2 class="text-2xl font-bold mb-2">Boutique</h2>
+        <p class="text-blue-600 font-semibold">Commandez et soyez livré en moins de 24h</p>
+    </div>
+
+    <div class="product-grid" id="produits-container">
+        <!-- Les produits seront chargés ici dynamiquement -->
+    </div>
+</div>
+
+<!-- Page Panier -->
+<div id="panier" class="page">
+    <div class="flex items-center mb-6">
+        <button onclick="showPage('boutique')" class="mr-2">
+            <i data-feather="arrow-left"></i>
+        </button>
+        <h2 class="text-2xl font-bold">Mon Panier</h2>
+    </div>
+
+    <div id="cart-items" class="bg-white rounded-lg shadow-md p-4 mb-4">
+        <!-- Les articles du panier seront chargés ici -->
+        <p class="text-center text-gray-500 py-4" id="empty-cart-message">Votre panier est vide</p>
+    </div>
+
+    <div class="bg-white rounded-lg shadow-md p-4 mb-4">
+        <div class="flex justify-between items-center mb-2">
+            <span>Total:</span>
+            <span id="cart-total">0 FCFA</span>
+        </div>
+        <div class="text-sm text-gray-500 mb-4" id="delivery-info">
+            Frais de livraison: 500 FCFA (gratuit à partir de 10 000 FCFA)
+        </div>
+        <button onclick="showCheckoutForm()" class="w-full bg-blue-600 text-white py-2 rounded-lg">
+            Commander
+        </button>
+    </div>
+</div>
+
+<!-- Formulaire de commande -->
+<div id="checkout" class="page">
+    <div class="flex items-center mb-6">
+        <button onclick="showPage('panier')" class="mr-2">
+            <i data-feather="arrow-left"></i>
+        </button>
+        <h2 class="text-2xl font-bold">Finaliser la commande</h2>
+    </div>
+
     <div class="bg-white rounded-lg shadow-md p-6">
-        <p class="mb-4">Découvrez nos produits automobiles : pièces détachées, accessoires et plus encore.</p>
-        <!-- Ajoute ici le contenu de la boutique (ex. : grille de produits) -->
-        <button onclick="showContactOptions()" class="w-full bg-blue-600 text-white py-2 rounded-lg">
-            Contacter pour plus d'infos
+        <form id="checkout-form" class="space-y-4">
+            <div>
+                <label class="block text-gray-700 mb-2">Prénom</label>
+                <input type="text" id="checkout-prenom" class="w-full p-2 border rounded" required>
+            </div>
+            <div>
+                <label class="block text-gray-700 mb-2">Nom</label>
+                <input type="text" id="checkout-nom" class="w-full p-2 border rounded" required>
+            </div>
+            <div>
+                <label class="block text-gray-700 mb-2">Numéro de téléphone</label>
+                <input type="tel" id="checkout-phone" class="w-full p-2 border rounded" required>
+            </div>
+            <div>
+                <label class="block text-gray-700 mb-2">Adresse</label>
+                <textarea id="checkout-adresse" class="w-full p-2 border rounded" rows="3" required></textarea>
+            </div>
+            
+            <div class="bg-gray-100 p-4 rounded-lg">
+                <div class="flex justify-between items-center mb-2">
+                    <span class="font-semibold">Total à payer:</span>
+                    <span id="checkout-total" class="font-bold">0 FCFA</span>
+                </div>
+            </div>
+            
+            <button type="submit" class="w-full bg-blue-600 text-white py-2 rounded-lg">
+                Valider la commande
+            </button>
+        </form>
+    </div>
+</div>
+
+<!-- Confirmation de commande -->
+<div id="confirmation" class="page">
+    <div class="text-center py-10">
+        <i data-feather="check-circle" class="text-green-500 w-16 h-16 mx-auto mb-4"></i>
+        <h2 class="text-2xl font-bold mb-2">Commande confirmée !</h2>
+        <p class="mb-6">Votre commande a été enregistrée avec succès.</p>
+        <button onclick="showPage('home')" class="bg-blue-600 text-white py-2 px-6 rounded-lg">
+            Retour à l'accueil
         </button>
     </div>
 </div>
@@ -567,6 +702,7 @@
                 </button>
             </div>
         </div>
+<!-- Admin Page principale -->
 <div id="admin" class="page">
     <h2 class="text-2xl font-bold mb-6">Espace Admin</h2>
     <div class="grid grid-cols-2 gap-4">
@@ -577,43 +713,242 @@
     </div>
 </div>
 
+<!-- Admin Vente -->
 <div id="admin-vente" class="page">
     <div class="flex items-center mb-4">
         <button onclick="showPage('admin')" class="mr-2"><i data-feather="arrow-left"></i></button>
         <h2 class="text-xl font-bold">Vente Admin</h2>
     </div>
+    
+    <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+        <h3 class="text-lg font-semibold mb-4">Ajouter un véhicule en vente</h3>
+        <form id="venteForm" class="space-y-4">
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-gray-700 mb-2">Marque</label>
+                    <input type="text" id="vente-marque" class="w-full p-2 border rounded" required>
+                </div>
+                <div>
+                    <label class="block text-gray-700 mb-2">Modèle</label>
+                    <input type="text" id="vente-modele" class="w-full p-2 border rounded" required>
+                </div>
+            </div>
+            
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-gray-700 mb-2">Année</label>
+                    <input type="number" id="vente-annee" class="w-full p-2 border rounded">
+                </div>
+                <div>
+                    <label class="block text-gray-700 mb-2">Kilométrage</label>
+                    <input type="number" id="vente-km" class="w-full p-2 border rounded">
+                </div>
+            </div>
+            
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-gray-700 mb-2">État</label>
+                    <select id="vente-etat" class="w-full p-2 border rounded">
+                        <option value="Neuf">Neuf</option>
+                        <option value="Occasion">Occasion</option>
+                        <option value="Bon état">Bon état</option>
+                        <option value="À réparer">À réparer</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-gray-700 mb-2">Transmission</label>
+                    <select id="vente-transmission" class="w-full p-2 border rounded">
+                        <option value="Manuelle">Manuelle</option>
+                        <option value="Automatique">Automatique</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-gray-700 mb-2">Carburant</label>
+                    <select id="vente-carburant" class="w-full p-2 border rounded">
+                        <option value="Essence">Essence</option>
+                        <option value="Diesel">Diesel</option>
+                        <option value="Hybride">Hybride</option>
+                        <option value="Électrique">Électrique</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-gray-700 mb-2">Prix (FCFA)</label>
+                    <input type="number" id="vente-prix" class="w-full p-2 border rounded" required>
+                </div>
+            </div>
+            
+            <div>
+                <label class="block text-gray-700 mb-2">Caractéristiques</label>
+                <textarea id="vente-caracteristiques" class="w-full p-2 border rounded" rows="3"></textarea>
+            </div>
+            
+            <div>
+                <label class="block text-gray-700 mb-2">Détails</label>
+                <textarea id="vente-details" class="w-full p-2 border rounded" rows="3"></textarea>
+            </div>
+            
+            <div>
+                <label class="block text-gray-700 mb-2">Image principale (URL PostImage)</label>
+                <input type="url" id="vente-image-principale" class="w-full p-2 border rounded" required>
+            </div>
+            
+            <div>
+                <label class="block text-gray-700 mb-2">Images de détails (URLs PostImage, séparées par des virgules)</label>
+                <textarea id="vente-images-details" class="w-full p-2 border rounded" rows="2"></textarea>
+            </div>
+            
+            <div class="flex justify-end space-x-2">
+                <button type="button" onclick="document.getElementById('admin-vente').querySelector('form').reset()" class="bg-gray-200 text-gray-800 py-2 px-4 rounded">Annuler</button>
+                <button type="submit" class="bg-blue-600 text-white py-2 px-4 rounded">Ajouter</button>
+            </div>
+        </form>
+    </div>
+    
     <div class="bg-white rounded-lg shadow-md p-6">
-        <!-- Contenu Vente Admin ici -->
+        <h3 class="text-lg font-semibold mb-4">Véhicules en vente</h3>
+        <div id="liste-vente" class="space-y-4">
+            <!-- Les véhicules seront chargés ici dynamiquement -->
+        </div>
     </div>
 </div>
 
+<!-- Admin Location (structure similaire à Vente) -->
 <div id="admin-location" class="page">
     <div class="flex items-center mb-4">
         <button onclick="showPage('admin')" class="mr-2"><i data-feather="arrow-left"></i></button>
         <h2 class="text-xl font-bold">Location Admin</h2>
     </div>
+    
+    <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+        <h3 class="text-lg font-semibold mb-4">Ajouter un véhicule en location</h3>
+        <form id="locationForm" class="space-y-4">
+            <!-- Formulaire similaire à celui de vente -->
+        </form>
+    </div>
+    
     <div class="bg-white rounded-lg shadow-md p-6">
-        <!-- Contenu Location Admin ici -->
+        <h3 class="text-lg font-semibold mb-4">Véhicules en location</h3>
+        <div id="liste-location" class="space-y-4">
+            <!-- Les véhicules seront chargés ici dynamiquement -->
+        </div>
     </div>
 </div>
 
+<!-- Admin Boutique -->
 <div id="admin-boutique" class="page">
     <div class="flex items-center mb-4">
         <button onclick="showPage('admin')" class="mr-2"><i data-feather="arrow-left"></i></button>
         <h2 class="text-xl font-bold">Boutique Admin</h2>
     </div>
+    
+    <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+        <h3 class="text-lg font-semibold mb-4">Ajouter un produit</h3>
+        <form id="boutiqueForm" class="space-y-4">
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-gray-700 mb-2">Nom du produit</label>
+                    <input type="text" id="produit-nom" class="w-full p-2 border rounded">
+                </div>
+                <div>
+                    <label class="block text-gray-700 mb-2">Prix (FCFA)</label>
+                    <input type="number" id="produit-prix" class="w-full p-2 border rounded">
+                </div>
+            </div>
+            
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-gray-700 mb-2">Marque</label>
+                    <input type="text" id="produit-marque" class="w-full p-2 border rounded">
+                </div>
+                <div>
+                    <label class="block text-gray-700 mb-2">Modèle</label>
+                    <input type="text" id="produit-modele" class="w-full p-2 border rounded">
+                </div>
+            </div>
+            
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-gray-700 mb-2">État</label>
+                    <select id="produit-etat" class="w-full p-2 border rounded">
+                        <option value="Neuf">Neuf</option>
+                        <option value="Occasion">Occasion</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-gray-700 mb-2">Stock disponible</label>
+                    <input type="number" id="produit-stock" class="w-full p-2 border rounded">
+                </div>
+            </div>
+            
+            <div>
+                <label class="block text-gray-700 mb-2">Caractéristiques</label>
+                <textarea id="produit-caracteristiques" class="w-full p-2 border rounded" rows="3"></textarea>
+            </div>
+            
+            <div>
+                <label class="block text-gray-700 mb-2">Détails</label>
+                <textarea id="produit-details" class="w-full p-2 border rounded" rows="3"></textarea>
+            </div>
+            
+            <div>
+                <label class="block text-gray-700 mb-2">Image principale (URL PostImage)</label>
+                <input type="url" id="produit-image-principale" class="w-full p-2 border rounded">
+            </div>
+            
+            <div>
+                <label class="block text-gray-700 mb-2">Images de détails (URLs PostImage, séparées par des virgules)</label>
+                <textarea id="produit-images-details" class="w-full p-2 border rounded" rows="2"></textarea>
+            </div>
+            
+            <div class="flex justify-end space-x-2">
+                <button type="button" onclick="document.getElementById('boutiqueForm').reset()" class="bg-gray-200 text-gray-800 py-2 px-4 rounded">Annuler</button>
+                <button type="submit" class="bg-blue-600 text-white py-2 px-4 rounded">Ajouter</button>
+            </div>
+        </form>
+    </div>
+    
     <div class="bg-white rounded-lg shadow-md p-6">
-        <!-- Contenu Boutique Admin ici -->
+        <h3 class="text-lg font-semibold mb-4">Produits en boutique</h3>
+        <div id="liste-boutique" class="space-y-4">
+            <!-- Les produits seront chargés ici dynamiquement -->
+        </div>
     </div>
 </div>
 
+<!-- Admin Autres (Gestion des services et images) -->
 <div id="admin-autres" class="page">
     <div class="flex items-center mb-4">
         <button onclick="showPage('admin')" class="mr-2"><i data-feather="arrow-left"></i></button>
         <h2 class="text-xl font-bold">Autres Admin</h2>
     </div>
+    
+    <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+        <h3 class="text-lg font-semibold mb-4">Gestion des services</h3>
+        <div class="grid grid-cols-2 gap-4 mb-4">
+            <!-- Les 10 services seront listés ici avec option de modification -->
+        </div>
+    </div>
+    
+    <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+        <h3 class="text-lg font-semibold mb-4">Image section À propos</h3>
+        <div class="flex items-center space-x-4">
+            <img id="a-propos-image-preview" src="http://static.photos/workspace/640x360/1" alt="Aperçu image à propos" class="w-32 h-20 object-cover rounded">
+            <div class="flex-1">
+                <input type="url" id="a-propos-image-url" class="w-full p-2 border rounded mb-2" placeholder="URL PostImage">
+                <button onclick="updateAProposImage()" class="bg-blue-600 text-white py-1 px-3 rounded text-sm">Mettre à jour</button>
+            </div>
+        </div>
+    </div>
+    
     <div class="bg-white rounded-lg shadow-md p-6">
-        <!-- Contenu Autres Admin ici -->
+        <h3 class="text-lg font-semibold mb-4">Images des partenaires</h3>
+        <div id="partenaires-list" class="space-y-4">
+            <!-- Les partenaires seront listés ici avec option de modification -->
+        </div>
+        <button onclick="addPartenaire()" class="mt-4 bg-blue-600 text-white py-2 px-4 rounded">Ajouter un partenaire</button>
     </div>
 </div>
         <!-- Appointment Confirmation Modal -->
@@ -868,5 +1203,505 @@ function checkAdminCode() {
             });
         }
     </script>
+      <script>
+        // Initialisation des composants
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialiser AOS (Animate On Scroll)
+    if (typeof AOS !== 'undefined') {
+        AOS.init({
+            duration: 800,
+            easing: 'ease-in-out',
+            once: true
+        });
+    }
+    
+    // Initialiser Feather Icons
+    if (typeof feather !== 'undefined') {
+        feather.replace();
+    }
+    
+    // Initialiser les gestionnaires d'événements
+    initEventHandlers();
+    
+    // Charger les données initiales
+    loadInitialData();
+});
+
+// Gestionnaires d'événements
+function initEventHandlers() {
+    // Gestionnaires pour les formulaires admin
+    document.getElementById('venteForm')?.addEventListener('submit', handleVenteSubmit);
+    document.getElementById('locationForm')?.addEventListener('submit', handleLocationSubmit);
+    document.getElementById('boutiqueForm')?.addEventListener('submit', handleBoutiqueSubmit);
+    
+    // Gestionnaire pour le formulaire de commande
+    document.getElementById('checkout-form')?.addEventListener('submit', handleCheckoutSubmit);
+    
+    // Navigation et autres interactions
+    document.querySelectorAll('.nav-item').forEach(item => {
+        item.addEventListener('click', function() {
+            const targetPage = this.getAttribute('data-target');
+            if (targetPage) showPage(targetPage);
+        });
+    });
+}
+
+// Fonctions de navigation
+function showPage(pageId) {
+    // Cacher toutes les pages
+    document.querySelectorAll('.page').forEach(page => {
+        page.classList.remove('active');
+    });
+    
+    // Afficher la page demandée
+    const targetPage = document.getElementById(pageId);
+    if (targetPage) {
+        targetPage.classList.add('active');
+        
+        // Charger les données spécifiques à la page si nécessaire
+        if (pageId === 'admin-vente') {
+            loadVenteVehicles();
+        } else if (pageId === 'admin-location') {
+            loadLocationVehicles();
+        } else if (pageId === 'admin-boutique') {
+            loadBoutiqueProducts();
+        } else if (pageId === 'boutique') {
+            loadBoutiqueProductsForCustomers();
+        } else if (pageId === 'panier') {
+            updateCartDisplay();
+        }
+    }
+}
+
+// Fonctions pour Firebase - Vente
+async function handleVenteSubmit(e) {
+    e.preventDefault();
+    
+    const vehicleData = {
+        marque: document.getElementById('vente-marque').value,
+        modele: document.getElementById('vente-modele').value,
+        annee: parseInt(document.getElementById('vente-annee').value),
+        kilometrage: parseInt(document.getElementById('vente-km').value),
+        etat: document.getElementById('vente-etat').value,
+        transmission: document.getElementById('vente-transmission').value,
+        carburant: document.getElementById('vente-carburant').value,
+        prix: parseInt(document.getElementById('vente-prix').value),
+        caracteristiques: document.getElementById('vente-caracteristiques').value,
+        details: document.getElementById('vente-details').value,
+        imagePrincipale: document.getElementById('vente-image-principale').value,
+        imagesDetails: document.getElementById('vente-images-details').value.split(',').map(url => url.trim()),
+        dateAjout: new Date()
+    };
+    
+    try {
+        const docRef = await window.firebase.addDoc(
+            window.firebase.collection(window.firebase.db, 'vehicles_vente'), 
+            vehicleData
+        );
+        console.log('Véhicule ajouté avec ID: ', docRef.id);
+        alert('Véhicule ajouté avec succès!');
+        e.target.reset();
+        loadVenteVehicles();
+    } catch (error) {
+        console.error('Erreur lors de l\'ajout du véhicule: ', error);
+        alert('Erreur lors de l\'ajout du véhicule');
+    }
+}
+
+async function loadVenteVehicles() {
+    const listeVente = document.getElementById('liste-vente');
+    if (!listeVente) return;
+    
+    try {
+        const querySnapshot = await window.firebase.getDocs(
+            window.firebase.collection(window.firebase.db, 'vehicles_vente')
+        );
+        
+        listeVente.innerHTML = '';
+        
+        querySnapshot.forEach((doc) => {
+            const vehicle = doc.data();
+            const vehicleElement = createVehicleCard(doc.id, vehicle, 'vente');
+            listeVente.appendChild(vehicleElement);
+        });
+    } catch (error) {
+        console.error('Erreur lors du chargement des véhicules: ', error);
+        listeVente.innerHTML = '<p class="text-red-500">Erreur lors du chargement des véhicules</p>';
+    }
+}
+
+function createVehicleCard(id, vehicle, type) {
+    const card = document.createElement('div');
+    card.className = 'border rounded-lg p-4';
+    card.innerHTML = `
+        <div class="flex justify-between items-start mb-2">
+            <h4 class="font-semibold">${vehicle.marque} ${vehicle.modele} (${vehicle.annee})</h4>
+            <span class="font-bold text-blue-600">${vehicle.prix.toLocaleString()} FCFA</span>
+        </div>
+        <div class="mb-2">
+            <img src="${vehicle.imagePrincipale}" alt="${vehicle.marque} ${vehicle.modele}" class="w-full h-48 object-cover rounded">
+        </div>
+        <div class="text-sm text-gray-600 mb-3">
+            <p>${vehicle.kilometrage.toLocaleString()} km • ${vehicle.carburant} • ${vehicle.transmission}</p>
+            <p>État: ${vehicle.etat}</p>
+        </div>
+        <div class="flex justify-end space-x-2">
+            <button onclick="editVehicle('${id}', '${type}')" class="bg-yellow-500 text-white px-3 py-1 rounded text-sm">
+                Modifier
+            </button>
+            <button onclick="deleteVehicle('${id}', '${type}')" class="bg-red-500 text-white px-3 py-1 rounded text-sm">
+                Supprimer
+            </button>
+        </div>
+    `;
+    return card;
+}
+
+// Fonctions pour Firebase - Location (similaires à Vente)
+async function handleLocationSubmit(e) {
+    e.preventDefault();
+    // Implémentation similaire à handleVenteSubmit mais pour la collection 'vehicles_location'
+}
+
+async function loadLocationVehicles() {
+    // Implémentation similaire à loadVenteVehicles mais pour la collection 'vehicles_location'
+}
+
+// Fonctions pour Firebase - Boutique
+async function handleBoutiqueSubmit(e) {
+    e.preventDefault();
+    
+    const productData = {
+        nom: document.getElementById('produit-nom').value,
+        prix: parseInt(document.getElementById('produit-prix').value),
+        marque: document.getElementById('produit-marque').value,
+        modele: document.getElementById('produit-modele').value,
+        etat: document.getElementById('produit-etat').value,
+        stock: parseInt(document.getElementById('produit-stock').value),
+        caracteristiques: document.getElementById('produit-caracteristiques').value,
+        details: document.getElementById('produit-details').value,
+        imagePrincipale: document.getElementById('produit-image-principale').value,
+        imagesDetails: document.getElementById('produit-images-details').value.split(',').map(url => url.trim()),
+        dateAjout: new Date()
+    };
+    
+    try {
+        const docRef = await window.firebase.addDoc(
+            window.firebase.collection(window.firebase.db, 'products'), 
+            productData
+        );
+        console.log('Produit ajouté avec ID: ', docRef.id);
+        alert('Produit ajouté avec succès!');
+        e.target.reset();
+        loadBoutiqueProducts();
+    } catch (error) {
+        console.error('Erreur lors de l\'ajout du produit: ', error);
+        alert('Erreur lors de l\'ajout du produit');
+    }
+}
+
+async function loadBoutiqueProducts() {
+    const listeBoutique = document.getElementById('liste-boutique');
+    if (!listeBoutique) return;
+    
+    try {
+        const querySnapshot = await window.firebase.getDocs(
+            window.firebase.collection(window.firebase.db, 'products')
+        );
+        
+        listeBoutique.innerHTML = '';
+        
+        querySnapshot.forEach((doc) => {
+            const product = doc.data();
+            const productElement = createProductCard(doc.id, product);
+            listeBoutique.appendChild(productElement);
+        });
+    } catch (error) {
+        console.error('Erreur lors du chargement des produits: ', error);
+        listeBoutique.innerHTML = '<p class="text-red-500">Erreur lors du chargement des produits</p>';
+    }
+}
+
+async function loadBoutiqueProductsForCustomers() {
+    const produitsContainer = document.getElementById('produits-container');
+    if (!produitsContainer) return;
+    
+    try {
+        const querySnapshot = await window.firebase.getDocs(
+            window.firebase.collection(window.firebase.db, 'products')
+        );
+        
+        produitsContainer.innerHTML = '';
+        
+        querySnapshot.forEach((doc) => {
+            const product = doc.data();
+            const productElement = createCustomerProductCard(doc.id, product);
+            produitsContainer.appendChild(productElement);
+        });
+    } catch (error) {
+        console.error('Erreur lors du chargement des produits: ', error);
+        produitsContainer.innerHTML = '<p class="text-red-500">Erreur lors du chargement des produits</p>';
+    }
+}
+
+function createProductCard(id, product) {
+    const card = document.createElement('div');
+    card.className = 'border rounded-lg p-4';
+    card.innerHTML = `
+        <div class="flex justify-between items-start mb-2">
+            <h4 class="font-semibold">${product.nom}</h4>
+            <span class="font-bold text-blue-600">${product.prix.toLocaleString()} FCFA</span>
+        </div>
+        <div class="mb-2">
+            <img src="${product.imagePrincipale}" alt="${product.nom}" class="w-full h-48 object-cover rounded">
+        </div>
+        <div class="text-sm text-gray-600 mb-3">
+            <p>${product.marque} ${product.modele}</p>
+            <p>État: ${product.etat} • Stock: ${product.stock}</p>
+        </div>
+        <div class="flex justify-end space-x-2">
+            <button onclick="editProduct('${id}')" class="bg-yellow-500 text-white px-3 py-1 rounded text-sm">
+                Modifier
+            </button>
+            <button onclick="deleteProduct('${id}')" class="bg-red-500 text-white px-3 py-1 rounded text-sm">
+                Supprimer
+            </button>
+        </div>
+    `;
+    return card;
+}
+
+function createCustomerProductCard(id, product) {
+    const card = document.createElement('div');
+    card.className = 'bg-white rounded-lg shadow-md overflow-hidden';
+    card.innerHTML = `
+        <img src="${product.imagePrincipale}" alt="${product.nom}" class="w-full h-40 object-cover">
+        <div class="p-3">
+            <h3 class="font-semibold mb-1">${product.nom}</h3>
+            <p class="text-blue-600 font-bold mb-2">${product.prix.toLocaleString()} FCFA</p>
+            <button onclick="addToCart('${id}', '${product.nom}', ${product.prix}, '${product.imagePrincipale}')" 
+                class="w-full bg-blue-600 text-white py-1 rounded text-sm">
+                Ajouter au panier
+            </button>
+        </div>
+    `;
+    return card;
+}
+
+// Gestion du panier
+let cart = JSON.parse(localStorage.getItem('gmbn_cart')) || [];
+
+function addToCart(productId, productName, productPrice, productImage) {
+    const existingItem = cart.find(item => item.id === productId);
+    
+    if (existingItem) {
+        existingItem.quantity += 1;
+    } else {
+        cart.push({
+            id: productId,
+            name: productName,
+            price: productPrice,
+            image: productImage,
+            quantity: 1
+        });
+    }
+    
+    updateCartStorage();
+    updateCartCount();
+    showNotification(`${productName} ajouté au panier`);
+}
+
+function updateCartCount() {
+    const cartCount = document.getElementById('cart-count');
+    if (cartCount) {
+        const totalItems = cart.reduce((total, item) => total + item.quantity, 0);
+        cartCount.textContent = totalItems;
+    }
+}
+
+function updateCartDisplay() {
+    const cartItems = document.getElementById('cart-items');
+    const emptyCartMessage = document.getElementById('empty-cart-message');
+    const cartTotal = document.getElementById('cart-total');
+    
+    if (cart.length === 0) {
+        if (emptyCartMessage) emptyCartMessage.style.display = 'block';
+        if (cartItems) cartItems.innerHTML = '';
+        if (cartTotal) cartTotal.textContent = '0 FCFA';
+        return;
+    }
+    
+    if (emptyCartMessage) emptyCartMessage.style.display = 'none';
+    
+    let total = 0;
+    let itemsHTML = '';
+    
+    cart.forEach((item, index) => {
+        const itemTotal = item.price * item.quantity;
+        total += itemTotal;
+        
+        itemsHTML += `
+            <div class="cart-item">
+                <div class="flex items-center">
+                    <img src="${item.image}" alt="${item.name}" class="w-12 h-12 object-cover rounded mr-3">
+                    <div>
+                        <p class="font-semibold">${item.name}</p>
+                        <p class="text-blue-600">${item.price.toLocaleString()} FCFA</p>
+                    </div>
+                </div>
+                <div class="quantity-controls">
+                    <button onclick="updateQuantity(${index}, ${item.quantity - 1})" class="bg-gray-200 rounded-full w-6 h-6">-</button>
+                    <span class="mx-2">${item.quantity}</span>
+                    <button onclick="updateQuantity(${index}, ${item.quantity + 1})" class="bg-gray-200 rounded-full w-6 h-6">+</button>
+                </div>
+            </div>
+        `;
+    });
+    
+    if (cartItems) cartItems.innerHTML = itemsHTML;
+    if (cartTotal) cartTotal.textContent = `${total.toLocaleString()} FCFA`;
+}
+
+function updateQuantity(index, newQuantity) {
+    if (newQuantity < 1) {
+        cart.splice(index, 1);
+    } else {
+        cart[index].quantity = newQuantity;
+    }
+    
+    updateCartStorage();
+    updateCartCount();
+    updateCartDisplay();
+}
+
+function updateCartStorage() {
+    localStorage.setItem('gmbn_cart', JSON.stringify(cart));
+}
+
+// Commande et checkout
+function showCheckoutForm() {
+    if (cart.length === 0) {
+        alert('Votre panier est vide');
+        return;
+    }
+    
+    const checkoutTotal = document.getElementById('checkout-total');
+    if (checkoutTotal) {
+        const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+        const deliveryFee = total >= 10000 ? 0 : 500;
+        checkoutTotal.textContent = `${(total + deliveryFee).toLocaleString()} FCFA`;
+    }
+    
+    showPage('checkout');
+}
+
+async function handleCheckoutSubmit(e) {
+    e.preventDefault();
+    
+    const orderData = {
+        prenom: document.getElementById('checkout-prenom').value,
+        nom: document.getElementById('checkout-nom').value,
+        telephone: document.getElementById('checkout-phone').value,
+        adresse: document.getElementById('checkout-adresse').value,
+        produits: cart,
+        total: cart.reduce((sum, item) => sum + (item.price * item.quantity), 0),
+        fraisLivraison: cart.reduce((sum, item) => sum + (item.price * item.quantity), 0) >= 10000 ? 0 : 500,
+        statut: 'en attente',
+        date: new Date()
+    };
+    
+    try {
+        const docRef = await window.firebase.addDoc(
+            window.firebase.collection(window.firebase.db, 'orders'), 
+            orderData
+        );
+        
+        console.log('Commande passée avec ID: ', docRef.id);
+        
+        // Vider le panier
+        cart = [];
+        updateCartStorage();
+        updateCartCount();
+        
+        // Afficher la confirmation
+        showPage('confirmation');
+    } catch (error) {
+        console.error('Erreur lors de la commande: ', error);
+        alert('Erreur lors de la commande. Veuillez réessayer.');
+    }
+}
+
+// Fonctions utilitaires
+function showNotification(message) {
+    // Créer une notification toast
+    const toast = document.createElement('div');
+    toast.className = 'fixed bottom-4 right-4 bg-green-500 text-white px-4 py-2 rounded-lg shadow-lg';
+    toast.textContent = message;
+    document.body.appendChild(toast);
+    
+    // Supprimer après 3 secondes
+    setTimeout(() => {
+        document.body.removeChild(toast);
+    }, 3000);
+}
+
+function loadInitialData() {
+    // Charger le compte du panier
+    updateCartCount();
+    
+    // Charger les données si on est sur une page qui en a besoin
+    if (document.getElementById('admin-vente')?.classList.contains('active')) {
+        loadVenteVehicles();
+    } else if (document.getElementById('admin-boutique')?.classList.contains('active')) {
+        loadBoutiqueProducts();
+    } else if (document.getElementById('boutique')?.classList.contains('active')) {
+        loadBoutiqueProductsForCustomers();
+    }
+}
+
+// Fonctions de gestion (suppression, modification)
+async function deleteVehicle(id, type) {
+    if (!confirm('Êtes-vous sûr de vouloir supprimer ce véhicule ?')) return;
+    
+    try {
+        await window.firebase.deleteDoc(
+            window.firebase.doc(window.firebase.db, `vehicles_${type}`, id)
+        );
+        alert('Véhicule supprimé avec succès');
+        if (type === 'vente') {
+            loadVenteVehicles();
+        } else {
+            loadLocationVehicles();
+        }
+    } catch (error) {
+        console.error('Erreur lors de la suppression: ', error);
+        alert('Erreur lors de la suppression du véhicule');
+    }
+}
+
+async function deleteProduct(id) {
+    if (!confirm('Êtes-vous sûr de vouloir supprimer ce produit ?')) return;
+    
+    try {
+        await window.firebase.deleteDoc(
+            window.firebase.doc(window.firebase.db, 'products', id)
+        );
+        alert('Produit supprimé avec succès');
+        loadBoutiqueProducts();
+    } catch (error) {
+        console.error('Erreur lors de la suppression: ', error);
+        alert('Erreur lors de la suppression du produit');
+    }
+}
+
+// Exposer les fonctions globales
+window.showPage = showPage;
+window.addToCart = addToCart;
+window.updateQuantity = updateQuantity;
+window.showCheckoutForm = showCheckoutForm;
+window.deleteVehicle = deleteVehicle;
+window.deleteProduct = deleteProduct;
+    </script>
+
 </body>
 </html>
