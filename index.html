@@ -579,6 +579,27 @@
         </button>
     </div>
 </div>
+      <div id="location-vehicle-detail" class="page">
+    <div class="flex items-center mb-4">
+        <button onclick="showPage('service-location')" class="mr-2">
+            <i data-feather="arrow-left"></i>
+        </button>
+        <h2 class="text-xl font-bold">Détails du véhicule</h2>
+    </div>
+    <div id="location-vehicle-images" class="overflow-x-auto flex snap-x snap-mandatory mb-6 whitespace-nowrap">
+        <!-- Images chargées dynamiquement ici -->
+    </div>
+    <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+        <h3 id="location-vehicle-name" class="text-xl font-bold mb-1"></h3>
+        <p id="location-vehicle-price" class="text-blue-600 font-bold text-lg mb-2"></p>
+        <p id="location-vehicle-info" class="text-gray-600 mb-4"></p>
+        <p class="text-sm text-gray-500 mb-4">Contactez-nous pour réserver ou pour plus d'informations</p>
+        <button onclick="showContactOptions()" class="w-full bg-blue-600 text-white py-2 rounded-lg mb-4">
+            Contacter
+        </button>
+        <div id="location-vehicle-description" class="text-gray-700"></div>
+    </div>
+</div>
               <!-- bOUTIQUE ahmed said aidara -->
 
 <!-- Boutique Page -->
@@ -755,6 +776,7 @@
         <div id="vehicle-description" class="text-gray-700"></div>
     </div>
 </div>
+      
 <!-- Admin Page principale -->
 <div id="admin" class="page">
     <h2 class="text-2xl font-bold mb-6">Espace Admin</h2>
@@ -1450,7 +1472,56 @@ async function handleLocationSubmit(e) {
 }
 
 async function loadLocationVehicles() {
-    // Implémentation similaire à loadVenteVehicles mais pour la collection 'vehicles_location'
+    const listeLocation = document.getElementById('liste-location');
+    if (!listeLocation) return;
+    
+    try {
+        const querySnapshot = await window.firebase.getDocs(
+            window.firebase.collection(window.firebase.db, 'vehicles_location')
+        );
+        
+        listeLocation.innerHTML = '';
+        
+        querySnapshot.forEach((doc) => {
+            const vehicle = doc.data();
+            const vehicleElement = createLocationVehicleCard(doc.id, vehicle);
+            listeLocation.appendChild(vehicleElement);
+        });
+    } catch (error) {
+        console.error('Erreur lors du chargement des véhicules: ', error);
+        listeLocation.innerHTML = '<p class="text-red-500">Erreur lors du chargement des véhicules</p>';
+    }
+}
+
+function createLocationVehicleCard(id, vehicle) {
+    const card = document.createElement('div');
+    card.className = 'border rounded-lg p-4';
+    const prixAffichage = vehicle.prixLocation && !isNaN(vehicle.prixLocation) && vehicle.prixLocation > 0 
+        ? `${vehicle.prixLocation.toLocaleString()} FCFA/jour` 
+        : '-- FCFA';
+    
+    card.innerHTML = `
+        <div class="flex justify-between items-start mb-2">
+            <h4 class="font-semibold">${vehicle.marque} ${vehicle.modele} (${vehicle.annee || 'N/A'})</h4>
+            <span class="font-bold text-blue-600">${prixAffichage}</span>
+        </div>
+        <div class="mb-2">
+            <img src="${vehicle.imagePrincipale || 'https://via.placeholder.com/150'}" alt="${vehicle.marque} ${vehicle.modele}" class="w-full h-48 object-cover rounded">
+        </div>
+        <div class="text-sm text-gray-600 mb-3">
+            <p>${vehicle.carburant || 'N/A'} • ${vehicle.transmission || 'N/A'} • ${vehicle.capacite || 0} places</p>
+            
+        </div>
+        <div class="flex justify-end space-x-2">
+            <button onclick="editVehicle('${id}', 'location')" class="bg-yellow-500 text-white px-3 py-1 rounded text-sm">
+                Modifier
+            </button>
+            <button onclick="deleteVehicle('${id}', 'location')" class="bg-red-500 text-white px-3 py-1 rounded text-sm">
+                Supprimer
+            </button>
+        </div>
+    `;
+    return card;
 }
 
 // Fonctions pour Firebase - Boutique
@@ -1731,7 +1802,6 @@ window.showVehicleDetail = showVehicleDetail;
                <h3 class="font-semibold mb-1">${vehicle.marque} ${vehicle.modele} (${vehicle.annee})</h3>
                <p class="text-blue-600 font-bold mb-1">${vehicle.prixLocation.toLocaleString()} FCFA/jour</p>
                <p class="text-sm text-gray-600">${vehicle.carburant} • ${vehicle.transmission} • ${vehicle.capacite} places</p>
-               <p class="text-sm text-gray-600">Disponibilité: ${vehicle.disponibilite ? 'Disponible' : 'Non disponible'}</p>
            </div>
        `;
        return card;
