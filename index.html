@@ -59,41 +59,42 @@
             background-color: #1f2937;
             color: #f3f4f6;
         }
+      header button:hover {
+    transform: translateY(-1px);
+    transition: transform 0.2s ease;
+}
     </style>
 </head>
 <body class="relative">
     <!-- Header -->
-    <header class="bg-blue-800 text-white p-4 shadow-md">
-        <div class="container mx-auto flex justify-between items-center">
-            <div class="flex items-center space-x-2">
-                <img src="http://static.photos/automotive/200x200/1" alt="Logo GMBN" class="w-10 h-10 rounded-full">
-                <h1 class="text-xl font-bold">GMBN</h1>
-            </div>
+   <header class="bg-blue-800 text-white p-4 shadow-md">
+    <div class="container mx-auto flex justify-between items-center">
+        <div class="flex items-center space-x-2">
+            <img src="http://static.photos/automotive/200x200/1" alt="Logo GMBN" class="w-10 h-10 rounded-full">
+            <h1 class="text-xl font-bold">GMBN</h1>
+        </div>
+        <div class="flex items-center space-x-4">
+            <button onclick="showPage('contact')" class="text-white hover:text-blue-200 px-2 py-1 rounded-lg flex items-center transition-colors">
+                <i data-feather="phone" class="mr-1 w-4 h-4"></i>
+                <span class="text-sm"></span>
+            </button>
             <button id="darkModeToggle" class="p-2 rounded-full hover:bg-blue-700">
                 <i data-feather="moon"></i>
             </button>
         </div>
-    </header>
+    </div>
+</header>
 
     <!-- Main Content -->
     <main class="container mx-auto p-4">
         <!-- Home Page -->
         <div id="home" class="page active">
             <div class="text-center mb-8" data-aos="fade-up">
-                <h2 class="text-2xl font-bold mb-2">Garage GMBN</h2>
+                <h2 class="text-2xl font-bold mb-2">Garage Médina Baye Niass</h2>
                 <p class="text-gray-600">Votre expert en mécanique automobile depuis 2005</p>
             </div>
 
-            <div class="bg-white rounded-lg shadow-md p-6 mb-6" data-aos="fade-up">
-                <h3 class="text-xl font-semibold mb-4">À propos de nous</h3>
-                <p class="text-gray-700 mb-4">
-                    Créé en 2005 par Mor Niass, géré actuellement par Djibril, le garage emploie 50 mécaniciens qualifiés et possède 3 emplacements.
-                </p>
-                <div class="flex justify-center">
-                    <img src="http://static.photos/workspace/640x360/1" alt="Notre équipe" class="rounded-lg w-full max-w-md">
-                </div>
-            </div>
-
+           
             <h3 class="text-xl font-semibold mb-4 mt-8">Nos Services</h3>
             <div class="grid grid-cols-2 gap-4">
                 <div class="service-card rounded-lg shadow-md p-4 text-white" 
@@ -144,8 +145,53 @@
                         <h4 class="font-bold">Entretien général</h4>
                     </div>
                 </div>
+                
+                <!-- Nouveaux services ajoutés -->
+                <div class="service-card rounded-lg shadow-md p-4 text-white" 
+                     style="background-image: url('http://static.photos/automotive/640x360/7')"
+                     onclick="navigateToService('remorquage')"
+                     data-aos="fade-up">
+                    <div class="service-card-content">
+                        <h4 class="font-bold">Remorquage</h4>
+                    </div>
+                </div>
+                <div class="service-card rounded-lg shadow-md p-4 text-white" 
+                     style="background-image: url('http://static.photos/automotive/640x360/8')"
+                     onclick="navigateToService('diagnostic')"
+                     data-aos="fade-up">
+                    <div class="service-card-content">
+                        <h4 class="font-bold">Diagnostic</h4>
+                    </div>
+                </div>
+                <div class="service-card rounded-lg shadow-md p-4 text-white" 
+                     style="background-image: url('http://static.photos/automotive/640x360/9')"
+                     onclick="navigateToService('location')"
+                     data-aos="fade-up">
+                    <div class="service-card-content">
+                        <h4 class="font-bold">Location</h4>
+                    </div>
+                </div>
+                <div class="service-card rounded-lg shadow-md p-4 text-white" 
+                     style="background-image: url('http://static.photos/automotive/640x360/10')"
+                     onclick="navigateToService('vente')"
+                     data-aos="fade-up">
+                    <div class="service-card-content">
+                        <h4 class="font-bold">Vente</h4>
+                    </div>
+                </div>
             </div>
 
+           <div class="bg-white rounded-lg shadow-md p-6 mb-6" data-aos="fade-up">
+                <h3 class="text-xl font-semibold mb-4">À propos de nous</h3>
+                <p class="text-gray-700 mb-4">
+                   Garage Medina Baye est une entreprise spécialisée dans le domaine de l’automobile Cette structure familiale dynamique qui a fêté ses 20 ans en 2017, jouit d'une excellente réputation dans tout le territoire national. Trois générations et une équipe bien organisée sont à votre service et son fondateur, El hadji Ibrahima Niasse dit Baye peut témoigner d'une expérience de plus de 30 ans dans le domaine. Active dans le domaine de l’automobile vous pouvez être sûr d'un service performant, rapide et efficace. Son équipement, ultra sophistiqué, sans cesse renouvelé, à la pointe de la dernière technologie lui a permis de réaliser des missions toujours plus performantes dans des délais toujours plus stricts. Toutes ces expériences l'ont amenée à aborder avec succès et compétences les entreprises et à décrocher des marchés au niveau des plus grandes structures du pays. Profitez d’un équipement à la fine pointe de la technologie
+                </p>
+                <div class="flex justify-center">
+                    <img src="http://static.photos/workspace/640x360/1" alt="Notre équipe" class="rounded-lg w-full max-w-md">
+                </div>
+            </div>
+
+          
             <div class="mt-8">
                 <h3 class="text-xl font-semibold mb-4">Nos Partenaires</h3>
                 <div class="grid grid-cols-3 gap-4">
@@ -182,6 +228,28 @@
                     <h3 class="font-semibold">Vidange</h3>
                     <p class="text-gray-600 text-sm">Vidange et changement d'huile</p>
                 </div>
+                <div class="bg-white rounded-lg shadow-md p-4" onclick="navigateToService('entretien')">
+                    <h3 class="font-semibold">Entretien général</h3>
+                    <p class="text-gray-600 text-sm">Entretien complet de votre véhicule</p>
+                </div>
+                
+                <!-- Nouveaux services ajoutés -->
+                <div class="bg-white rounded-lg shadow-md p-4" onclick="navigateToService('remorquage')">
+                    <h3 class="font-semibold">Remorquage</h3>
+                    <p class="text-gray-600 text-sm">Service de remorquage 24h/24</p>
+                </div>
+                <div class="bg-white rounded-lg shadow-md p-4" onclick="navigateToService('diagnostic')">
+                    <h3 class="font-semibold">Diagnostic</h3>
+                    <p class="text-gray-600 text-sm">Diagnostic électronique complet</p>
+                </div>
+                <div class="bg-white rounded-lg shadow-md p-4" onclick="navigateToService('location')">
+                    <h3 class="font-semibold">Location</h3>
+                    <p class="text-gray-600 text-sm">Location de véhicules</p>
+                </div>
+                <div class="bg-white rounded-lg shadow-md p-4" onclick="navigateToService('vente')">
+                    <h3 class="font-semibold">Vente</h3>
+                    <p class="text-gray-600 text-sm">Vente de véhicules d'occasion</p>
+                </div>
             </div>
         </div>
 
@@ -199,6 +267,11 @@
                         <option value="froid">Froid</option>
                         <option value="vidange">Vidange</option>
                         <option value="entretien">Entretien général</option>
+                        <option value="remorquage">Remorquage</option>
+                        <option value="diagnostic">Diagnostic</option>
+                        <option value="location">Location</option>
+                        <option value="vente">Vente</option>
+                        <option value="autres">Autres</option>
                     </select>
                 </div>
                 <div id="priceEstimate" class="bg-blue-50 p-4 rounded-lg mb-4 hidden">
@@ -237,6 +310,10 @@
                         <option value="froid">Froid</option>
                         <option value="vidange">Vidange</option>
                         <option value="entretien">Entretien général</option>
+                        <option value="remorquage">Remorquage</option>
+                        <option value="diagnostic">Diagnostic</option>
+                        <option value="location">Location</option>
+                        <option value="vente">Vente</option>
                     </select>
                 </div>
                 <div class="mb-4">
@@ -371,7 +448,7 @@
             </div>
             <div class="service-card rounded-lg shadow-md mb-6 h-48" style="background-image: url('http://static.photos/automotive/640x360/5')"></div>
             <div class="bg-white rounded-lg shadow-md p-6">
-                <p class="mb-4">Nous effectuons des vidanges complètes avec des huiles de qualité pour assurer la longévité de votre moteur. Prix à partir de 25 000 FCFA.</p>
+                <p class="mb-4">Nous effectuons des vidanges complètes avec des huiles de qualité pour assurer la longévité de votre moteur.</p>
                 <button onclick="showContactOptions()" class="w-full bg-blue-600 text-white py-2 rounded-lg">
                     Demander un devis
                 </button>
@@ -394,6 +471,82 @@
             </div>
         </div>
 
+        <!-- Nouveaux services détaillés -->
+        <div id="service-remorquage" class="page">
+            <div class="flex items-center mb-4">
+                <button onclick="goBack()" class="mr-2">
+                    <i data-feather="arrow-left"></i>
+                </button>
+                <h2 class="text-xl font-bold">Remorquage</h2>
+            </div>
+            <div class="service-card rounded-lg shadow-md mb-6 h-48" style="background-image: url('http://static.photos/automotive/640x360/7')"></div>
+            <div class="bg-white rounded-lg shadow-md p-6">
+                <p class="mb-4">Service de remorquage disponible 24h/24 et 7j/7 pour toutes pannes et accidents. Intervention rapide dans tout Dakar et ses environs.</p>
+                <button onclick="showContactOptions()" class="w-full bg-blue-600 text-white py-2 rounded-lg">
+                    Contacter pour remorquage
+                </button>
+            </div>
+        </div>
+
+        <div id="service-diagnostic" class="page">
+            <div class="flex items-center mb-4">
+                <button onclick="goBack()" class="mr-2">
+                    <i data-feather="arrow-left"></i>
+                </button>
+                <h2 class="text-xl font-bold">Diagnostic</h2>
+            </div>
+            <div class="service-card rounded-lg shadow-md mb-6 h-48" style="background-image: url('http://static.photos/automotive/640x360/8')"></div>
+            <div class="bg-white rounded-lg shadow-md p-6">
+                <p class="mb-4">Diagnostic électronique complet avec outils professionnels pour identifier toutes les pannes de votre véhicule. Rapport détaillé fourni.</p>
+                <button onclick="showContactOptions()" class="w-full bg-blue-600 text-white py-2 rounded-lg">
+                    Demander un diagnostic
+                </button>
+            </div>
+        </div>
+
+        <div id="service-location" class="page">
+            <div class="flex items-center mb-4">
+                <button onclick="goBack()" class="mr-2">
+                    <i data-feather="arrow-left"></i>
+                </button>
+                <h2 class="text-xl font-bold">Location</h2>
+            </div>
+            <div class="service-card rounded-lg shadow-md mb-6 h-48" style="background-image: url('http://static.photos/automotive/640x360/9')"></div>
+            <div class="bg-white rounded-lg shadow-md p-6">
+                <p class="mb-4">Location de véhicules pour toutes occasions. Court et long terme. Véhicules régulièrement entretenus et assurances comprises.</p>
+                <button onclick="showContactOptions()" class="w-full bg-blue-600 text-white py-2 rounded-lg">
+                    Voir les véhicules disponibles
+                </button>
+            </div>
+        </div>
+
+        <div id="service-vente" class="page">
+            <div class="flex items-center mb-4">
+                <button onclick="goBack()" class="mr-2">
+                    <i data-feather="arrow-left"></i>
+                </button>
+                <h2 class="text-xl font-bold">Vente</h2>
+            </div>
+            <div class="service-card rounded-lg shadow-md mb-6 h-48" style="background-image: url('http://static.photos/automotive/640x360/10')"></div>
+            <div class="bg-white rounded-lg shadow-md p-6">
+                <p class="mb-4">Vente de véhicules d'occasion vérifiés et garantis. Large choix de modèles. Financement possible.</p>
+                <button onclick="showContactOptions()" class="w-full bg-blue-600 text-white py-2 rounded-lg">
+                    Voir le catalogue
+                </button>
+            </div>
+        </div>
+              <!-- bOUTIQUE ahmed said aidara -->
+
+<div id="boutique" class="page">
+    <h2 class="text-2xl font-bold mb-6">Boutique</h2>
+    <div class="bg-white rounded-lg shadow-md p-6">
+        <p class="mb-4">Découvrez nos produits automobiles : pièces détachées, accessoires et plus encore.</p>
+        <!-- Ajoute ici le contenu de la boutique (ex. : grille de produits) -->
+        <button onclick="showContactOptions()" class="w-full bg-blue-600 text-white py-2 rounded-lg">
+            Contacter pour plus d'infos
+        </button>
+    </div>
+</div>
         <!-- Contact Options Modal -->
         <div id="contactModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50">
             <div class="bg-white rounded-lg p-6 w-full max-w-sm mx-4">
@@ -438,18 +591,15 @@
             <i data-feather="settings"></i>
             <span class="text-xs mt-1">Services</span>
         </button>
-        <button onclick="showPage('devis')" class="nav-item flex flex-col items-center p-2">
-            <i data-feather="dollar-sign"></i>
-            <span class="text-xs mt-1">Devis</span>
-        </button>
+       
         <button onclick="showPage('rendezvous')" class="nav-item flex flex-col items-center p-2">
             <i data-feather="calendar"></i>
             <span class="text-xs mt-1">RDV</span>
         </button>
-        <button onclick="showPage('contact')" class="nav-item flex flex-col items-center p-2">
-            <i data-feather="phone"></i>
-            <span class="text-xs mt-1">Contact</span>
-        </button>
+      <button onclick="showPage('boutique')" class="nav-item flex flex-col items-center p-2">
+    <i data-feather="shopping-cart"></i>
+    <span class="text-xs mt-1">Boutique</span>
+</button>
     </nav>
 
     <script>
@@ -600,6 +750,12 @@
                     break;
                 case 'entretien':
                     estimate = 'À partir de 50 000 FCFA (selon le véhicule)';
+                    break;
+                case 'diagnostic':
+                    estimate = 'À partir de 15 000 FCFA';
+                    break;
+                case 'remorquage':
+                    estimate = 'À partir de 30 000 FCFA (selon la distance)';
                     break;
                 default:
                     estimate = 'Veuillez demander un devis personnalisé';
