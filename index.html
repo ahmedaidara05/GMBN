@@ -3,1329 +3,637 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GMBN - Garage Mécanique</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3.2.0/dist/email.min.js"></script>
+    <title>GMBN - Garage Médina Baye Niass</title>
+    <meta name="theme-color" content="#1e40af">
+    <link rel="manifest" href="/manifest.json">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
+    <script src="https://unpkg.com/feather-icons"></script>
     <style>
-        :root {
-            --primary: #1a365d;
-            --secondary: #2d3748;
-            --accent: #d69e2e;
-            --light: #f7fafc;
-            --dark: #2d3748;
-            --success: #48bb78;
-            --danger: #e53e3e;
-            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            --transition: all 0.3s ease;
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
         body {
-            font-family: 'Montserrat', sans-serif;
-            line-height: 1.6;
-            color: var(--dark);
-            background-color: var(--light);
-            overflow-x: hidden;
+            font-family: 'Poppins', sans-serif;
+            padding-bottom: 80px;
+            background-color: #f3f4f6;
         }
-
-        .app-container {
-            max-width: 100%;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-        }
-
-        /* Header & Navigation */
-        header {
-            background-color: var(--primary);
-            color: white;
-            padding: 1rem;
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-            box-shadow: var(--shadow);
-        }
-
-        .header-content {
-            max-width: 1200px;
-            margin: 0 auto;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .logo img {
-            height: 40px;
-        }
-
-        .logo h1 {
-            font-size: 1.5rem;
-            font-weight: 700;
-        }
-
-        .nav-toggle {
-            display: none;
-            background: none;
-            border: none;
-            color: white;
-            font-size: 1.5rem;
-            cursor: pointer;
-        }
-
-        nav ul {
-            display: flex;
-            list-style: none;
-            gap: 1.5rem;
-        }
-
-        nav a {
-            color: white;
-            text-decoration: none;
-            font-weight: 500;
-            transition: var(--transition);
-            padding: 0.5rem;
-            border-radius: 4px;
-        }
-
-        nav a:hover {
-            background-color: rgba(255, 255, 255, 0.1);
-        }
-
-        .sos-button {
-            background-color: var(--danger);
-            color: white;
-            border: none;
-            padding: 0.5rem 1rem;
-            border-radius: 50px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: var(--transition);
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .sos-button:hover {
-            background-color: #c53030;
-            transform: scale(1.05);
-        }
-
-        /* Main Content */
-        main {
-            flex: 1;
-        }
-
-        .section {
-            padding: 3rem 1rem;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .section-title {
-            text-align: center;
-            margin-bottom: 2rem;
-            font-size: 2rem;
-            color: var(--primary);
-            position: relative;
-        }
-
-        .section-title:after {
-            content: '';
-            display: block;
-            width: 60px;
-            height: 4px;
-            background-color: var(--accent);
-            margin: 0.5rem auto;
-        }
-
-        /* Hero Section */
-        .hero {
-            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80');
-            background-size: cover;
-            background-position: center;
-            color: white;
-            text-align: center;
-            padding: 5rem 1rem;
-        }
-
-        .hero-content {
-            max-width: 800px;
-            margin: 0 auto;
-        }
-
-        .hero h2 {
-            font-size: 2.5rem;
-            margin-bottom: 1rem;
-        }
-
-        .hero p {
-            font-size: 1.2rem;
-            margin-bottom: 2rem;
-        }
-
-        .btn {
-            display: inline-block;
-            background-color: var(--accent);
-            color: white;
-            padding: 0.8rem 1.5rem;
-            border-radius: 50px;
-            text-decoration: none;
-            font-weight: 600;
-            transition: var(--transition);
-            border: none;
-            cursor: pointer;
-        }
-
-        .btn:hover {
-            background-color: #b7791f;
-            transform: translateY(-3px);
-        }
-
-        /* Services Section */
-        .services-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 1.5rem;
-        }
-
         .service-card {
-            background-color: white;
-            border-radius: 10px;
-            overflow: hidden;
-            box-shadow: var(--shadow);
-            transition: var(--transition);
-        }
-
-        .service-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
-        }
-
-        .service-image {
-            height: 160px;
             background-size: cover;
             background-position: center;
-        }
-
-        .service-content {
-            padding: 1.5rem;
-        }
-
-        .service-content h3 {
-            margin-bottom: 0.5rem;
-            color: var(--primary);
-        }
-
-        .service-content p {
-            margin-bottom: 1rem;
-            color: var(--secondary);
-        }
-
-        .service-price {
-            font-weight: 600;
-            color: var(--accent);
-            margin-bottom: 1rem;
-        }
-
-        /* Appointment Form */
-        .form-container {
-            background-color: white;
-            border-radius: 10px;
-            padding: 2rem;
-            box-shadow: var(--shadow);
-            max-width: 600px;
-            margin: 0 auto;
-        }
-
-        .form-group {
-            margin-bottom: 1.5rem;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 0.5rem;
-            font-weight: 500;
-        }
-
-        .form-group input,
-        .form-group select,
-        .form-group textarea {
-            width: 100%;
-            padding: 0.8rem;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            font-family: inherit;
-        }
-
-        /* Footer */
-        footer {
-            background-color: var(--primary);
-            color: white;
-            padding: 2rem 1rem;
-        }
-
-        .footer-content {
-            max-width: 1200px;
-            margin: 0 auto;
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 2rem;
-        }
-
-        .footer-section h3 {
-            margin-bottom: 1rem;
-            font-size: 1.2rem;
-        }
-
-        .footer-section p,
-        .footer-section a {
-            margin-bottom: 0.5rem;
-            display: block;
-            color: #cbd5e0;
-            text-decoration: none;
-        }
-
-        .footer-section a:hover {
-            color: white;
-        }
-
-        .social-links {
-            display: flex;
-            gap: 1rem;
-            margin-top: 1rem;
-        }
-
-        .social-links a {
-            font-size: 1.5rem;
-        }
-
-        .copyright {
-            text-align: center;
-            margin-top: 2rem;
-            padding-top: 1rem;
-            border-top: 1px solid #4a5568;
-        }
-
-        /* Responsive Design */
-        @media (max-width: 768px) {
-            .nav-toggle {
-                display: block;
-            }
-
-            nav ul {
-                display: none;
-                flex-direction: column;
-                position: absolute;
-                top: 100%;
-                left: 0;
-                right: 0;
-                background-color: var(--primary);
-                padding: 1rem;
-                box-shadow: var(--shadow);
-            }
-
-            nav ul.show {
-                display: flex;
-            }
-
-            .hero h2 {
-                font-size: 2rem;
-            }
-
-            .section-title {
-                font-size: 1.8rem;
-            }
-        }
-
-        /* Admin Panel */
-        .admin-panel {
-            display: none;
-            background-color: white;
-            border-radius: 10px;
-            padding: 2rem;
-            box-shadow: var(--shadow);
-            margin-top: 2rem;
-        }
-
-        .admin-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 1rem 0;
-        }
-
-        .admin-table th,
-        .admin-table td {
-            padding: 0.8rem;
-            border: 1px solid #ddd;
-            text-align: left;
-        }
-
-        .admin-table th {
-            background-color: #f7fafc;
-            font-weight: 600;
-        }
-
-        /* Modal */
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
-            z-index: 2000;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .modal-content {
-            background-color: white;
-            padding: 2rem;
-            border-radius: 10px;
-            max-width: 500px;
-            width: 100%;
-            max-height: 90vh;
-            overflow-y: auto;
-        }
-
-        .modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1.5rem;
-        }
-
-        .close-modal {
-            background: none;
-            border: none;
-            font-size: 1.5rem;
-            cursor: pointer;
-        }
-
-        /* Toast Notification */
-        .toast {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            padding: 1rem 1.5rem;
-            background-color: var(--success);
-            color: white;
-            border-radius: 4px;
-            box-shadow: var(--shadow);
-            display: none;
-            z-index: 3000;
-        }
-
-        .toast.error {
-            background-color: var(--danger);
-        }
-
-        /* Map */
-        #map {
-            height: 300px;
-            width: 100%;
-            border-radius: 10px;
-            margin-top: 1rem;
-        }
-
-        /* Tabs */
-        .tabs {
-            display: flex;
-            margin-bottom: 1.5rem;
-            border-bottom: 1px solid #ddd;
-        }
-
-        .tab-btn {
-            padding: 0.8rem 1.5rem;
-            background: none;
-            border: none;
-            cursor: pointer;
-            font-weight: 500;
-            color: var(--dark);
             position: relative;
+            overflow: hidden;
         }
-
-        .tab-btn.active {
-            color: var(--primary);
-        }
-
-        .tab-btn.active:after {
+        .service-card::before {
             content: '';
             position: absolute;
-            bottom: -1px;
+            top: 0;
             left: 0;
             right: 0;
-            height: 3px;
-            background-color: var(--primary);
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1;
         }
-
-        .tab-content {
+        .service-card-content {
+            position: relative;
+            z-index: 2;
+        }
+        .nav-item.active {
+            color: #1e40af;
+        }
+        .nav-item.active svg {
+            stroke: #1e40af;
+        }
+        .page {
             display: none;
         }
-
-        .tab-content.active {
+        .page.active {
             display: block;
         }
-
-        /* Dark Mode */
-        body.dark-mode {
-            background-color: #1a202c;
-            color: #e2e8f0;
+        .accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
         }
-
-        body.dark-mode .service-card,
-        body.dark-mode .form-container,
-        body.dark-mode .admin-panel {
-            background-color: #2d3748;
-            color: #e2e8f0;
-        }
-
-        body.dark-mode .form-group input,
-        body.dark-mode .form-group select,
-        body.dark-mode .form-group textarea {
-            background-color: #4a5568;
-            color: #e2e8f0;
-            border-color: #4a5568;
-        }
-
-        .theme-toggle {
-            background: none;
-            border: none;
-            color: white;
-            font-size: 1.2rem;
-            cursor: pointer;
-            margin-left: 1rem;
+        .dark-mode {
+            background-color: #1f2937;
+            color: #f3f4f6;
         }
     </style>
 </head>
-<body>
-    <div class="app-container">
-        <header>
-            <div class="header-content">
-                <div class="logo">
-                    <img src="https://i.postimg.cc/8CQnHjL2/gmbn-logo.png" alt="GMBN Logo">
-                    <h1>GMBN Garage</h1>
-                </div>
-                <button class="nav-toggle" id="navToggle">
-                    <i class="fas fa-bars"></i>
-                </button>
-                <nav>
-                    <ul id="navMenu">
-                        <li><a href="#home">Accueil</a></li>
-                        <li><a href="#services">Services</a></li>
-                        <li><a href="#appointment">Rendez-vous</a></li>
-                        <li><a href="#team">Notre équipe</a></li>
-                        <li><a href="#contact">Contact</a></li>
-                        <li><a href="#admin" id="adminLink">Admin</a></li>
-                    </ul>
-                </nav>
-                <button class="sos-button" id="sosButton">
-                    <i class="fas fa-phone-alt"></i> SOS Urgence
-                </button>
-                <button class="theme-toggle" id="themeToggle">
-                    <i class="fas fa-moon"></i>
-                </button>
+<body class="relative">
+    <!-- Header -->
+    <header class="bg-blue-800 text-white p-4 shadow-md">
+        <div class="container mx-auto flex justify-between items-center">
+            <div class="flex items-center space-x-2">
+                <img src="http://static.photos/automotive/200x200/1" alt="Logo GMBN" class="w-10 h-10 rounded-full">
+                <h1 class="text-xl font-bold">GMBN</h1>
             </div>
-        </header>
-
-        <main>
-            <!-- Hero Section -->
-            <section id="home" class="hero">
-                <div class="hero-content">
-                    <h2>Votre garage de confiance pour tous services automobiles</h2>
-                    <p>Expertise, qualité et service 24h/24 pour prendre soin de votre véhicule</p>
-                    <a href="#appointment" class="btn">Prendre rendez-vous</a>
-                </div>
-            </section>
-
-            <!-- Services Section -->
-            <section id="services" class="section">
-                <h2 class="section-title">Nos Services</h2>
-                <div class="services-grid">
-                    <!-- Services will be dynamically loaded here -->
-                </div>
-            </section>
-
-            <!-- Appointment Section -->
-            <section id="appointment" class="section">
-                <h2 class="section-title">Prendre Rendez-vous</h2>
-                <div class="form-container">
-                    <form id="appointmentForm">
-                        <div class="form-group">
-                            <label for="service">Service demandé</label>
-                            <select id="service" required>
-                                <option value="">Sélectionnez un service</option>
-                                <!-- Options will be dynamically loaded -->
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="date">Date souhaitée</label>
-                            <input type="date" id="date" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="time">Heure souhaitée</label>
-                            <input type="time" id="time" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="firstName">Prénom</label>
-                            <input type="text" id="firstName" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="lastName">Nom</label>
-                            <input type="text" id="lastName" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="phone">Téléphone</label>
-                            <input type="tel" id="phone" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="email">Email</label>
-                            <input type="email" id="email" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="message">Message (optionnel)</label>
-                            <textarea id="message" rows="4"></textarea>
-                        </div>
-                        <button type="submit" class="btn">Confirmer le rendez-vous</button>
-                    </form>
-                </div>
-            </section>
-
-            <!-- Team Section -->
-            <section id="team" class="section">
-                <h2 class="section-title">Notre Équipe</h2>
-                <div class="services-grid">
-                    <!-- Team members will be dynamically loaded here -->
-                </div>
-            </section>
-
-            <!-- Contact Section -->
-            <section id="contact" class="section">
-                <h2 class="section-title">Nous Contacter</h2>
-                <div class="form-container">
-                    <div class="form-group">
-                        <label>Adresse</label>
-                        <p>123 Rue de l'Automobile, 75000 Paris</p>
-                    </div>
-                    <div class="form-group">
-                        <label>Téléphone</label>
-                        <p><a href="tel:+33123456789">+33 1 23 45 67 89</a></p>
-                    </div>
-                    <div class="form-group">
-                        <label>Email</label>
-                        <p><a href="mailto:contact@gmbn.fr">contact@gmbn.fr</a></p>
-                    </div>
-                    <div class="form-group">
-                        <label>Horaires</label>
-                        <p>Lun-Ven: 8h-18h | Sam: 9h-17h | Urgences: 24h/24</p>
-                    </div>
-                    <div class="form-group">
-                        <label>Localisation</label>
-                        <div id="map">
-                            <!-- Google Maps will be loaded here -->
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Admin Panel -->
-            <section id="admin" class="section">
-                <h2 class="section-title">Espace Administrateur</h2>
-                <div class="form-container">
-                    <div class="form-group">
-                        <label for="adminPassword">Mot de passe administrateur</label>
-                        <input type="password" id="adminPassword" placeholder="Entrez le mot de passe">
-                    </div>
-                    <button class="btn" id="adminLogin">Se connecter</button>
-                </div>
-
-                <div class="admin-panel" id="adminPanel">
-                    <div class="tabs">
-                        <button class="tab-btn active" data-tab="services-tab">Services</button>
-                        <button class="tab-btn" data-tab="inventory-tab">Inventaire</button>
-                        <button class="tab-btn" data-tab="invoices-tab">Factures</button>
-                    </div>
-
-                    <div class="tab-content active" id="services-tab">
-                        <h3>Gestion des services</h3>
-                        <button class="btn" id="addService">Ajouter un service</button>
-                        <table class="admin-table">
-                            <thead>
-                                <tr>
-                                    <th>Nom</th>
-                                    <th>Description</th>
-                                    <th>Prix</th>
-                                    <th>Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody id="servicesTable">
-                                <!-- Services will be dynamically loaded here -->
-                            </tbody>
-                        </table>
-                    </div>
-
-                    <div class="tab-content" id="inventory-tab">
-                        <h3>Gestion des pièces détachées</h3>
-                        <button class="btn" id="addPart">Ajouter une pièce</button>
-                        <table class="admin-table">
-                            <thead>
-                                <tr>
-                                    <th>Nom</th>
-                                    <th>Référence</th>
-                                    <th>Prix</th>
-                                    <th>Stock</th>
-                                    <th>Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody id="inventoryTable">
-                                <!-- Inventory will be dynamically loaded here -->
-                            </tbody>
-                        </table>
-                    </div>
-
-                    <div class="tab-content" id="invoices-tab">
-                        <h3>Générer une facture</h3>
-                        <form id="invoiceForm">
-                            <div class="form-group">
-                                <label for="clientName">Nom du client</label>
-                                <input type="text" id="clientName" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="items">Articles</label>
-                                <div id="items">
-                                    <div class="invoice-item">
-                                        <select class="item-select" required>
-                                            <option value="">Sélectionnez un article</option>
-                                            <!-- Options will be dynamically loaded -->
-                                        </select>
-                                        <input type="number" class="item-quantity" value="1" min="1" required>
-                                        <button type="button" class="remove-item">×</button>
-                                    </div>
-                                </div>
-                                <button type="button" class="btn" id="addItem">Ajouter un article</button>
-                            </div>
-                            <button type="submit" class="btn">Générer la facture</button>
-                        </form>
-                        <div id="invoiceResult" style="margin-top: 2rem; display: none;">
-                            <h4>Facture générée</h4>
-                            <div id="invoiceDetails"></div>
-                            <button class="btn" id="printInvoice">Imprimer la facture</button>
-                        </div>
-                    </div>
-                </div>
-            </section>
-        </main>
-
-        <footer>
-            <div class="footer-content">
-                <div class="footer-section">
-                    <h3>GMBN Garage</h3>
-                    <p>Votre partenaire de confiance pour l'entretien et la réparation de votre véhicule.</p>
-                </div>
-                <div class="footer-section">
-                    <h3>Liens rapides</h3>
-                    <a href="#home">Accueil</a>
-                    <a href="#services">Services</a>
-                    <a href="#appointment">Rendez-vous</a>
-                    <a href="#contact">Contact</a>
-                </div>
-                <div class="footer-section">
-                    <h3>Contact</h3>
-                    <p>123 Rue de l'Automobile, 75000 Paris</p>
-                    <p>Tél: +33 1 23 45 67 89</p>
-                    <p>Email: contact@gmbn.fr</p>
-                    <div class="social-links">
-                        <a href="#"><i class="fab fa-facebook"></i></a>
-                        <a href="#"><i class="fab fa-twitter"></i></a>
-                        <a href="#"><i class="fab fa-instagram"></i></a>
-                    </div>
-                </div>
-            </div>
-            <div class="copyright">
-                <p>&copy; 2023 GMBN Garage. Tous droits réservés.</p>
-            </div>
-        </footer>
-    </div>
-
-    <!-- SOS Modal -->
-    <div class="modal" id="sosModal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3>Assistance Urgence 24h/24</h3>
-                <button class="close-modal">&times;</button>
-            </div>
-            <p>Notre service de dépannage est disponible 24h/24 et 7j/7 pour toutes vos urgences.</p>
-            <p>Appelez-nous immédiatement au :</p>
-            <p style="font-size: 1.5rem; font-weight: bold; margin: 1rem 0;">
-                <a href="tel:+33123456789">+33 1 23 45 67 89</a>
-            </p>
-            <p>Ou remplissez le formulaire ci-dessous pour une demande d'assistance :</p>
-            <form id="sosForm">
-                <div class="form-group">
-                    <label for="sosName">Nom et Prénom</label>
-                    <input type="text" id="sosName" required>
-                </div>
-                <div class="form-group">
-                    <label for="sosPhone">Téléphone</label>
-                    <input type="tel" id="sosPhone" required>
-                </div>
-                <div class="form-group">
-                    <label for="sosLocation">Localisation</label>
-                    <input type="text" id="sosLocation" required placeholder="Où êtes-vous actuellement ?">
-                </div>
-                <div class="form-group">
-                    <label for="sosProblem">Description du problème</label>
-                    <textarea id="sosProblem" rows="3" required></textarea>
-                </div>
-                <button type="submit" class="btn">Envoyer la demande d'assistance</button>
-            </form>
+            <button id="darkModeToggle" class="p-2 rounded-full hover:bg-blue-700">
+                <i data-feather="moon"></i>
+            </button>
         </div>
-    </div>
+    </header>
 
-    <!-- Toast Notification -->
-    <div class="toast" id="toast"></div>
+    <!-- Main Content -->
+    <main class="container mx-auto p-4">
+        <!-- Home Page -->
+        <div id="home" class="page active">
+            <div class="text-center mb-8" data-aos="fade-up">
+                <h2 class="text-2xl font-bold mb-2">Garage GMBN</h2>
+                <p class="text-gray-600">Votre expert en mécanique automobile depuis 2005</p>
+            </div>
+
+            <div class="bg-white rounded-lg shadow-md p-6 mb-6" data-aos="fade-up">
+                <h3 class="text-xl font-semibold mb-4">À propos de nous</h3>
+                <p class="text-gray-700 mb-4">
+                    Créé en 2005 par Mor Niass, géré actuellement par Djibril, le garage emploie 50 mécaniciens qualifiés et possède 3 emplacements.
+                </p>
+                <div class="flex justify-center">
+                    <img src="http://static.photos/workspace/640x360/1" alt="Notre équipe" class="rounded-lg w-full max-w-md">
+                </div>
+            </div>
+
+            <h3 class="text-xl font-semibold mb-4 mt-8">Nos Services</h3>
+            <div class="grid grid-cols-2 gap-4">
+                <div class="service-card rounded-lg shadow-md p-4 text-white" 
+                     style="background-image: url('http://static.photos/automotive/640x360/1')"
+                     onclick="navigateToService('tolerie')"
+                     data-aos="fade-up">
+                    <div class="service-card-content">
+                        <h4 class="font-bold">Tôlerie</h4>
+                    </div>
+                </div>
+                <div class="service-card rounded-lg shadow-md p-4 text-white" 
+                     style="background-image: url('http://static.photos/automotive/640x360/2')"
+                     onclick="navigateToService('mecanique')"
+                     data-aos="fade-up">
+                    <div class="service-card-content">
+                        <h4 class="font-bold">Mécanique</h4>
+                    </div>
+                </div>
+                <div class="service-card rounded-lg shadow-md p-4 text-white" 
+                     style="background-image: url('http://static.photos/automotive/640x360/3')"
+                     onclick="navigateToService('peinture')"
+                     data-aos="fade-up">
+                    <div class="service-card-content">
+                        <h4 class="font-bold">Peinture</h4>
+                    </div>
+                </div>
+                <div class="service-card rounded-lg shadow-md p-4 text-white" 
+                     style="background-image: url('http://static.photos/automotive/640x360/4')"
+                     onclick="navigateToService('froid')"
+                     data-aos="fade-up">
+                    <div class="service-card-content">
+                        <h4 class="font-bold">Froid</h4>
+                    </div>
+                </div>
+                <div class="service-card rounded-lg shadow-md p-4 text-white" 
+                     style="background-image: url('http://static.photos/automotive/640x360/5')"
+                     onclick="navigateToService('vidange')"
+                     data-aos="fade-up">
+                    <div class="service-card-content">
+                        <h4 class="font-bold">Vidange</h4>
+                    </div>
+                </div>
+                <div class="service-card rounded-lg shadow-md p-4 text-white" 
+                     style="background-image: url('http://static.photos/automotive/640x360/6')"
+                     onclick="navigateToService('entretien')"
+                     data-aos="fade-up">
+                    <div class="service-card-content">
+                        <h4 class="font-bold">Entretien général</h4>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-8">
+                <h3 class="text-xl font-semibold mb-4">Nos Partenaires</h3>
+                <div class="grid grid-cols-3 gap-4">
+                    <img src="http://static.photos/automotive/200x200/10" alt="Partenaire 1" class="rounded-lg">
+                    <img src="http://static.photos/automotive/200x200/11" alt="Partenaire 2" class="rounded-lg">
+                    <img src="http://static.photos/automotive/200x200/12" alt="Partenaire 3" class="rounded-lg">
+                    <img src="http://static.photos/automotive/200x200/13" alt="Partenaire 4" class="rounded-lg">
+                    <img src="http://static.photos/automotive/200x200/14" alt="Partenaire 5" class="rounded-lg">
+                </div>
+            </div>
+        </div>
+
+        <!-- Services Page -->
+        <div id="services" class="page">
+            <h2 class="text-2xl font-bold mb-6">Tous nos services</h2>
+            <div class="grid grid-cols-1 gap-4">
+                <div class="bg-white rounded-lg shadow-md p-4" onclick="navigateToService('tolerie')">
+                    <h3 class="font-semibold">Tôlerie</h3>
+                    <p class="text-gray-600 text-sm">Réparation de carrosserie et tôlerie</p>
+                </div>
+                <div class="bg-white rounded-lg shadow-md p-4" onclick="navigateToService('mecanique')">
+                    <h3 class="font-semibold">Mécanique</h3>
+                    <p class="text-gray-600 text-sm">Réparation mécanique générale</p>
+                </div>
+                <div class="bg-white rounded-lg shadow-md p-4" onclick="navigateToService('peinture')">
+                    <h3 class="font-semibold">Peinture</h3>
+                    <p class="text-gray-600 text-sm">Peinture automobile professionnelle</p>
+                </div>
+                <div class="bg-white rounded-lg shadow-md p-4" onclick="navigateToService('froid')">
+                    <h3 class="font-semibold">Froid</h3>
+                    <p class="text-gray-600 text-sm">Climatisation et système de refroidissement</p>
+                </div>
+                <div class="bg-white rounded-lg shadow-md p-4" onclick="navigateToService('vidange')">
+                    <h3 class="font-semibold">Vidange</h3>
+                    <p class="text-gray-600 text-sm">Vidange et changement d'huile</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Devis Page -->
+        <div id="devis" class="page">
+            <h2 class="text-2xl font-bold mb-6">Demander un devis</h2>
+            <div class="bg-white rounded-lg shadow-md p-6">
+                <div class="mb-4">
+                    <label class="block text-gray-700 mb-2">Service</label>
+                    <select id="serviceSelect" class="w-full p-2 border rounded">
+                        <option value="">Sélectionnez un service</option>
+                        <option value="tolerie">Tôlerie</option>
+                        <option value="mecanique">Mécanique</option>
+                        <option value="peinture">Peinture</option>
+                        <option value="froid">Froid</option>
+                        <option value="vidange">Vidange</option>
+                        <option value="entretien">Entretien général</option>
+                    </select>
+                </div>
+                <div id="priceEstimate" class="bg-blue-50 p-4 rounded-lg mb-4 hidden">
+                    <h3 class="font-semibold mb-2">Estimation indicative</h3>
+                    <p id="estimateText"></p>
+                </div>
+                <button onclick="showContactOptions()" class="w-full bg-blue-600 text-white py-2 rounded-lg">
+                    Contacter le gérant
+                </button>
+            </div>
+        </div>
+
+        <!-- Rendez-vous Page -->
+        <div id="rendezvous" class="page">
+            <h2 class="text-2xl font-bold mb-6">Prendre rendez-vous</h2>
+            <div class="bg-white rounded-lg shadow-md p-6">
+                <div class="mb-4">
+                    <label class="block text-gray-700 mb-2">Nom complet</label>
+                    <input type="text" id="fullName" class="w-full p-2 border rounded">
+                </div>
+                <div class="mb-4">
+                    <label class="block text-gray-700 mb-2">Numéro de téléphone</label>
+                    <input type="tel" id="phoneNumber" class="w-full p-2 border rounded">
+                </div>
+                <div class="mb-4">
+                    <label class="block text-gray-700 mb-2">Email</label>
+                    <input type="email" id="email" class="w-full p-2 border rounded">
+                </div>
+                <div class="mb-4">
+                    <label class="block text-gray-700 mb-2">Service</label>
+                    <select id="appointmentService" class="w-full p-2 border rounded">
+                        <option value="">Sélectionnez un service</option>
+                        <option value="tolerie">Tôlerie</option>
+                        <option value="mecanique">Mécanique</option>
+                        <option value="peinture">Peinture</option>
+                        <option value="froid">Froid</option>
+                        <option value="vidange">Vidange</option>
+                        <option value="entretien">Entretien général</option>
+                    </select>
+                </div>
+                <div class="mb-4">
+                    <label class="block text-gray-700 mb-2">Date</label>
+                    <input type="date" id="appointmentDate" class="w-full p-2 border rounded">
+                </div>
+                <div class="mb-4">
+                    <label class="block text-gray-700 mb-2">Heure</label>
+                    <input type="time" id="appointmentTime" class="w-full p-2 border rounded">
+                </div>
+                <button onclick="bookAppointment()" class="w-full bg-blue-600 text-white py-2 rounded-lg">
+                    Confirmer le rendez-vous
+                </button>
+            </div>
+        </div>
+
+        <!-- Contact Page -->
+        <div id="contact" class="page">
+            <h2 class="text-2xl font-bold mb-6">Contactez-nous</h2>
+            <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+                <div class="flex items-center mb-4">
+                    <i data-feather="phone" class="mr-2"></i>
+                    <div>
+                        <p class="font-semibold">Téléphone</p>
+                        <p>33 825 32 42 / 77 470 47 42</p>
+                    </div>
+                </div>
+                <div class="flex items-center mb-4">
+                    <i data-feather="mail" class="mr-2"></i>
+                    <div>
+                        <p class="font-semibold">Email</p>
+                        <p>contact@garage-gmbn.com</p>
+                    </div>
+                </div>
+                <div class="flex items-center mb-4">
+                    <i data-feather="map-pin" class="mr-2"></i>
+                    <div>
+                        <p class="font-semibold">Adresse</p>
+                        <p>Garage GMBN - Dakar, Sénégal</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-4 mb-6">
+                <button onclick="window.location.href='tel:+221774704742'" class="bg-green-600 text-white py-2 rounded-lg flex items-center justify-center">
+                    <i data-feather="phone" class="mr-2"></i> Appeler
+                </button>
+                <button onclick="window.location.href='https://wa.me/221774704742'" class="bg-blue-600 text-white py-2 rounded-lg flex items-center justify-center">
+                    <i data-feather="message-square" class="mr-2"></i> WhatsApp
+                </button>
+            </div>
+
+            <div class="bg-white rounded-lg shadow-md p-4">
+                <h3 class="font-semibold mb-2">Nos horaires</h3>
+                <p class="mb-1">Lundi - Vendredi: 8h - 18h</p>
+                <p class="mb-1">Samedi: 8h - 13h</p>
+                <p>Dimanche: Fermé</p>
+            </div>
+        </div>
+
+        <!-- Service Detail Pages -->
+        <div id="service-tolerie" class="page">
+            <div class="flex items-center mb-4">
+                <button onclick="goBack()" class="mr-2">
+                    <i data-feather="arrow-left"></i>
+                </button>
+                <h2 class="text-xl font-bold">Tôlerie</h2>
+            </div>
+            <div class="service-card rounded-lg shadow-md mb-6 h-48" style="background-image: url('http://static.photos/automotive/640x360/1')"></div>
+            <div class="bg-white rounded-lg shadow-md p-6">
+                <p class="mb-4">Nos experts en tôlerie vous offrent des réparations de qualité pour redonner à votre véhicule son aspect d'origine après un accident ou des dommages.</p>
+                <button onclick="showContactOptions()" class="w-full bg-blue-600 text-white py-2 rounded-lg">
+                    Demander un devis
+                </button>
+            </div>
+        </div>
+
+        <div id="service-mecanique" class="page">
+            <div class="flex items-center mb-4">
+                <button onclick="goBack()" class="mr-2">
+                    <i data-feather="arrow-left"></i>
+                </button>
+                <h2 class="text-xl font-bold">Mécanique</h2>
+            </div>
+            <div class="service-card rounded-lg shadow-md mb-6 h-48" style="background-image: url('http://static.photos/automotive/640x360/2')"></div>
+            <div class="bg-white rounded-lg shadow-md p-6">
+                <p class="mb-4">Notre équipe de mécaniciens qualifiés prend en charge toutes les réparations mécaniques de votre véhicule, du simple entretien aux réparations complexes.</p>
+                <button onclick="showContactOptions()" class="w-full bg-blue-600 text-white py-2 rounded-lg">
+                    Demander un devis
+                </button>
+            </div>
+        </div>
+
+        <div id="service-peinture" class="page">
+            <div class="flex items-center mb-4">
+                <button onclick="goBack()" class="mr-2">
+                    <i data-feather="arrow-left"></i>
+                </button>
+                <h2 class="text-xl font-bold">Peinture</h2>
+            </div>
+            <div class="service-card rounded-lg shadow-md mb-6 h-48" style="background-image: url('http://static.photos/automotive/640x360/3')"></div>
+            <div class="bg-white rounded-lg shadow-md p-6">
+                <p class="mb-4">Nous proposons des services de peinture automobile professionnelle avec des finitions de haute qualité et une large gamme de couleurs disponibles.</p>
+                <button onclick="showContactOptions()" class="w-full bg-blue-600 text-white py-2 rounded-lg">
+                    Demander un devis
+                </button>
+            </div>
+        </div>
+
+        <div id="service-froid" class="page">
+            <div class="flex items-center mb-4">
+                <button onclick="goBack()" class="mr-2">
+                    <i data-feather="arrow-left"></i>
+                </button>
+                <h2 class="text-xl font-bold">Froid</h2>
+            </div>
+            <div class="service-card rounded-lg shadow-md mb-6 h-48" style="background-image: url('http://static.photos/automotive/640x360/4')"></div>
+            <div class="bg-white rounded-lg shadow-md p-6">
+                <p class="mb-4">Nos techniciens spécialisés interviennent sur tous les systèmes de climatisation et de refroidissement de votre véhicule pour un confort optimal.</p>
+                <button onclick="showContactOptions()" class="w-full bg-blue-600 text-white py-2 rounded-lg">
+                    Demander un devis
+                </button>
+            </div>
+        </div>
+
+        <div id="service-vidange" class="page">
+            <div class="flex items-center mb-4">
+                <button onclick="goBack()" class="mr-2">
+                    <i data-feather="arrow-left"></i>
+                </button>
+                <h2 class="text-xl font-bold">Vidange</h2>
+            </div>
+            <div class="service-card rounded-lg shadow-md mb-6 h-48" style="background-image: url('http://static.photos/automotive/640x360/5')"></div>
+            <div class="bg-white rounded-lg shadow-md p-6">
+                <p class="mb-4">Nous effectuons des vidanges complètes avec des huiles de qualité pour assurer la longévité de votre moteur. Prix à partir de 25 000 FCFA.</p>
+                <button onclick="showContactOptions()" class="w-full bg-blue-600 text-white py-2 rounded-lg">
+                    Demander un devis
+                </button>
+            </div>
+        </div>
+
+        <div id="service-entretien" class="page">
+            <div class="flex items-center mb-4">
+                <button onclick="goBack()" class="mr-2">
+                    <i data-feather="arrow-left"></i>
+                </button>
+                <h2 class="text-xl font-bold">Entretien général</h2>
+            </div>
+            <div class="service-card rounded-lg shadow-md mb-6 h-48" style="background-image: url('http://static.photos/automotive/640x360/6')"></div>
+            <div class="bg-white rounded-lg shadow-md p-6">
+                <p class="mb-4">Un entretien régulier est essentiel pour la sécurité et la longévité de votre véhicule. Nous proposons des forfaits d'entretien adaptés à votre voiture.</p>
+                <button onclick="showContactOptions()" class="w-full bg-blue-600 text-white py-2 rounded-lg">
+                    Demander un devis
+                </button>
+            </div>
+        </div>
+
+        <!-- Contact Options Modal -->
+        <div id="contactModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50">
+            <div class="bg-white rounded-lg p-6 w-full max-w-sm mx-4">
+                <h3 class="text-xl font-bold mb-4">Comment souhaitez-vous nous contacter ?</h3>
+                <button onclick="window.location.href='https://wa.me/221774704742'" class="w-full bg-green-500 text-white py-2 rounded-lg mb-2 flex items-center justify-center">
+                    <i data-feather="message-square" class="mr-2"></i> WhatsApp
+                </button>
+                <button onclick="window.location.href='sms:+221774704742'" class="w-full bg-blue-500 text-white py-2 rounded-lg mb-2 flex items-center justify-center">
+                    <i data-feather="smartphone" class="mr-2"></i> SMS
+                </button>
+                <button onclick="window.location.href='tel:+221774704742'" class="w-full bg-red-500 text-white py-2 rounded-lg mb-2 flex items-center justify-center">
+                    <i data-feather="phone" class="mr-2"></i> Appel
+                </button>
+                <button onclick="hideContactOptions()" class="w-full bg-gray-200 py-2 rounded-lg mt-4">
+                    Annuler
+                </button>
+            </div>
+        </div>
+
+        <!-- Appointment Confirmation Modal -->
+        <div id="appointmentModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50">
+            <div class="bg-white rounded-lg p-6 w-full max-w-sm mx-4">
+                <div class="text-center mb-4">
+                    <i data-feather="check-circle" class="text-green-500 w-12 h-12 mx-auto"></i>
+                </div>
+                <h3 class="text-xl font-bold mb-2 text-center">Rendez-vous confirmé !</h3>
+                <p id="appointmentDetails" class="text-center mb-4"></p>
+                <button onclick="hideAppointmentModal()" class="w-full bg-blue-600 text-white py-2 rounded-lg">
+                    Fermer
+                </button>
+            </div>
+        </div>
+    </main>
+
+    <!-- Bottom Navigation -->
+    <nav class="fixed bottom-0 left-0 right-0 bg-white shadow-lg flex justify-around items-center h-16 z-40">
+        <button onclick="showPage('home')" class="nav-item active flex flex-col items-center p-2">
+            <i data-feather="home"></i>
+            <span class="text-xs mt-1">Accueil</span>
+        </button>
+        <button onclick="showPage('services')" class="nav-item flex flex-col items-center p-2">
+            <i data-feather="settings"></i>
+            <span class="text-xs mt-1">Services</span>
+        </button>
+        <button onclick="showPage('devis')" class="nav-item flex flex-col items-center p-2">
+            <i data-feather="dollar-sign"></i>
+            <span class="text-xs mt-1">Devis</span>
+        </button>
+        <button onclick="showPage('rendezvous')" class="nav-item flex flex-col items-center p-2">
+            <i data-feather="calendar"></i>
+            <span class="text-xs mt-1">RDV</span>
+        </button>
+        <button onclick="showPage('contact')" class="nav-item flex flex-col items-center p-2">
+            <i data-feather="phone"></i>
+            <span class="text-xs mt-1">Contact</span>
+        </button>
+    </nav>
 
     <script>
-        // Initialize EmailJS (you need to create an account and replace with your own ID)
-        emailjs.init("YOUR_EMAILJS_USER_ID");
+        // Initialize AOS animations
+        AOS.init({
+            duration: 800,
+            easing: 'ease-in-out',
+            once: true
+        });
 
-        // Sample data for services
-        const services = [
-            {
-                id: 1,
-                name: "Dépannage automobile",
-                description: "Service de dépannage rapide 24h/24 pour tous types de véhicules.",
-                price: "À partir de 60€",
-                image: "https://images.unsplash.com/photo-1580273916550-e323be2ae537?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=400&q=80"
-            },
-            {
-                id: 2,
-                name: "Tôlerie",
-                description: "Réparez les dommages à la carrosserie de votre véhicule.",
-                price: "À partir de 120€",
-                image: "https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=400&q=80"
-            },
-            {
-                id: 3,
-                name: "Peinture",
-                description: "Service de peinture professionnelle pour redonner vie à votre véhicule.",
-                price: "À partir de 200€",
-                image: "https://images.unsplash.com/photo-1503376780353-7e6692767b70?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=400&q=80"
-            },
-            {
-                id: 4,
-                name: "Remorquage 24h/24",
-                description: "Service de remorquage disponible 24h/24 et 7j/7.",
-                price: "À partir de 50€",
-                image: "https://images.unsplash.com/photo-1511919884226-fd3cad34687c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=400&q=80"
-            },
-            {
-                id: 5,
-                name: "Vidange",
-                description: "Vidange complète avec huile de qualité et filtre neuf.",
-                price: "À partir de 70€",
-                image: "https://images.unsplash.com/photo-1603712610494-7e93a64c5956?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=400&q=80"
-            },
-            {
-                id: 6,
-                name: "Diagnostic automobile",
-                description: "Diagnostic électronique complet de votre véhicule.",
-                price: "À partir de 50€",
-                image: "https://images.unsplash.com/photo-1494905998402-395d579af36f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=400&q=80"
+        // Initialize feather icons
+        feather.replace();
+
+        // Navigation functions
+        function showPage(pageId) {
+            // Hide all pages
+            document.querySelectorAll('.page').forEach(page => {
+                page.classList.remove('active');
+            });
+
+            // Show selected page
+            document.getElementById(pageId).classList.add('active');
+
+            // Update active nav item
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            event.currentTarget.classList.add('active');
+        }
+
+        function navigateToService(serviceId) {
+            showPage('service-' + serviceId);
+            
+            // Update nav to show home as active (since we're not on a main page)
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            document.querySelector('.nav-item[onclick="showPage(\'home\')"]').classList.add('active');
+        }
+
+        function goBack() {
+            showPage('home');
+        }
+
+        // Contact options modal
+        function showContactOptions() {
+            document.getElementById('contactModal').classList.remove('hidden');
+        }
+
+        function hideContactOptions() {
+            document.getElementById('contactModal').classList.add('hidden');
+        }
+
+        // Appointment booking
+        function bookAppointment() {
+            const fullName = document.getElementById('fullName').value;
+            const phoneNumber = document.getElementById('phoneNumber').value;
+            const email = document.getElementById('email').value;
+            const service = document.getElementById('appointmentService').value;
+            const date = document.getElementById('appointmentDate').value;
+            const time = document.getElementById('appointmentTime').value;
+
+            if (!fullName || !phoneNumber || !service || !date || !time) {
+                alert('Veuillez remplir tous les champs obligatoires');
+                return;
             }
-        ];
 
-        // Sample data for team members
-        const teamMembers = [
-            {
-                name: "Jean Dupont",
-                role: "Directeur & Mécanicien expert",
-                description: "25 ans d'expérience dans la réparation automobile.",
-                image: "https://images.unsplash.com/photo-1560250097-0b93528c311a?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=400&q=80"
-            },
-            {
-                name: "Marie Lambert",
-                role: "Spécialiste tôlerie-peinture",
-                description: "Expert en restauration de carrosserie et peinture.",
-                image: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=400&q=80"
-            },
-            {
-                name: "Thomas Martin",
-                role: "Mécanicien polyvalent",
-                description: "Spécialiste en diagnostic électronique et entretien.",
-                image: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=400&q=80"
-            }
-        ];
-
-        // Sample data for inventory
-        const inventory = [
-            { id: 1, name: "Pneu 205/55 R16", reference: "PNE-20555-16", price: 85, stock: 20 },
-            { id: 2, name: "Plaquettes de frein avant", reference: "FRN-AV-001", price: 45, stock: 15 },
-            { id: 3, name: "Filtre à air", reference: "FIL-AIR-02", price: 25, stock: 30 },
-            { id: 4, name: "Filtre à huile", reference: "FIL-HUI-05", price: 15, stock: 40 },
-            { id: 5, name: "Batterie 12V 60Ah", reference: "BAT-12V60", price: 120, stock: 10 }
-        ];
-
-        // DOM Elements
-        const navToggle = document.getElementById('navToggle');
-        const navMenu = document.getElementById('navMenu');
-        const sosButton = document.getElementById('sosButton');
-        const sosModal = document.getElementById('sosModal');
-        const closeModal = document.querySelector('.close-modal');
-        const appointmentForm = document.getElementById('appointmentForm');
-        const sosForm = document.getElementById('sosForm');
-        const toast = document.getElementById('toast');
-        const adminLink = document.getElementById('adminLink');
-        const adminLogin = document.getElementById('adminLogin');
-        const adminPanel = document.getElementById('adminPanel');
-        const adminPassword = document.getElementById('adminPassword');
-        const themeToggle = document.getElementById('themeToggle');
-        const tabBtns = document.querySelectorAll('.tab-btn');
-        const tabContents = document.querySelectorAll('.tab-content');
-        const servicesTable = document.getElementById('servicesTable');
-        const inventoryTable = document.getElementById('inventoryTable');
-        const addServiceBtn = document.getElementById('addService');
-        const addPartBtn = document.getElementById('addPart');
-        const servicesGrid = document.querySelector('.services-grid');
-        const serviceSelect = document.getElementById('service');
-        const addItemBtn = document.getElementById('addItem');
-        const itemsContainer = document.getElementById('items');
-        const invoiceForm = document.getElementById('invoiceForm');
-        const invoiceResult = document.getElementById('invoiceResult');
-        const invoiceDetails = document.getElementById('invoiceDetails');
-        const printInvoiceBtn = document.getElementById('printInvoice');
-
-        // Initialize the application
-        function initApp() {
-            // Load services
-            loadServices();
-            
-            // Load team members
-            loadTeamMembers();
-            
-            // Populate service dropdown
-            populateServiceDropdown();
-            
-            // Load inventory for admin
-            if (isAdminLoggedIn()) {
-                loadInventoryTable();
-                loadServicesTable();
-            }
-            
-            // Setup event listeners
-            setupEventListeners();
-            
-            // Initialize map
-            initMap();
-        }
-
-        // Load services into the services grid
-        function loadServices() {
-            servicesGrid.innerHTML = '';
-            services.forEach(service => {
-                const serviceCard = document.createElement('div');
-                serviceCard.className = 'service-card';
-                serviceCard.innerHTML = `
-                    <div class="service-image" style="background-image: url('${service.image}')"></div>
-                    <div class="service-content">
-                        <h3>${service.name}</h3>
-                        <p>${service.description}</p>
-                        <p class="service-price">${service.price}</p>
-                        <a href="#appointment" class="btn">Prendre RDV</a>
-                    </div>
-                `;
-                servicesGrid.appendChild(serviceCard);
-            });
-        }
-
-        // Load team members
-        function loadTeamMembers() {
-            const teamGrid = document.querySelector('#team .services-grid');
-            teamGrid.innerHTML = '';
-            teamMembers.forEach(member => {
-                const memberCard = document.createElement('div');
-                memberCard.className = 'service-card';
-                memberCard.innerHTML = `
-                    <div class="service-image" style="background-image: url('${member.image}')"></div>
-                    <div class="service-content">
-                        <h3>${member.name}</h3>
-                        <p><strong>${member.role}</strong></p>
-                        <p>${member.description}</p>
-                    </div>
-                `;
-                teamGrid.appendChild(memberCard);
-            });
-        }
-
-        // Populate service dropdown
-        function populateServiceDropdown() {
-            serviceSelect.innerHTML = '<option value="">Sélectionnez un service</option>';
-            services.forEach(service => {
-                const option = document.createElement('option');
-                option.value = service.id;
-                option.textContent = service.name;
-                serviceSelect.appendChild(option);
-            });
-        }
-
-        // Initialize Google Maps
-        function initMap() {
-            // This is a simplified version. In a real implementation, you would use the Google Maps API
-            const mapElement = document.getElementById('map');
-            mapElement.innerHTML = `
-                <div style="width:100%; height:100%; background:#eee; display:flex; justify-content:center; align-items:center;">
-                    <div style="text-align:center;">
-                        <i class="fas fa-map-marker-alt" style="font-size: 3rem; color: #d69e2e;"></i>
-                        <p>Carte interactive GMBN Garage</p>
-                        <p>123 Rue de l'Automobile, 75000 Paris</p>
-                    </div>
-                </div>
-            `;
-        }
-
-        // Setup event listeners
-        function setupEventListeners() {
-            // Mobile navigation toggle
-            navToggle.addEventListener('click', () => {
-                navMenu.classList.toggle('show');
-            });
-
-            // SOS button click
-            sosButton.addEventListener('click', () => {
-                sosModal.style.display = 'flex';
-            });
-
-            // Close modal
-            closeModal.addEventListener('click', () => {
-                sosModal.style.display = 'none';
-            });
-
-            // Appointment form submission
-            appointmentForm.addEventListener('submit', (e) => {
-                e.preventDefault();
-                sendAppointmentEmail();
-            });
-
-            // SOS form submission
-            sosForm.addEventListener('submit', (e) => {
-                e.preventDefault();
-                sendSOSEmail();
-            });
-
-            // Admin login
-            adminLogin.addEventListener('click', () => {
-                if (adminPassword.value === 'admin123') { // Default password, change in production
-                    localStorage.setItem('adminLoggedIn', 'true');
-                    adminPanel.style.display = 'block';
-                    loadInventoryTable();
-                    loadServicesTable();
-                    showToast('Connexion administrateur réussie');
-                } else {
-                    showToast('Mot de passe incorrect', true);
-                }
-            });
-
-            // Admin link click
-            adminLink.addEventListener('click', (e) => {
-                if (!isAdminLoggedIn()) {
-                    e.preventDefault();
-                    adminPassword.focus();
-                    showToast('Veuillez vous connecter en tant qu\'administrateur', true);
-                }
-            });
-
-            // Theme toggle
-            themeToggle.addEventListener('click', () => {
-                document.body.classList.toggle('dark-mode');
-                const icon = themeToggle.querySelector('i');
-                if (document.body.classList.contains('dark-mode')) {
-                    icon.classList.remove('fa-moon');
-                    icon.classList.add('fa-sun');
-                    localStorage.setItem('theme', 'dark');
-                } else {
-                    icon.classList.remove('fa-sun');
-                    icon.classList.add('fa-moon');
-                    localStorage.setItem('theme', 'light');
-                }
-            });
-
-            // Tab switching
-            tabBtns.forEach(btn => {
-                btn.addEventListener('click', () => {
-                    const tabId = btn.getAttribute('data-tab');
-                    
-                    // Update active tab button
-                    tabBtns.forEach(b => b.classList.remove('active'));
-                    btn.classList.add('active');
-                    
-                    // Update active tab content
-                    tabContents.forEach(content => content.classList.remove('active'));
-                    document.getElementById(tabId).classList.add('active');
-                });
-            });
-
-            // Add service button
-            addServiceBtn.addEventListener('click', () => {
-                // In a real implementation, this would open a form to add a new service
-                showToast('Fonctionnalité d\'ajout de service en cours de développement');
-            });
-
-            // Add part button
-            addPartBtn.addEventListener('click', () => {
-                // In a real implementation, this would open a form to add a new part
-                showToast('Fonctionnalité d\'ajout de pièce en cours de développement');
-            });
-
-            // Add item to invoice
-            addItemBtn.addEventListener('click', () => {
-                const newItem = document.createElement('div');
-                newItem.className = 'invoice-item';
-                newItem.innerHTML = `
-                    <select class="item-select" required>
-                        <option value="">Sélectionnez un article</option>
-                        ${inventory.map(item => `<option value="${item.id}" data-price="${item.price}">${item.name} - ${item.price}€</option>`).join('')}
-                    </select>
-                    <input type="number" class="item-quantity" value="1" min="1" required>
-                    <button type="button" class="remove-item">×</button>
-                `;
-                itemsContainer.appendChild(newItem);
-                
-                // Add event listener to remove button
-                newItem.querySelector('.remove-item').addEventListener('click', () => {
-                    newItem.remove();
-                });
-            });
-
-            // Invoice form submission
-            invoiceForm.addEventListener('submit', (e) => {
-                e.preventDefault();
-                generateInvoice();
-            });
-
-            // Print invoice
-            printInvoiceBtn.addEventListener('click', () => {
-                window.print();
-            });
-
-            // Close modal when clicking outside
-            window.addEventListener('click', (e) => {
-                if (e.target === sosModal) {
-                    sosModal.style.display = 'none';
-                }
-            });
-        }
-
-        // Check if admin is logged in
-        function isAdminLoggedIn() {
-            return localStorage.getItem('adminLoggedIn') === 'true';
-        }
-
-        // Load inventory table for admin
-        function loadInventoryTable() {
-            if (!isAdminLoggedIn()) return;
-            
-            inventoryTable.innerHTML = '';
-            inventory.forEach(item => {
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td>${item.name}</td>
-                    <td>${item.reference}</td>
-                    <td>${item.price}€</td>
-                    <td>${item.stock}</td>
-                    <td>
-                        <button class="btn" onclick="editItem(${item.id})">Modifier</button>
-                        <button class="btn" style="background: var(--danger)" onclick="deleteItem(${item.id})">Supprimer</button>
-                    </td>
-                `;
-                inventoryTable.appendChild(row);
-            });
-        }
-
-        // Load services table for admin
-        function loadServicesTable() {
-            if (!isAdminLoggedIn()) return;
-            
-            servicesTable.innerHTML = '';
-            services.forEach(service => {
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td>${service.name}</td>
-                    <td>${service.description}</td>
-                    <td>${service.price}</td>
-                    <td>
-                        <button class="btn" onclick="editService(${service.id})">Modifier</button>
-                        <button class="btn" style="background: var(--danger)" onclick="deleteService(${service.id})">Supprimer</button>
-                    </td>
-                `;
-                servicesTable.appendChild(row);
-            });
-        }
-
-        // Send appointment email using EmailJS
-        function sendAppointmentEmail() {
-            const formData = {
-                service: serviceSelect.options[serviceSelect.selectedIndex].text,
-                date: document.getElementById('date').value,
-                time: document.getElementById('time').value,
-                first_name: document.getElementById('firstName').value,
-                last_name: document.getElementById('lastName').value,
-                phone: document.getElementById('phone').value,
-                email: document.getElementById('email').value,
-                message: document.getElementById('message').value
+            // Save to localStorage
+            const appointment = {
+                fullName,
+                phoneNumber,
+                email,
+                service,
+                date,
+                time,
+                timestamp: new Date().toISOString()
             };
 
-            // In a real implementation, you would use EmailJS to send the email
-            // For this example, we'll simulate a successful submission
-            setTimeout(() => {
-                appointmentForm.reset();
-                showToast('Votre demande de rendez-vous a été envoyée avec succès!');
-            }, 1000);
-        }
+            let appointments = JSON.parse(localStorage.getItem('appointments')) || [];
+            appointments.push(appointment);
+            localStorage.setItem('appointments', JSON.stringify(appointments));
 
-        // Send SOS email using EmailJS
-        function sendSOSEmail() {
-            const formData = {
-                name: document.getElementById('sosName').value,
-                phone: document.getElementById('sosPhone').value,
-                location: document.getElementById('sosLocation').value,
-                problem: document.getElementById('sosProblem').value
-            };
-
-            // In a real implementation, you would use EmailJS to send the email
-            // For this example, we'll simulate a successful submission
-            setTimeout(() => {
-                sosForm.reset();
-                sosModal.style.display = 'none';
-                showToast('Votre demande d\'assistance a été envoyée. Nous vous contactons rapidement!');
-            }, 1000);
-        }
-
-        // Generate invoice
-        function generateInvoice() {
-            const clientName = document.getElementById('clientName').value;
-            const items = [];
-            let total = 0;
+            // Show confirmation
+            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            const formattedDate = new Date(date).toLocaleDateString('fr-FR', options);
             
-            // Get selected items
-            const itemElements = itemsContainer.querySelectorAll('.invoice-item');
-            itemElements.forEach(itemEl => {
-                const select = itemEl.querySelector('.item-select');
-                const quantity = parseInt(itemEl.querySelector('.item-quantity').value);
-                const selectedOption = select.options[select.selectedIndex];
-                const itemId = select.value;
-                const itemName = selectedOption.text;
-                const itemPrice = parseFloat(selectedOption.getAttribute('data-price'));
-                const itemTotal = itemPrice * quantity;
-                
-                items.push({
-                    name: itemName,
-                    quantity: quantity,
-                    price: itemPrice,
-                    total: itemTotal
+            document.getElementById('appointmentDetails').textContent = 
+                `Votre rendez-vous pour ${service} est confirmé pour le ${formattedDate} à ${time}.`;
+            
+            document.getElementById('appointmentModal').classList.remove('hidden');
+
+            // Clear form
+            document.getElementById('fullName').value = '';
+            document.getElementById('phoneNumber').value = '';
+            document.getElementById('email').value = '';
+            document.getElementById('appointmentService').value = '';
+            document.getElementById('appointmentDate').value = '';
+            document.getElementById('appointmentTime').value = '';
+
+            // Schedule notification
+            scheduleNotification(appointment);
+        }
+
+        function hideAppointmentModal() {
+            document.getElementById('appointmentModal').classList.add('hidden');
+            showPage('home');
+        }
+
+        function scheduleNotification(appointment) {
+            if ('Notification' in window) {
+                Notification.requestPermission().then(permission => {
+                    if (permission === 'granted') {
+                        // Calculate notification time (1 hour before appointment)
+                        const appointmentTime = new Date(`${appointment.date}T${appointment.time}`);
+                        const notificationTime = new Date(appointmentTime.getTime() - 3600000);
+                        
+                        const now = new Date();
+                        const delay = notificationTime - now;
+                        
+                        if (delay > 0) {
+                            setTimeout(() => {
+                                new Notification('Rappel de rendez-vous', {
+                                    body: `Vous avez un rendez-vous pour ${appointment.service} dans 1 heure.`,
+                                    icon: 'http://static.photos/automotive/200x200/1'
+                                });
+                            }, delay);
+                        }
+                    }
                 });
-                
-                total += itemTotal;
+            }
+        }
+
+        // Price estimate
+        document.getElementById('serviceSelect').addEventListener('change', function() {
+            const service = this.value;
+            const estimateDiv = document.getElementById('priceEstimate');
+            const estimateText = document.getElementById('estimateText');
+            
+            if (!service) {
+                estimateDiv.classList.add('hidden');
+                return;
+            }
+            
+            let estimate = '';
+            switch(service) {
+                case 'vidange':
+                    estimate = 'À partir de 25 000 FCFA';
+                    break;
+                case 'entretien':
+                    estimate = 'À partir de 50 000 FCFA (selon le véhicule)';
+                    break;
+                default:
+                    estimate = 'Veuillez demander un devis personnalisé';
+                    break;
+            }
+            
+            estimateText.textContent = estimate;
+            estimateDiv.classList.remove('hidden');
+        });
+
+        // Dark mode toggle
+        document.getElementById('darkModeToggle').addEventListener('click', function() {
+            document.body.classList.toggle('dark-mode');
+            const icon = this.querySelector('i');
+            if (document.body.classList.contains('dark-mode')) {
+                feather.replace();
+                icon.setAttribute('data-feather', 'sun');
+            } else {
+                feather.replace();
+                icon.setAttribute('data-feather', 'moon');
+            }
+            feather.replace();
+        });
+
+        // Service Worker Registration for PWA
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js').then(registration => {
+                    console.log('ServiceWorker registration successful');
+                }).catch(err => {
+                    console.log('ServiceWorker registration failed: ', err);
+                });
             });
-            
-            // Generate invoice number (YYYYMMDD-XXXX)
-            const now = new Date();
-            const invoiceNumber = `${now.getFullYear()}${(now.getMonth()+1).toString().padStart(2, '0')}${now.getDate().toString().padStart(2, '0')}-${Math.floor(1000 + Math.random() * 9000)}`;
-            
-            // Display invoice
-            invoiceDetails.innerHTML = `
-                <p><strong>Numéro de facture:</strong> ${invoiceNumber}</p>
-                <p><strong>Date:</strong> ${now.toLocaleDateString('fr-FR')} ${now.toLocaleTimeString('fr-FR')}</p>
-                <p><strong>Client:</strong> ${clientName}</p>
-                <table style="width: 100%; border-collapse: collapse; margin: 1rem 0;">
-                    <thead>
-                        <tr style="border-bottom: 1px solid #ddd;">
-                            <th style="text-align: left; padding: 0.5rem;">Article</th>
-                            <th style="text-align: right; padding: 0.5rem;">Quantité</th>
-                            <th style="text-align: right; padding: 0.5rem;">Prix unitaire</th>
-                            <th style="text-align: right; padding: 0.5rem;">Total</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        ${items.map(item => `
-                            <tr style="border-bottom: 1px solid #eee;">
-                                <td style="padding: 0.5rem;">${item.name}</td>
-                                <td style="text-align: right; padding: 0.5rem;">${item.quantity}</td>
-                                <td style="text-align: right; padding: 0.5rem;">${item.price.toFixed(2)}€</td>
-                                <td style="text-align: right; padding: 0.5rem;">${item.total.toFixed(2)}€</td>
-                            </tr>
-                        `).join('')}
-                    </tbody>
-                    <tfoot>
-                        <tr>
-                            <td colspan="3" style="text-align: right; padding: 0.5rem; font-weight: bold;">Total TTC:</td>
-                            <td style="text-align: right; padding: 0.5rem; font-weight: bold;">${total.toFixed(2)}€</td>
-                        </tr>
-                    </tfoot>
-                </table>
-            `;
-            
-            invoiceResult.style.display = 'block';
-            
-            // Update stock (in a real implementation, this would update the database)
-            items.forEach(item => {
-                // This is a simplified example - in reality you would update your inventory data
-                console.log(`Stock updated for item: ${item.name}, quantity reduced by: ${item.quantity}`);
-            });
-            
-            showToast('Facture générée avec succès');
         }
-
-        // Show toast notification
-        function showToast(message, isError = false) {
-            toast.textContent = message;
-            toast.className = isError ? 'toast error' : 'toast';
-            toast.style.display = 'block';
-            
-            setTimeout(() => {
-                toast.style.display = 'none';
-            }, 3000);
-        }
-
-        // These functions would be implemented in a real application
-        function editItem(id) {
-            showToast('Fonctionnalité de modification en cours de développement');
-        }
-
-        function deleteItem(id) {
-            showToast('Fonctionnalité de suppression en cours de développement');
-        }
-
-        function editService(id) {
-            showToast('Fonctionnalité de modification en cours de développement');
-        }
-
-        function deleteService(id) {
-            showToast('Fonctionnalité de suppression en cours de développement');
-        }
-
-        // Check for saved theme preference
-        if (localStorage.getItem('theme') === 'dark') {
-            document.body.classList.add('dark-mode');
-            const icon = themeToggle.querySelector('i');
-            icon.classList.remove('fa-moon');
-            icon.classList.add('fa-sun');
-        }
-
-        // Initialize the app when the DOM is loaded
-        document.addEventListener('DOMContentLoaded', initApp);
     </script>
 </body>
 </html>
