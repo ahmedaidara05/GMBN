@@ -706,13 +706,33 @@
 <div id="admin" class="page">
     <h2 class="text-2xl font-bold mb-6">Espace Admin</h2>
     <div class="grid grid-cols-2 gap-4">
+      <button onclick="showPage('admin-commandes')" class="bg-blue-600 text-white py-4 rounded-lg col-span-2">COMMANDES</button>
         <button onclick="showPage('admin-vente')" class="bg-blue-600 text-white py-4 rounded-lg">VENTE</button>
         <button onclick="showPage('admin-location')" class="bg-blue-600 text-white py-4 rounded-lg">LOCATION</button>
         <button onclick="showPage('admin-boutique')" class="bg-blue-600 text-white py-4 rounded-lg">BOUTIQUE</button>
         <button onclick="showPage('admin-autres')" class="bg-blue-600 text-white py-4 rounded-lg">AUTRES</button>
     </div>
 </div>
-
+<!-- Nouvelle page pour les commandes -->
+<!-- Page admin-commandes modifiée -->
+  <div id="admin-commandes" class="page">
+    <div class="flex items-center mb-4">
+      <button onclick="showPage('admin')" class="mr-2"><i data-feather="arrow-left"></i></button>
+      <h2 class="text-xl font-bold">Commandes Admin</h2>
+    </div>
+    <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+      <h3 class="text-lg font-semibold mb-4">Commandes en attente</h3>
+      <div id="liste-commandes" class="space-y-4">
+        <!-- Les commandes en attente seront chargées ici dynamiquement -->
+      </div>
+    </div>
+    <div class="bg-white rounded-lg shadow-md p-6">
+      <h3 class="text-lg font-semibold mb-4">Commandes livrées</h3>
+      <div id="liste-commandes-livrees" class="space-y-4">
+        <!-- Les commandes livrées seront chargées ici dynamiquement -->
+      </div>
+    </div>
+  </div>
 <!-- Admin Vente -->
 <div id="admin-vente" class="page">
     <div class="flex items-center mb-4">
@@ -1701,6 +1721,123 @@ window.updateQuantity = updateQuantity;
 window.showCheckoutForm = showCheckoutForm;
 window.deleteVehicle = deleteVehicle;
 window.deleteProduct = deleteProduct;
+    </script>
+    <script>
+     async function loadCommandes() {
+  const listeCommandes = document.getElementById('liste-commandes');
+  const listeCommandesLivrees = document.getElementById('liste-commandes-livrees');
+  if (!listeCommandes || !listeCommandesLivrees) return;
+
+  try {
+    const querySnapshot = await window.firebase.getDocs(
+      window.firebase.collection(window.firebase.db, 'orders')
+    );
+
+    listeCommandes.innerHTML = '';
+    listeCommandesLivrees.innerHTML = '';
+
+    querySnapshot.forEach((doc) => {
+      const order = doc.data();
+      const orderElement = createOrderCard(doc.id, order);
+      if (order.statut === 'livré') {
+        listeCommandesLivrees.appendChild(orderElement);
+      } else {
+        listeCommandes.appendChild(orderElement);
+      }
+    });
+  } catch (error) {
+    console.error('Erreur lors du chargement des commandes: ', error);
+    listeCommandes.innerHTML = '<p class="text-red-500">Erreur lors du chargement des commandes</p>';
+    listeCommandesLivrees.innerHTML = '<p class="text-red-500">Erreur lors du chargement des commandes</p>';
+  }
+}
+
+function createOrderCard(id, order) {
+  const card = document.createElement('div');
+  card.className = 'border rounded-lg p-4';
+  card.innerHTML = `
+    <div class="flex justify-between items-start mb-2">
+      <h4 class="font-semibold">${order.prenom} ${order.nom}</h4>
+      <span class="font-bold text-blue-600">${(order.total + order.fraisLivraison).toLocaleString()} FCFA</span>
+    </div>
+    <div class="text-sm text-gray-600 mb-3">
+      <p>Téléphone: ${order.telephone}</p>
+      <p>Adresse: ${order.adresse}</p>
+      <p>Statut: ${order.statut}</p>
+      <p>Date: ${new Date(order.date.seconds * 1000).toLocaleDateString('fr-FR')}</p>
+      <p>Produits: ${order.produits.map(p => `${p.name} (x${p.quantity})`).join(', ')}</p>
+    </div>
+    <div class="flex justify-end space-x-2">
+      <button onclick="toggleOrderStatus('${id}', '${order.statut}')" class="bg-yellow-500 text-white px-3 py-1 rounded text-sm">
+        ${order.statut === 'livré' ? 'Marquer comme en attente' : 'Marquer comme livré'}
+      </button>
+      <button onclick="deleteOrder('${id}')" class="bg-red-500 text-white px-3 py-1 rounded text-sm">
+        Supprimer
+      </button>
+    </div>
+  `;
+  return card;
+}
+
+async function toggleOrderStatus(id, currentStatus) {
+  const newStatus = currentStatus === 'livré' ? 'en attente' : 'livré';
+  try {
+    await window.firebase.updateDoc(
+      window.firebase.doc(window.firebase.db, 'orders', id),
+      { statut: newStatus }
+    );
+    alert(`Commande marquée comme ${newStatus}`);
+    loadCommandes();
+  } catch (error) {
+    console.error('Erreur lors de la mise à jour du statut: ', error);
+    alert('Erreur lors de la mise à jour du statut');
+  }
+}
+
+// Exposer la fonction globalement
+window.toggleOrderStatus = toggleOrderStatus;
+
+async function deleteOrder(id) {
+  if (!confirm('Êtes-vous sûr de vouloir supprimer cette commande ?')) return;
+
+  try {
+    await window.firebase.deleteDoc(
+      window.firebase.doc(window.firebase.db, 'orders', id)
+    );
+    alert('Commande supprimée avec succès');
+    loadCommandes();
+  } catch (error) {
+    console.error('Erreur lors de la suppression: ', error);
+    alert('Erreur lors de la suppression de la commande');
+  }
+}
+
+// Mettre à jour showPage pour inclure le chargement des commandes
+function showPage(pageId) {
+  document.querySelectorAll('.page').forEach(page => {
+    page.classList.remove('active');
+  });
+  const targetPage = document.getElementById(pageId);
+  if (targetPage) {
+    targetPage.classList.add('active');
+    if (pageId === 'admin-commandes') {
+      loadCommandes();
+    } else if (pageId === 'admin-vente') {
+      loadVenteVehicles();
+    } else if (pageId === 'admin-location') {
+      loadLocationVehicles();
+    } else if (pageId === 'admin-boutique') {
+      loadBoutiqueProducts();
+    } else if (pageId === 'boutique') {
+      loadBoutiqueProductsForCustomers();
+    } else if (pageId === 'panier') {
+      updateCartDisplay();
+    }
+  }
+}
+
+// Exposer la fonction globalement
+window.deleteOrder = deleteOrder;
     </script>
 
 </body>
