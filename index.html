@@ -99,6 +99,26 @@
     transform: translateY(-1px);
     transition: transform 0.2s ease;
 }
+     #produits-container {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* Deux colonnes de taille égale */
+    gap: 16px; /* Espacement entre les cartes */
+    padding: 7px;
+} 
+      #cart-notification {
+    transition: opacity 0.3s ease-in-out;
+}
+#cart-notification:not(.hidden) {
+    opacity: 1;
+}
+#cart-notification.hidden {
+    opacity: 0;
+}
+      
+      .add-to-cart-btn {
+    transition: background-color 0.3s ease; /* Transition fluide pour la couleur */
+}
+      
     </style>
 </head>
 <body class="relative">
@@ -644,7 +664,7 @@
         <p id="product-stock" class="text-gray-600 mb-4"></p>
         <p class="text-sm text-gray-500 mb-4">Livraison à partir de 500 FCFA, gratuit si supérieur à 10 000 FCFA</p>
         <button id="add-to-cart-btn" class="w-full bg-blue-600 text-white py-2 rounded-lg mb-4">
-            Acheter
+            Ajouter au panier
         </button>
         <div id="product-description" class="text-gray-700"></div>
     </div>
@@ -774,6 +794,10 @@
             Contacter
         </button>
         <div id="vehicle-description" class="text-gray-700"></div>
+    </div>
+        <!-- Ajoutez ce conteneur pour la notification -->
+  <div id="cart-notification" class="fixed bottom-4 right-4 hidden bg-green-600 text-white px-4 py-2 rounded-lg shadow-lg">
+        Article ajouté au panier avec succès
     </div>
 </div>
       
@@ -1701,17 +1725,66 @@ function createProductCard(id, product) {
 function createCustomerProductCard(id, product) {
     const card = document.createElement('div');
     card.className = 'bg-white rounded-lg shadow-md overflow-hidden cursor-pointer';
-    card.onclick = () => showProductDetail(id);
     card.innerHTML = `
         <img src="${product.imagePrincipale}" alt="${product.nom}" class="w-full h-40 object-cover">
         <div class="p-3">
             <h3 class="font-semibold mb-1">${product.nom}</h3>
-            <p class="text-blue-600 font-bold mb-2">${product.prix.toLocaleString()} FCFA</p>
+            <p class="text-blue-600 font-bold mb-2">${product.prix ? product.prix.toLocaleString() + ' FCFA' : '-- FCFA'}</p>
+            <button class="add-to-cart-btn w-full bg-blue-600 text-white py-2 rounded-lg transition-colors duration-300" data-id="${id}">
+                Ajouter au panier
+            </button>
         </div>
     `;
+    card.querySelector('.add-to-cart-btn').addEventListener('click', function(e) {
+        e.stopPropagation(); // Empêche l'ouverture des détails
+        const button = e.target;
+        button.classList.add('bg-green-600');
+        setTimeout(() => {
+            button.classList.remove('bg-green-600');
+        }, 1500);
+        // Ajouter au panier
+        addToCart(id, product);
+    });
+    card.addEventListener('click', (e) => {
+        if (!e.target.classList.contains('add-to-cart-btn')) {
+            showProductDetail(id);
+        }
+    });
     return card;
 }
-        
+        function addToCart(id, product) {
+    // Récupérer le panier depuis localStorage ou initialiser un tableau vide
+    let cart = JSON.parse(localStorage.getItem('cart')) || [];
+    
+    // Créer l'objet produit à ajouter
+    const cartItem = {
+        id: id,
+        nom: product.nom,
+        prix: product.prix || 0,
+        imagePrincipale: product.imagePrincipale,
+        quantite: 1
+    };
+    
+    // Vérifier si le produit existe déjà dans le panier
+    const existingItem = cart.find(item => item.id === id);
+    if (existingItem) {
+        existingItem.quantite += 1; // Augmenter la quantité
+    } else {
+        cart.push(cartItem); // Ajouter le nouveau produit
+    }
+    
+    // Sauvegarder le panier dans localStorage
+    localStorage.setItem('cart', JSON.stringify(cart));
+    
+    // Afficher la notification
+    const notification = document.getElementById('cart-notification');
+    if (notification) {
+        notification.classList.remove('hidden');
+        setTimeout(() => {
+            notification.classList.add('hidden');
+        }, 3000); // Masquer après 3 secondes
+    }
+}
         
         async function showVehicleDetail(vehicleId) {
     showPage('vehicle-detail');
@@ -1946,6 +2019,7 @@ function updateCartCount() {
     }
 }
 
+        
 function updateCartDisplay() {
     const cartItems = document.getElementById('cart-items');
     const emptyCartMessage = document.getElementById('empty-cart-message');
@@ -1988,7 +2062,21 @@ function updateCartDisplay() {
     if (cartItems) cartItems.innerHTML = itemsHTML;
     if (cartTotal) cartTotal.textContent = `${total.toLocaleString()} FCFA`;
 }
-
+document.getElementById('add-to-cart-btn')?.addEventListener('click', function() {
+    const button = document.getElementById('add-to-cart-btn');
+    button.classList.add('bg-green-600');
+    setTimeout(() => {
+        button.classList.remove('bg-green-600');
+    }, 1500);
+    // Récupérer les données du produit depuis la page de détails
+    const id = button.getAttribute('data-id'); // Ajoutez data-id dans le HTML si nécessaire
+    const product = {
+        nom: document.getElementById('vehicle-name').textContent,
+        prix: parseFloat(document.getElementById('vehicle-price').textContent.replace(' FCFA', '').replace(',', '')) || 0,
+        imagePrincipale: document.querySelector('#vehicle-images img')?.src || ''
+    };
+    addToCart(id, product);
+});
         async function showLocationVehicleDetail(vehicleId) {
        showPage('location-vehicle-detail');
        
@@ -2114,7 +2202,16 @@ async function handleCheckoutSubmit(e) {
         alert('Erreur lors de la commande. Veuillez réessayer.');
     }
 }
-
+function addToCart() {
+        const notification = document.getElementById('cart-notification');
+        if (notification) {
+            notification.classList.remove('hidden');
+            setTimeout(() => {
+                notification.classList.add('hidden');
+            }, 3000); // Masquer après 3 secondes
+        }
+        // Ajoutez ici la logique pour ajouter au panier si nécessaire
+    }
 // Fonctions utilitaires
 function showNotification(message) {
     // Créer une notification toast
