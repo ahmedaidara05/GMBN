@@ -558,21 +558,24 @@
             </div>
         </div>
 
-        <div id="service-vente" class="page">
-            <div class="flex items-center mb-4">
-                <button onclick="goBack()" class="mr-2">
-                    <i data-feather="arrow-left"></i>
-                </button>
-                <h2 class="text-xl font-bold">Vente</h2>
-            </div>
-            <div class="service-card rounded-lg shadow-md mb-6 h-48" style="background-image: url('http://static.photos/automotive/640x360/10')"></div>
-            <div class="bg-white rounded-lg shadow-md p-6">
-                <p class="mb-4">Vente de véhicules d'occasion vérifiés et garantis. Large choix de modèles. Financement possible.</p>
-                <button onclick="showContactOptions()" class="w-full bg-blue-600 text-white py-2 rounded-lg">
-                    Voir le catalogue
-                </button>
-            </div>
+       <div id="service-vente" class="page">
+    <div class="flex items-center mb-4">
+        <button onclick="goBack()" class="mr-2">
+            <i data-feather="arrow-left"></i>
+        </button>
+        <h2 class="text-xl font-bold">Vente</h2>
+    </div>
+    <div class="service-card rounded-lg shadow-md mb-6 h-48" style="background-image: url('http://static.photos/automotive/640x360/10')"></div>
+    <div class="bg-white rounded-lg shadow-md p-6">
+        <h3 class="text-lg font-semibold mb-4">Véhicules en vente</h3>
+        <div id="liste-vente-client" class="space-y-4">
+            <!-- Les véhicules seront chargés ici dynamiquement -->
         </div>
+        <button onclick="showContactOptions()" class="w-full bg-blue-600 text-white py-2 rounded-lg mt-4">
+            Contacter pour plus d'infos
+        </button>
+    </div>
+</div>
               <!-- bOUTIQUE ahmed said aidara -->
 
 <!-- Boutique Page -->
@@ -727,6 +730,28 @@
                 </button>
             </div>
         </div>
+      
+      <div id="vehicle-detail" class="page">
+    <div class="flex items-center mb-4">
+        <button onclick="showPage('service-vente')" class="mr-2">
+            <i data-feather="arrow-left"></i>
+        </button>
+        <h2 class="text-xl font-bold">Détails du véhicule</h2>
+    </div>
+    <div id="vehicle-images" class="overflow-x-auto flex snap-x snap-mandatory mb-6 whitespace-nowrap">
+        <!-- Images chargées dynamiquement ici -->
+    </div>
+    <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+        <h3 id="vehicle-name" class="text-xl font-bold mb-1"></h3>
+        <p id="vehicle-price" class="text-blue-600 font-bold text-lg mb-2"></p>
+        <p id="vehicle-info" class="text-gray-600 mb-4"></p>
+        <p class="text-sm text-gray-500 mb-4">Contactez-nous pour plus d'informations ou pour un essai</p>
+        <button onclick="showContactOptions()" class="w-full bg-blue-600 text-white py-2 rounded-lg mb-4">
+            Contacter
+        </button>
+        <div id="vehicle-description" class="text-gray-700"></div>
+    </div>
+</div>
 <!-- Admin Page principale -->
 <div id="admin" class="page">
     <h2 class="text-2xl font-bold mb-6">Espace Admin</h2>
@@ -1473,7 +1498,7 @@ async function loadBoutiqueProductsForCustomers() {
         
         querySnapshot.forEach((doc) => {
             const product = doc.data();
-            const productElement = createCustomerProductCard(doc.id, product);
+     0      const productElement = createCustomerProductCard(doc.id, product);
             produitsContainer.appendChild(productElement);
         });
     } catch (error) {
@@ -1481,7 +1506,43 @@ async function loadBoutiqueProductsForCustomers() {
         produitsContainer.innerHTML = '<p class="text-red-500">Erreur lors du chargement des produits</p>';
     }
 }
+async function loadVenteVehiclesClient() {
+    const listeVenteClient = document.getElementById('liste-vente-client');
+    if (!listeVenteClient) return;
 
+    try {
+        const querySnapshot = await window.firebase.getDocs(
+            window.firebase.collection(window.firebase.db, 'vehicles_vente')
+        );
+
+        listeVenteClient.innerHTML = '';
+
+        querySnapshot.forEach((doc) => {
+            const vehicle = doc.data();
+            const vehicleElement = createVehicleCardClient(doc.id, vehicle);
+            listeVenteClient.appendChild(vehicleElement);
+        });
+    } catch (error) {
+        console.error('Erreur lors du chargement des véhicules:', error);
+        listeVenteClient.innerHTML = '<p class="text-red-500">Erreur lors du chargement des véhicules</p>';
+    }
+}
+
+function createVehicleCardClient(id, vehicle) {
+    const card = document.createElement('div');
+    card.className = 'bg-white rounded-lg shadow-md overflow-hidden cursor-pointer';
+    card.onclick = () => showVehicleDetail(id); // Redirige vers une page de détail (à créer)
+    card.innerHTML = `
+        <img src="${vehicle.imagePrincipale}" alt="${vehicle.marque} ${vehicle.modele}" class="w-full h-40 object-cover">
+        <div class="p-3">
+            <h3 class="font-semibold mb-1">${vehicle.marque} ${vehicle.modele} (${vehicle.annee})</h3>
+            <p class="text-blue-600 font-bold mb-1">${vehicle.prix.toLocaleString()} FCFA</p>
+            <p class="text-sm text-gray-600">${vehicle.kilometrage.toLocaleString()} km • ${vehicle.carburant} • ${vehicle.transmission}</p>
+            <p class="text-sm text-gray-600">État: ${vehicle.etat}</p>
+        </div>
+    `;
+    return card;
+}
 function createProductCard(id, product) {
     const card = document.createElement('div');
     card.className = 'border rounded-lg p-4';
@@ -1522,6 +1583,65 @@ function createCustomerProductCard(id, product) {
     `;
     return card;
 }
+        
+        
+        async function showVehicleDetail(vehicleId) {
+    showPage('vehicle-detail');
+    
+    try {
+        const docRef = window.firebase.doc(window.firebase.db, 'vehicles_vente', vehicleId);
+        const docSnap = await window.firebase.getDoc(docRef);
+        
+        if (docSnap.exists()) {
+            const vehicle = docSnap.data();
+            
+            // Images carousel
+            const imagesContainer = document.getElementById('vehicle-images');
+            if (imagesContainer) {
+                imagesContainer.innerHTML = '';
+                [vehicle.imagePrincipale, ...(vehicle.imagesDetails || [])].forEach(url => {
+                    if (url) {
+                        const img = document.createElement('img');
+                        img.src = url;
+                        img.className = 'w-full h-64 object-cover snap-center flex-shrink-0';
+                        imagesContainer.appendChild(img);
+                    }
+                });
+                let scrollAmount = 0;
+                const scrollInterval = setInterval(() => {
+                    if (imagesContainer && document.getElementById('vehicle-detail').classList.contains('active')) {
+                        scrollAmount += imagesContainer.offsetWidth;
+                        if (scrollAmount >= imagesContainer.scrollWidth) {
+                            scrollAmount = 0;
+                        }
+                        imagesContainer.scrollTo({ left: scrollAmount, behavior: 'smooth' });
+                    } else {
+                        clearInterval(scrollInterval);
+                    }
+                }, 3000);
+            }
+            
+            // Vehicle info
+            document.getElementById('vehicle-name').textContent = `${vehicle.marque} ${vehicle.modele} (${vehicle.annee})`;
+            document.getElementById('vehicle-price').textContent = `${vehicle.prix.toLocaleString()} FCFA`;
+            document.getElementById('vehicle-info').textContent = `${vehicle.kilometrage.toLocaleString()} km • ${vehicle.carburant} • ${vehicle.transmission} • État: ${vehicle.etat}`;
+            document.getElementById('vehicle-description').innerHTML = `
+                <p class="font-semibold mb-2">Caractéristiques:</p>
+                <p>${vehicle.caracteristiques || 'Non spécifié'}</p>
+                <p class="font-semibold mt-4 mb-2">Détails:</p>
+                <p>${vehicle.details || 'Non spécifié'}</p>
+            `;
+        } else {
+            document.getElementById('vehicle-name').textContent = 'Véhicule non trouvé';
+        }
+    } catch (error) {
+        console.error('Erreur chargement véhicule:', error);
+        document.getElementById('vehicle-name').textContent = 'Erreur de chargement';
+    }
+}
+
+window.showVehicleDetail = showVehicleDetail;
+        
         
 async function showProductDetail(productId) {
     showPage('product-detail');
@@ -1938,26 +2058,28 @@ async function deleteOrder(id) {
 
 // Mettre à jour showPage pour inclure le chargement des commandes
 function showPage(pageId) {
-  document.querySelectorAll('.page').forEach(page => {
-    page.classList.remove('active');
-  });
-  const targetPage = document.getElementById(pageId);
-  if (targetPage) {
-    targetPage.classList.add('active');
-    if (pageId === 'admin-commandes') {
-      loadCommandes();
-    } else if (pageId === 'admin-vente') {
-      loadVenteVehicles();
-    } else if (pageId === 'admin-location') {
-      loadLocationVehicles();
-    } else if (pageId === 'admin-boutique') {
-      loadBoutiqueProducts();
-    } else if (pageId === 'boutique') {
-      loadBoutiqueProductsForCustomers();
-    } else if (pageId === 'panier') {
-      updateCartDisplay();
+    document.querySelectorAll('.page').forEach(page => {
+        page.classList.remove('active');
+    });
+    const targetPage = document.getElementById(pageId);
+    if (targetPage) {
+        targetPage.classList.add('active');
+        if (pageId === 'admin-vente') {
+            loadVenteVehicles();
+        } else if (pageId === 'admin-location') {
+            loadLocationVehicles();
+        } else if (pageId === 'admin-boutique') {
+            loadBoutiqueProducts();
+        } else if (pageId === 'boutique') {
+            loadBoutiqueProductsForCustomers();
+        } else if (pageId === 'panier') {
+            updateCartDisplay();
+        } else if (pageId === 'admin-commandes') {
+            loadCommandes();
+        } else if (pageId === 'service-vente') {
+            loadVenteVehiclesClient();
+        }
     }
-  }
 }
 
 // Exposer la fonction globalement
