@@ -13,43 +13,40 @@
     <script src="https://unpkg.com/feather-icons"></script>
     
     <!-- Intégration Firebase -->
-    <script type="module">
-        // Import the functions you need from the SDKs you need
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
-        import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-analytics.js";
-        import { getFirestore, collection, addDoc, getDocs, updateDoc, deleteDoc, doc, onSnapshot, query, where, orderBy } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
-        
-        // Your web app's Firebase configuration
-        const firebaseConfig = {
-            apiKey: "AIzaSyCX1Q0i-L33RNZIVsJ8V1iRsDY6CJm1Lmc",
-            authDomain: "gmbn-9ba54.firebaseapp.com",
-            projectId: "gmbn-9ba54",
-            storageBucket: "gmbn-9ba54.firebasestorage.app",
-            messagingSenderId: "968684169673",
-            appId: "1:968684169673:web:d6b2796b396f8e62eda018",
-            measurementId: "G-MQXSQQQHBC"
-        };
+   <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
+    import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-analytics.js";
+    import { getFirestore, collection, addDoc, getDocs, updateDoc, deleteDoc, doc, getDoc, onSnapshot, query, where, orderBy } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
+    
+    const firebaseConfig = {
+        apiKey: "AIzaSyCX1Q0i-L33RNZIVsJ8V1iRsDY6CJm1Lmc",
+        authDomain: "gmbn-9ba54.firebaseapp.com",
+        projectId: "gmbn-9ba54",
+        storageBucket: "gmbn-9ba54.firebasestorage.app",
+        messagingSenderId: "968684169673",
+        appId: "1:968684169673:web:d6b2796b396f8e62eda018",
+        measurementId: "G-MQXSQQQHBC"
+    };
 
-        // Initialize Firebase
-        const app = initializeApp(firebaseConfig);
-        const analytics = getAnalytics(app);
-        const db = getFirestore(app);
-        
-        // Make Firebase available globally
-        window.firebase = {
-            db,
-            collection,
-            addDoc,
-            getDocs,
-            updateDoc,
-            deleteDoc,
-            doc,
-            onSnapshot,
-            query,
-            where,
-            orderBy
-        };
-    </script>
+    const app = initializeApp(firebaseConfig);
+    const analytics = getAnalytics(app);
+    const db = getFirestore(app);
+    
+    window.firebase = {
+        db,
+        collection,
+        addDoc,
+        getDocs,
+        getDoc, // Ensure getDoc is included
+        updateDoc,
+        deleteDoc,
+        doc,
+        onSnapshot,
+        query,
+        where,
+        orderBy
+    };
+</script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
         body {
@@ -602,7 +599,35 @@
         <!-- Les produits seront chargés ici dynamiquement -->
     </div>
 </div>
-
+<!-- Ajoutez cette nouvelle page pour les détails du produit -->
+<div id="product-detail" class="page">
+    <div class="flex items-center mb-4">
+        <button onclick="showPage('boutique')" class="mr-2">
+            <i data-feather="arrow-left"></i>
+        </button>
+        <h2 class="text-xl font-bold">Détails du produit</h2>
+    </div>
+    <div id="product-images" class="overflow-x-auto flex snap-x snap-mandatory mb-6 whitespace-nowrap">
+        <!-- Images chargées dynamiquement ici -->
+    </div>
+    <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+        <h3 id="product-name" class="text-xl font-bold mb-1"></h3>
+        <p id="product-brand" class="text-gray-600 mb-2"></p>
+        <p id="product-price" class="text-blue-600 font-bold text-lg mb-2"></p>
+        <p id="product-stock" class="text-gray-600 mb-4"></p>
+        <p class="text-sm text-gray-500 mb-4">Livraison à partir de 500 FCFA, gratuit si supérieur à 10 000 FCFA</p>
+        <button id="add-to-cart-btn" class="w-full bg-blue-600 text-white py-2 rounded-lg mb-4">
+            Acheter
+        </button>
+        <div id="product-description" class="text-gray-700"></div>
+    </div>
+    <div class="mb-6">
+        <h3 class="text-lg font-semibold mb-4">Autres produits</h3>
+        <div id="related-products" class="grid grid-cols-2 gap-4 md:grid-cols-4">
+            <!-- Produits aléatoires chargés ici -->
+        </div>
+    </div>
+</div>
 <!-- Page Panier -->
 <div id="panier" class="page">
     <div class="flex items-center mb-6">
@@ -1428,17 +1453,10 @@ async function loadBoutiqueProducts() {
         const querySnapshot = await window.firebase.getDocs(
             window.firebase.collection(window.firebase.db, 'products')
         );
-        
-        listeBoutique.innerHTML = '';
-        
-        querySnapshot.forEach((doc) => {
-            const product = doc.data();
-            const productElement = createProductCard(doc.id, product);
-            listeBoutique.appendChild(productElement);
-        });
+        console.log('Produits récupérés:', querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })));
+        // ... reste du code
     } catch (error) {
-        console.error('Erreur lors du chargement des produits: ', error);
-        listeBoutique.innerHTML = '<p class="text-red-500">Erreur lors du chargement des produits</p>';
+        console.error('Erreur:', error);
     }
 }
 
@@ -1493,21 +1511,127 @@ function createProductCard(id, product) {
 
 function createCustomerProductCard(id, product) {
     const card = document.createElement('div');
-    card.className = 'bg-white rounded-lg shadow-md overflow-hidden';
+    card.className = 'bg-white rounded-lg shadow-md overflow-hidden cursor-pointer';
+    card.onclick = () => showProductDetail(id);
     card.innerHTML = `
         <img src="${product.imagePrincipale}" alt="${product.nom}" class="w-full h-40 object-cover">
         <div class="p-3">
             <h3 class="font-semibold mb-1">${product.nom}</h3>
             <p class="text-blue-600 font-bold mb-2">${product.prix.toLocaleString()} FCFA</p>
-            <button onclick="addToCart('${id}', '${product.nom}', ${product.prix}, '${product.imagePrincipale}')" 
-                class="w-full bg-blue-600 text-white py-1 rounded text-sm">
-                Ajouter au panier
-            </button>
         </div>
     `;
     return card;
 }
+        
+async function showProductDetail(productId) {
+    showPage('product-detail');
+    
+    try {
+        const docRef = window.firebase.doc(window.firebase.db, 'products', productId);
+        const docSnap = await window.firebase.getDoc(docRef);
+        
+        if (docSnap.exists()) {
+            const product = docSnap.data();
+            console.log('Product data:', product); // Debug: Log product data
+            
+            // Images carousel
+            const imagesContainer = document.getElementById('product-images');
+            if (imagesContainer) {
+                imagesContainer.innerHTML = '';
+                [product.imagePrincipale, ...(product.imagesDetails || [])].forEach(url => {
+                    if (url) {
+                        const img = document.createElement('img');
+                        img.src = url;
+                        img.className = 'w-full h-64 object-cover snap-center flex-shrink-0';
+                        imagesContainer.appendChild(img);
+                    }
+                });
+                
+                // Auto-scroll
+                let scrollAmount = 0;
+                const scrollInterval = setInterval(() => {
+                    if (imagesContainer && document.getElementById('product-detail').classList.contains('active')) {
+                        scrollAmount += imagesContainer.offsetWidth;
+                        if (scrollAmount >= imagesContainer.scrollWidth) {
+                            scrollAmount = 0;
+                        }
+                        imagesContainer.scrollTo({ left: scrollAmount, behavior: 'smooth' });
+                    } else {
+                        clearInterval(scrollInterval);
+                    }
+                }, 3000);
+            }
+            
+            // Product info
+            document.getElementById('product-name').textContent = product.nom || 'Nom indisponible';
+            document.getElementById('product-brand').textContent = product.marque || 'Marque indisponible';
+            document.getElementById('product-brand').classList.add('text-sm');
+            document.getElementById('product-price').textContent = product.prix ? `${product.prix.toLocaleString()} FCFA` : 'Prix indisponible';
+            document.getElementById('product-stock').textContent = product.stock !== undefined ? `Stock: ${product.stock} articles` : 'Stock indisponible';
+            document.getElementById('product-description').innerHTML = `
+                <p class="font-semibold mb-2">Caractéristiques:</p>
+                <p>${product.caracteristiques || 'Non spécifié'}</p>
+                <p class="font-semibold mt-4 mb-2">Détails:</p>
+                <p>${product.details || 'Non spécifié'}</p>
+            `;
+            
+            // Add to cart button
+            const addBtn = document.getElementById('add-to-cart-btn');
+            if (addBtn) {
+                addBtn.onclick = () => addToCart(productId, product.nom, product.prix, product.imagePrincipale);
+            }
+            
+            // Load related products
+            await loadRelatedProducts(productId);
+        } else {
+            console.error('Product not found for ID:', productId);
+            document.getElementById('product-name').textContent = 'Produit non trouvé';
+        }
+    } catch (error) {
+        console.error('Error loading product:', error);
+        document.getElementById('product-name').textContent = 'Erreur de chargement';
+    }
+}
+        // Charger produits aléatoires
+async function loadRelatedProducts(currentId) {
+    const relatedContainer = document.getElementById('related-products');
+    relatedContainer.innerHTML = '';
+    
+    try {
+        const querySnapshot = await window.firebase.getDocs(
+            window.firebase.collection(window.firebase.db, 'products')
+        );
+        
+        let products = [];
+        querySnapshot.forEach(doc => {
+            if (doc.id !== currentId) {
+                products.push({ id: doc.id, ...doc.data() });
+            }
+        });
+        
+        // Shuffle et prendre 8
+        products = products.sort(() => 0.5 - Math.random()).slice(0, 8);
+        
+        products.forEach(product => {
+            const card = createCustomerProductCard(product.id, product);
+            relatedContainer.appendChild(card);
+        });
+    } catch (error) {
+        console.error('Erreur chargement produits liés:', error);
+    }
+}
+        // Ajoutez au CSS pour le carousel
+const style = document.createElement('style');
+style.textContent = `
+    #product-images {
+        scroll-snap-type: x mandatory;
+        -webkit-overflow-scrolling: touch;
+    }
+`;
+document.head.appendChild(style);
 
+// Exposer la fonction
+window.showProductDetail = showProductDetail;
 // Gestion du panier
 let cart = JSON.parse(localStorage.getItem('gmbn_cart')) || [];
 
