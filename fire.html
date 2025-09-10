@@ -1,21 +1,1311 @@
-// Import the functions you need from the SDKs you need
-import { initializeApp } from "firebase/app";
-import { getAnalytics } from "firebase/analytics";
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GMBN - Garage Médina Baye Niass</title>
+    <meta name="theme-color" content="#1e40af">
+    <link rel="manifest" href="/manifest.json">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
+    <script src="https://unpkg.com/feather-icons"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+        body {
+            font-family: 'Poppins', sans-serif;
+            padding-bottom: 80px;
+            background-color: #f3f4f6;
+        }
+        .service-card {
+            background-size: cover;
+            background-position: center;
+            position: relative;
+            overflow: hidden;
+        }
+        .service-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1;
+        }
+        .service-card-content {
+            position: relative;
+            z-index: 2;
+        }
+        .nav-item.active {
+            color: #1e40af;
+        }
+        .nav-item.active svg {
+            stroke: #1e40af;
+        }
+        .page {
+            display: none;
+        }
+        .page.active {
+            display: block;
+        }
+        .accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+        }
+        .dark-mode {
+            background-color: #1f2937;
+            color: #f3f4f6;
+        }
+      header button:hover {
+    transform: translateY(-1px);
+    transition: transform 0.2s ease;
+}
+.product-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+}
+.product-card {
+    background: white;
+    border-radius: 0.5rem;
+    padding: 1rem;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    cursor: pointer;
+}
+.product-images {
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+}
+.product-images img {
+    flex: 0 0 auto;
+    width: 100%;
+    scroll-snap-align: start;
+}
+    </style>
+</head>
+<body class="relative">
+    <!-- Header -->
+   <header class="bg-blue-800 text-white p-4 shadow-md">
+    <div class="container mx-auto flex justify-between items-center">
+        <div class="flex items-center space-x-2">
+            <img src="http://static.photos/automotive/200x200/1" alt="Logo GMBN" class="w-10 h-10 rounded-full">
+            <h1 class="text-xl font-bold">GMBN</h1>
+        </div>
+        <div class="flex items-center space-x-4">
+            <button onclick="showPage('contact')" class="text-white hover:text-blue-200 px-2 py-1 rounded-lg flex items-center transition-colors">
+                <i data-feather="phone" class="mr-1 w-4 h-4"></i>
+                <span class="text-sm"></span>
+            </button>
+            <button id="darkModeToggle" class="p-2 rounded-full hover:bg-blue-700">
+                <i data-feather="moon"></i>
+            </button>
+        </div>
+    </div>
+</header>
 
-// Your web app's Firebase configuration
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
-const firebaseConfig = {
-  apiKey: "AIzaSyCX1Q0i-L33RNZIVsJ8V1iRsDY6CJm1Lmc",
-  authDomain: "gmbn-9ba54.firebaseapp.com",
-  projectId: "gmbn-9ba54",
-  storageBucket: "gmbn-9ba54.firebasestorage.app",
-  messagingSenderId: "968684169673",
-  appId: "1:968684169673:web:d6b2796b396f8e62eda018",
-  measurementId: "G-MQXSQQQHBC"
-};
+    <!-- Main Content -->
+    <main class="container mx-auto p-4">
+        <!-- Home Page -->
+        <div id="home" class="page active">
+            <div class="text-center mb-8" data-aos="fade-up">
+                <h2 class="text-2xl font-bold mb-2">Garage Médina Baye Niass</h2>
+                <p class="text-gray-600">Votre expert en mécanique automobile depuis 2005</p>
+            </div>
 
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
+           
+            <h3 class="text-xl font-semibold mb-4 mt-8">Nos Services</h3>
+            <div class="grid grid-cols-2 gap-4" id="service-cards">
+                <!-- Dynamically loaded -->
+            </div>
+
+           <div class="bg-white rounded-lg shadow-md p-6 mb-6" data-aos="fade-up" id="about-section">
+                <h3 class="text-xl font-semibold mb-4">À propos de nous</h3>
+                <p class="text-gray-700 mb-4" id="about-text">
+                   Garage Medina Baye est une entreprise spécialisée dans le domaine de l’automobile Cette structure familiale dynamique qui a fêté ses 20 ans en 2017, jouit d'une excellente réputation dans tout le territoire national. Trois générations et une équipe bien organisée sont à votre service et son fondateur, El hadji Ibrahima <span onclick="showAdminModal()" style="cursor: pointer; color: black; text-decoration: none;">Niasse</span>
+ dit <span onclick="showAdminModal()" style="cursor: pointer; color: black; text-decoration: none;">Baye</span>
+ peut témoigner d'une expérience de plus de 30 ans dans le domaine. Active dans le domaine de l’automobile vous pouvez être sûr d'un service performant, rapide et efficace. Son équipement, ultra sophistiqué, sans cesse renouvelé, à la pointe de la dernière technologie lui a permis de réaliser des missions toujours plus performantes dans des délais toujours plus stricts. Toutes ces expériences l'ont amenée à aborder avec succès et compétences les entreprises et à décrocher des marchés au niveau des plus grandes structures du pays. Profitez d’un équipement à la fine pointe de la technologie
+                </p>
+                <div class="flex justify-center">
+                    <img id="about-image" src="https://i.postimg.cc/vBxynkc6/Design-sans-titre-2.png" alt="Notre équipe" class="rounded-lg w-full max-w-md">
+                </div>
+            </div>
+
+          
+            <div class="mt-8">
+                <h3 class="text-xl font-semibold mb-4">Nos Partenaires</h3>
+                <div class="grid grid-cols-3 gap-4" id="partners-grid">
+                    <!-- Dynamically loaded -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Services Page -->
+        <div id="services" class="page">
+            <h2 class="text-2xl font-bold mb-6">Tous nos services</h2>
+            <div class="grid grid-cols-1 gap-4" id="all-services">
+                <!-- Dynamically loaded -->
+            </div>
+        </div>
+
+        <!-- Devis Page -->
+        <div id="devis" class="page">
+            <h2 class="text-2xl font-bold mb-6">Demander un devis</h2>
+            <div class="bg-white rounded-lg shadow-md p-6">
+                <div class="mb-4">
+                    <label class="block text-gray-700 mb-2">Service</label>
+                    <select id="serviceSelect" class="w-full p-2 border rounded">
+                        <option value="">Sélectionnez un service</option>
+                        <option value="tolerie">Tôlerie</option>
+                        <option value="mecanique">Mécanique</option>
+                        <option value="peinture">Peinture</option>
+                        <option value="froid">Froid</option>
+                        <option value="vidange">Vidange</option>
+                        <option value="entretien">Entretien général</option>
+                        <option value="remorquage">Remorquage</option>
+                        <option value="diagnostic">Diagnostic</option>
+                        <option value="location">Location</option>
+                        <option value="vente">Vente</option>
+                        <option value="autres">Autres</option>
+                    </select>
+                </div>
+                <div id="priceEstimate" class="bg-blue-50 p-4 rounded-lg mb-4 hidden">
+                    <h3 class="font-semibold mb-2">Estimation indicative</h3>
+                    <p id="estimateText"></p>
+                </div>
+                <button onclick="showContactOptions()" class="w-full bg-blue-600 text-white py-2 rounded-lg">
+                    Contacter le gérant
+                </button>
+            </div>
+        </div>
+
+        <!-- Rendez-vous Page -->
+        <div id="rendezvous" class="page">
+            <h2 class="text-2xl font-bold mb-6">Prendre rendez-vous</h2>
+            <div class="bg-white rounded-lg shadow-md p-6">
+                <div class="mb-4">
+                    <label class="block text-gray-700 mb-2">Nom complet</label>
+                    <input type="text" id="fullName" class="w-full p-2 border rounded">
+                </div>
+                <div class="mb-4">
+                    <label class="block text-gray-700 mb-2">Numéro de téléphone</label>
+                    <input type="tel" id="phoneNumber" class="w-full p-2 border rounded">
+                </div>
+                <div class="mb-4">
+                    <label class="block text-gray-700 mb-2">Email</label>
+                    <input type="email" id="email" class="w-full p-2 border rounded">
+                </div>
+                <div class="mb-4">
+                    <label class="block text-gray-700 mb-2">Service</label>
+                    <select id="appointmentService" class="w-full p-2 border rounded">
+                        <option value="">Sélectionnez un service</option>
+                        <option value="tolerie">Tôlerie</option>
+                        <option value="mecanique">Mécanique</option>
+                        <option value="peinture">Peinture</option>
+                        <option value="froid">Froid</option>
+                        <option value="vidange">Vidange</option>
+                        <option value="entretien">Entretien général</option>
+                        <option value="remorquage">Remorquage</option>
+                        <option value="diagnostic">Diagnostic</option>
+                        <option value="location">Location</option>
+                        <option value="vente">Vente</option>
+                    </select>
+                </div>
+                <div class="mb-4">
+                    <label class="block text-gray-700 mb-2">Date</label>
+                    <input type="date" id="appointmentDate" class="w-full p-2 border rounded">
+                </div>
+                <div class="mb-4">
+                    <label class="block text-gray-700 mb-2">Heure</label>
+                    <input type="time" id="appointmentTime" class="w-full p-2 border rounded">
+                </div>
+                <button onclick="bookAppointment()" class="w-full bg-blue-600 text-white py-2 rounded-lg">
+                    Confirmer le rendez-vous
+                </button>
+            </div>
+        </div>
+
+        <!-- Contact Page -->
+        <div id="contact" class="page">
+            <h2 class="text-2xl font-bold mb-6">Contactez-nous</h2>
+            <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+                <div class="flex items-center mb-4">
+                    <i data-feather="phone" class="mr-2"></i>
+                    <div>
+                        <p class="font-semibold">Téléphone</p>
+                        <p>33 825 32 42 / 77 470 47 42</p>
+                    </div>
+                </div>
+                <div class="flex items-center mb-4">
+                    <i data-feather="mail" class="mr-2"></i>
+                    <div>
+                        <p class="font-semibold">Email</p>
+                        <p>contact@garage-gmbn.com</p>
+                    </div>
+                </div>
+                <div class="flex items-center mb-4">
+                    <i data-feather="map-pin" class="mr-2"></i>
+                    <div>
+                        <p class="font-semibold">Adresse</p>
+                        <p>Garage GMBN - Dakar, Sénégal</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-4 mb-6">
+                <button onclick="window.location.href='tel:+221774704742'" class="bg-green-600 text-white py-2 rounded-lg flex items-center justify-center">
+                    <i data-feather="phone" class="mr-2"></i> Appeler
+                </button>
+                <button onclick="window.location.href='https://wa.me/221774704742'" class="bg-blue-600 text-white py-2 rounded-lg flex items-center justify-center">
+                    <i data-feather="message-square" class="mr-2"></i> WhatsApp
+                </button>
+            </div>
+
+            <div class="bg-white rounded-lg shadow-md p-4">
+                <h3 class="font-semibold mb-2">Nos horaires</h3>
+                <p class="mb-1">Lundi - Vendredi: 8h - 18h</p>
+                <p class="mb-1">Samedi: 8h - 13h</p>
+                <p>Dimanche: Fermé</p>
+            </div>
+        </div>
+
+        <!-- Service Detail Pages -->
+        <div id="service-tolerie" class="page">
+            <div class="flex items-center mb-4">
+                <button onclick="goBack()" class="mr-2">
+                    <i data-feather="arrow-left"></i>
+                </button>
+                <h2 class="text-xl font-bold">Tôlerie</h2>
+            </div>
+            <div id="service-tolerie-images" class="product-images mb-6"></div>
+            <div class="bg-white rounded-lg shadow-md p-6">
+                <p class="mb-4" id="service-tolerie-text"></p>
+                <button onclick="showContactOptions()" class="w-full bg-blue-600 text-white py-2 rounded-lg">
+                    Demander un devis
+                </button>
+            </div>
+        </div>
+
+        <div id="service-mecanique" class="page">
+            <div class="flex items-center mb-4">
+                <button onclick="goBack()" class="mr-2">
+                    <i data-feather="arrow-left"></i>
+                </button>
+                <h2 class="text-xl font-bold">Mécanique</h2>
+            </div>
+            <div id="service-mecanique-images" class="product-images mb-6"></div>
+            <div class="bg-white rounded-lg shadow-md p-6">
+                <p class="mb-4" id="service-mecanique-text"></p>
+                <button onclick="showContactOptions()" class="w-full bg-blue-600 text-white py-2 rounded-lg">
+                    Demander un devis
+                </button>
+            </div>
+        </div>
+
+        <div id="service-peinture" class="page">
+            <div class="flex items-center mb-4">
+                <button onclick="goBack()" class="mr-2">
+                    <i data-feather="arrow-left"></i>
+                </button>
+                <h2 class="text-xl font-bold">Peinture</h2>
+            </div>
+            <div id="service-peinture-images" class="product-images mb-6"></div>
+            <div class="bg-white rounded-lg shadow-md p-6">
+                <p class="mb-4" id="service-peinture-text"></p>
+                <button onclick="showContactOptions()" class="w-full bg-blue-600 text-white py-2 rounded-lg">
+                    Demander un devis
+                </button>
+            </div>
+        </div>
+
+        <div id="service-froid" class="page">
+            <div class="flex items-center mb-4">
+                <button onclick="goBack()" class="mr-2">
+                    <i data-feather="arrow-left"></i>
+                </button>
+                <h2 class="text-xl font-bold">Froid</h2>
+            </div>
+            <div id="service-froid-images" class="product-images mb-6"></div>
+            <div class="bg-white rounded-lg shadow-md p-6">
+                <p class="mb-4" id="service-froid-text"></p>
+                <button onclick="showContactOptions()" class="w-full bg-blue-600 text-white py-2 rounded-lg">
+                    Demander un devis
+                </button>
+            </div>
+        </div>
+
+        <div id="service-vidange" class="page">
+            <div class="flex items-center mb-4">
+                <button onclick="goBack()" class="mr-2">
+                    <i data-feather="arrow-left"></i>
+                </button>
+                <h2 class="text-xl font-bold">Vidange</h2>
+            </div>
+            <div id="service-vidange-images" class="product-images mb-6"></div>
+            <div class="bg-white rounded-lg shadow-md p-6">
+                <p class="mb-4" id="service-vidange-text"></p>
+                <button onclick="showContactOptions()" class="w-full bg-blue-600 text-white py-2 rounded-lg">
+                    Demander un devis
+                </button>
+            </div>
+        </div>
+
+        <div id="service-entretien" class="page">
+            <div class="flex items-center mb-4">
+                <button onclick="goBack()" class="mr-2">
+                    <i data-feather="arrow-left"></i>
+                </button>
+                <h2 class="text-xl font-bold">Entretien général</h2>
+            </div>
+            <div id="service-entretien-images" class="product-images mb-6"></div>
+            <div class="bg-white rounded-lg shadow-md p-6">
+                <p class="mb-4" id="service-entretien-text"></p>
+                <button onclick="showContactOptions()" class="w-full bg-blue-600 text-white py-2 rounded-lg">
+                    Demander un devis
+                </button>
+            </div>
+        </div>
+
+        <div id="service-remorquage" class="page">
+            <div class="flex items-center mb-4">
+                <button onclick="goBack()" class="mr-2">
+                    <i data-feather="arrow-left"></i>
+                </button>
+                <h2 class="text-xl font-bold">Remorquage</h2>
+            </div>
+            <div id="service-remorquage-images" class="product-images mb-6"></div>
+            <div class="bg-white rounded-lg shadow-md p-6">
+                <p class="mb-4" id="service-remorquage-text"></p>
+                <button onclick="showContactOptions()" class="w-full bg-blue-600 text-white py-2 rounded-lg">
+                    Contacter pour remorquage
+                </button>
+            </div>
+        </div>
+
+        <div id="service-diagnostic" class="page">
+            <div class="flex items-center mb-4">
+                <button onclick="goBack()" class="mr-2">
+                    <i data-feather="arrow-left"></i>
+                </button>
+                <h2 class="text-xl font-bold">Diagnostic</h2>
+            </div>
+            <div id="service-diagnostic-images" class="product-images mb-6"></div>
+            <div class="bg-white rounded-lg shadow-md p-6">
+                <p class="mb-4" id="service-diagnostic-text"></p>
+                <button onclick="showContactOptions()" class="w-full bg-blue-600 text-white py-2 rounded-lg">
+                    Demander un diagnostic
+                </button>
+            </div>
+        </div>
+
+        <div id="service-location" class="page">
+            <div class="flex items-center mb-4">
+                <button onclick="goBack()" class="mr-2">
+                    <i data-feather="arrow-left"></i>
+                </button>
+                <h2 class="text-xl font-bold">Location</h2>
+            </div>
+            <div id="service-location-content" class="bg-white rounded-lg shadow-md p-6">
+                <!-- Dynamically loaded cars -->
+            </div>
+        </div>
+
+        <div id="service-vente" class="page">
+            <div class="flex items-center mb-4">
+                <button onclick="goBack()" class="mr-2">
+                    <i data-feather="arrow-left"></i>
+                </button>
+                <h2 class="text-xl font-bold">Vente</h2>
+            </div>
+            <div id="service-vente-content" class="bg-white rounded-lg shadow-md p-6">
+                <!-- Dynamically loaded cars -->
+            </div>
+        </div>
+        
+        <!-- Boutique Page -->
+<div id="boutique" class="page">
+    <div class="fixed top-0 left-0 right-0 bg-blue-800 text-white p-4 flex justify-between items-center z-50">
+        <button onclick="goBack()"><i data-feather="arrow-left"></i></button>
+        <input type="text" id="searchInput" placeholder="Rechercher..." class="p-2 rounded flex-1 mx-2">
+        <button onclick="showPage('cart')"><i data-feather="shopping-cart"></i></button>
+    </div>
+    <div class="pt-16">
+        <p class="text-center mb-4">COMMANDER ET SOYEZ LIVREZ EN MOINS DE 24H</p>
+        <div id="products-grid" class="product-grid">
+            <!-- Dynamically loaded -->
+        </div>
+    </div>
+</div>
+
+<!-- Product Detail Page Template (dynamic) -->
+<div id="product-detail" class="page">
+    <div class="flex items-center mb-4">
+        <button onclick="showPage('boutique')"><i data-feather="arrow-left"></i></button>
+        <h2 class="text-xl font-bold ml-2" id="product-title"></h2>
+    </div>
+    <div id="product-images" class="product-images mb-4"></div>
+    <p id="product-brand" class="text-sm text-gray-600"></p>
+    <p id="product-price" class="font-bold"></p>
+    <p id="product-stock"></p>
+    <p>Livraison a partir de 500 FCFA et gratuit si supérieur a 10000 FCFA</p>
+    <button onclick="addToCart()" class="w-full bg-blue-600 text-white py-2 rounded-lg mb-4">Acheter</button>
+    <h3 class="font-semibold mb-2">Autres produits</h3>
+    <div id="related-products" class="product-grid">
+        <!-- Random 8 -->
+    </div>
+</div>
+
+<!-- Cart Page -->
+<div id="cart" class="page">
+    <div class="flex items-center mb-4">
+        <button onclick="showPage('boutique')"><i data-feather="arrow-left"></i></button>
+        <h2 class="text-xl font-bold ml-2">Panier</h2>
+    </div>
+    <div id="cart-items"></div>
+    <p id="delivery-note">COUT DU LIVRAISON EXCLU</p>
+    <div class="fixed bottom-16 left-0 right-0 bg-white p-4 flex justify-between">
+        <span id="total-price"></span>
+        <button onclick="showOrderForm()" class="bg-blue-600 text-white py-2 px-4 rounded">Commander</button>
+    </div>
+</div>
+
+<!-- Order Form Modal -->
+<div id="orderModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50">
+    <div class="bg-white rounded-lg p-6 w-full max-w-sm mx-4">
+        <input type="text" id="orderName" placeholder="Prénom Nom" class="w-full p-2 border rounded mb-2">
+        <input type="tel" id="orderPhone" placeholder="Numéro de téléphone" class="w-full p-2 border rounded mb-2">
+        <input type="text" id="orderAddress" placeholder="Adresse" class="w-full p-2 border rounded mb-4">
+        <button onclick="submitOrder()" class="w-full bg-blue-600 text-white py-2 rounded">Valider</button>
+        <button onclick="hideOrderModal()" class="w-full bg-gray-200 py-2 rounded mt-2">Annuler</button>
+    </div>
+</div>
+
+        <!-- Contact Options Modal -->
+        <div id="contactModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50">
+            <div class="bg-white rounded-lg p-6 w-full max-w-sm mx-4">
+                <h3 class="text-xl font-bold mb-4">Comment souhaitez-vous nous contacter ?</h3>
+                <button onclick="window.location.href='https://wa.me/221774704742'" class="w-full bg-green-500 text-white py-2 rounded-lg mb-2 flex items-center justify-center">
+                    <i data-feather="message-square" class="mr-2"></i> WhatsApp
+                </button>
+                <button onclick="window.location.href='sms:+221774704742'" class="w-full bg-blue-500 text-white py-2 rounded-lg mb-2 flex items-center justify-center">
+                    <i data-feather="smartphone" class="mr-2"></i> SMS
+                </button>
+                <button onclick="window.location.href='tel:+221774704742'" class="w-full bg-red-500 text-white py-2 rounded-lg mb-2 flex items-center justify-center">
+                    <i data-feather="phone" class="mr-2"></i> Appel
+                </button>
+                <button onclick="hideContactOptions()" class="w-full bg-gray-200 py-2 rounded-lg mt-4">
+                    Annuler
+                </button>
+            </div>
+        </div>
+<div id="admin" class="page">
+    <h2 class="text-2xl font-bold mb-6">Espace Admin</h2>
+    <div class="grid grid-cols-2 gap-4">
+        <button onclick="showPage('admin-vente')" class="bg-blue-600 text-white py-4 rounded-lg">VENTE</button>
+        <button onclick="showPage('admin-location')" class="bg-blue-600 text-white py-4 rounded-lg">LOCATION</button>
+        <button onclick="showPage('admin-boutique')" class="bg-blue-600 text-white py-4 rounded-lg">BOUTIQUE</button>
+        <button onclick="showPage('admin-autres')" class="bg-blue-600 text-white py-4 rounded-lg">AUTRES</button>
+        <button onclick="showPage('admin-commandes')" class="bg-blue-600 text-white py-4 rounded-lg">COMMANDES</button>
+    </div>
+</div>
+
+<div id="admin-vente" class="page">
+    <div class="flex items-center mb-4">
+        <button onclick="showPage('admin')" class="mr-2"><i data-feather="arrow-left"></i></button>
+        <h2 class="text-xl font-bold">Vente Admin</h2>
+    </div>
+    <div class="bg-white rounded-lg shadow-md p-6">
+        <button onclick="showAddCarForm('vente')" class="w-full bg-green-600 text-white py-2 rounded mb-4">Ajouter une voiture</button>
+        <div id="vente-history"></div>
+    </div>
+</div>
+
+<div id="admin-location" class="page">
+    <div class="flex items-center mb-4">
+        <button onclick="showPage('admin')" class="mr-2"><i data-feather="arrow-left"></i></button>
+        <h2 class="text-xl font-bold">Location Admin</h2>
+    </div>
+    <div class="bg-white rounded-lg shadow-md p-6">
+        <button onclick="showAddCarForm('location')" class="w-full bg-green-600 text-white py-2 rounded mb-4">Ajouter une voiture</button>
+        <div id="location-history"></div>
+    </div>
+</div>
+
+<div id="admin-boutique" class="page">
+    <div class="flex items-center mb-4">
+        <button onclick="showPage('admin')" class="mr-2"><i data-feather="arrow-left"></i></button>
+        <h2 class="text-xl font-bold">Boutique Admin</h2>
+    </div>
+    <div class="bg-white rounded-lg shadow-md p-6">
+        <button onclick="showAddProductForm()" class="w-full bg-green-600 text-white py-2 rounded mb-4">Ajouter un produit</button>
+        <div id="boutique-history"></div>
+    </div>
+</div>
+
+<div id="admin-autres" class="page">
+    <div class="flex items-center mb-4">
+        <button onclick="showPage('admin')" class="mr-2"><i data-feather="arrow-left"></i></button>
+        <h2 class="text-xl font-bold">Autres Admin</h2>
+    </div>
+    <div class="bg-white rounded-lg shadow-md p-6">
+        <h3>Nos Services (10 images de fond)</h3>
+        <div id="services-images-form" class="grid grid-cols-1 gap-2 mb-4">
+            <!-- 10 inputs -->
+        </div>
+        <button onclick="saveServicesImages()" class="w-full bg-blue-600 text-white py-2 rounded mb-4">Sauvegarder</button>
+        
+        <h3>Image À propos</h3>
+        <input id="about-image-input" type="text" placeholder="Lien image" class="w-full p-2 border rounded mb-2">
+        <button onclick="saveAboutImage()" class="w-full bg-blue-600 text-white py-2 rounded mb-4">Sauvegarder</button>
+        
+        <h3>Partenaires (ajouter/supprimer)</h3>
+        <input id="partner-image-input" type="text" placeholder="Lien image" class="w-full p-2 border rounded mb-2">
+        <button onclick="addPartner()" class="w-full bg-green-600 text-white py-2 rounded mb-4">Ajouter</button>
+        <div id="partners-history"></div>
+        
+        <!-- For each service: images and text -->
+        <h3>Services Détails</h3>
+        <select id="serviceSelectAdmin" class="w-full p-2 border rounded mb-2">
+            <option value="tolerie">Tôlerie</option>
+            <!-- ... all 10 -->
+        </select>
+        <textarea id="service-text-input" placeholder="Texte" class="w-full p-2 border rounded mb-2"></textarea>
+        <input id="service-images-input" type="text" placeholder="Liens images (séparés par ,)" class="w-full p-2 border rounded mb-2">
+        <button onclick="saveServiceDetails()" class="w-full bg-blue-600 text-white py-2 rounded">Sauvegarder</button>
+    </div>
+</div>
+
+<div id="admin-commandes" class="page">
+    <div class="flex items-center mb-4">
+        <button onclick="showPage('admin')" class="mr-2"><i data-feather="arrow-left"></i></button>
+        <h2 class="text-xl font-bold">Commandes</h2>
+    </div>
+    <div id="orders-list" class="bg-white rounded-lg shadow-md p-6">
+        <!-- Dynamically loaded -->
+    </div>
+</div>
+
+<!-- Add Car Modal -->
+<div id="addCarModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50">
+    <div class="bg-white rounded-lg p-6 w-full max-w-sm mx-4">
+        <input type="text" id="car-marque" placeholder="Marque" class="w-full p-2 border rounded mb-2">
+        <input type="text" id="car-modele" placeholder="Modèle" class="w-full p-2 border rounded mb-2">
+        <input type="text" id="car-etat" placeholder="État" class="w-full p-2 border rounded mb-2">
+        <input type="text" id="car-transmission" placeholder="Transmission" class="w-full p-2 border rounded mb-2">
+        <input type="text" id="car-annee" placeholder="Année" class="w-full p-2 border rounded mb-2">
+        <input type="text" id="car-carburant" placeholder="Carburant" class="w-full p-2 border rounded mb-2">
+        <input type="text" id="car-kilometrage" placeholder="Kilométrage" class="w-full p-2 border rounded mb-2">
+        <textarea id="car-details" placeholder="Caractéristiques et détails" class="w-full p-2 border rounded mb-2"></textarea>
+        <input type="text" id="car-main-image" placeholder="Image d'accueil (lien)" class="w-full p-2 border rounded mb-2">
+        <input type="text" id="car-detail-images" placeholder="Images détails (séparés par ,)" class="w-full p-2 border rounded mb-4">
+        <button onclick="saveCar()" class="w-full bg-blue-600 text-white py-2 rounded">Ajouter</button>
+        <button onclick="hideAddCarModal()" class="w-full bg-gray-200 py-2 rounded mt-2">Annuler</button>
+    </div>
+</div>
+
+<!-- Add Product Modal -->
+<div id="addProductModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50">
+    <div class="bg-white rounded-lg p-6 w-full max-w-sm mx-4">
+        <input type="text" id="product-name" placeholder="Nom" class="w-full p-2 border rounded mb-2">
+        <input type="text" id="product-price" placeholder="Prix" class="w-full p-2 border rounded mb-2">
+        <input type="text" id="product-modele" placeholder="Modèle" class="w-full p-2 border rounded mb-2">
+        <input type="text" id="product-marque" placeholder="Marque" class="w-full p-2 border rounded mb-2">
+        <input type="text" id="product-etat" placeholder="État" class="w-full p-2 border rounded mb-2">
+        <textarea id="product-details" placeholder="Caractéristiques et détails" class="w-full p-2 border rounded mb-2"></textarea>
+        <input type="text" id="product-stock" placeholder="Stock" class="w-full p-2 border rounded mb-2">
+        <input type="text" id="product-main-image" placeholder="Image d'accueil (lien)" class="w-full p-2 border rounded mb-2">
+        <input type="text" id="product-detail-images" placeholder="Images détails (séparés par ,)" class="w-full p-2 border rounded mb-4">
+        <button onclick="saveProduct()" class="w-full bg-blue-600 text-white py-2 rounded">Ajouter</button>
+        <button onclick="hideAddProductModal()" class="w-full bg-gray-200 py-2 rounded mt-2">Annuler</button>
+    </div>
+</div>
+
+        <!-- Appointment Confirmation Modal -->
+        <div id="appointmentModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50">
+            <div class="bg-white rounded-lg p-6 w-full max-w-sm mx-4">
+                <div class="text-center mb-4">
+                    <i data-feather="check-circle" class="text-green-500 w-12 h-12 mx-auto"></i>
+                </div>
+                <h3 class="text-xl font-bold mb-2 text-center">Rendez-vous confirmé !</h3>
+                <p id="appointmentDetails" class="text-center mb-4"></p>
+                <button onclick="hideAppointmentModal()" class="w-full bg-blue-600 text-white py-2 rounded-lg">
+                    Fermer
+                </button>
+            </div>
+        </div>
+      <div id="adminModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50">
+    <div class="bg-white rounded-lg p-6 w-full max-w-sm mx-4">
+        <h3 class="text-xl font-bold mb-4 text-center">ESPACE ADMIN</h3>
+        <input type="password" id="adminCode" class="w-full p-2 border rounded mb-4" placeholder="Entrez le code">
+        <div class="flex justify-between">
+            <button onclick="checkAdminCode()" class="bg-blue-600 text-white py-2 px-4 rounded">Entré</button>
+            <button onclick="hideAdminModal()" class="bg-gray-200 py-2 px-4 rounded">Annuler</button>
+        </div>
+    </div>
+</div>
+    </main>
+
+    <!-- Bottom Navigation -->
+    <nav class="fixed bottom-0 left-0 right-0 bg-white shadow-lg flex justify-around items-center h-16 z-40">
+        <button onclick="showPage('home')" class="nav-item active flex flex-col items-center p-2">
+            <i data-feather="home"></i>
+            <span class="text-xs mt-1">Accueil</span>
+        </button>
+        <button onclick="showPage('services')" class="nav-item flex flex-col items-center p-2">
+            <i data-feather="settings"></i>
+            <span class="text-xs mt-1">Services</span>
+        </button>
+       
+        <button onclick="showPage('rendezvous')" class="nav-item flex flex-col items-center p-2">
+            <i data-feather="calendar"></i>
+            <span class="text-xs mt-1">RDV</span>
+        </button>
+      <button onclick="showPage('boutique')" class="nav-item flex flex-col items-center p-2">
+    <i data-feather="shopping-cart"></i>
+    <span class="text-xs mt-1">Boutique</span>
+</button>
+    </nav>
+
+    <script type="module">
+        // Firebase
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-app.js";
+        import { getFirestore, doc, setDoc, getDoc, collection, getDocs, addDoc, deleteDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+          apiKey: "AIzaSyCX1Q0i-L33RNZIVsJ8V1iRsDY6CJm1Lmc",
+          authDomain: "gmbn-9ba54.firebaseapp.com",
+          projectId: "gmbn-9ba54",
+          storageBucket: "gmbn-9ba54.firebasestorage.app",
+          messagingSenderId: "968684169673",
+          appId: "1:968684169673:web:d6b2796b396f8e62eda018",
+          measurementId: "G-MQXSQQQHBC"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        const defaultImage = 'https://i.postimg.cc/vBxynkc6/Design-sans-titre-2.png';
+
+        const services = ['tolerie', 'mecanique', 'peinture', 'froid', 'vidange', 'entretien', 'remorquage', 'diagnostic', 'location', 'vente'];
+        const serviceTitles = {
+            tolerie: 'Tôlerie',
+            mecanique: 'Mécanique',
+            peinture: 'Peinture',
+            froid: 'Froid',
+            vidange: 'Vidange',
+            entretien: 'Entretien général',
+            remorquage: 'Remorquage',
+            diagnostic: 'Diagnostic',
+            location: 'Location',
+            vente: 'Vente'
+        };
+        const serviceTexts = {
+            tolerie: 'Nos experts en tôlerie vous offrent des réparations de qualité pour redonner à votre véhicule son aspect d\'origine après un accident ou des dommages.',
+            mecanique: 'Notre équipe de mécaniciens qualifiés prend en charge toutes les réparations mécaniques de votre véhicule, du simple entretien aux réparations complexes.',
+            peinture: 'Nous proposons des services de peinture automobile professionnelle avec des finitions de haute qualité et une large gamme de couleurs disponibles.',
+            froid: 'Nos techniciens spécialisés interviennent sur tous les systèmes de climatisation et de refroidissement de votre véhicule pour un confort optimal.',
+            vidange: 'Nous effectuons des vidanges complètes avec des huiles de qualité pour assurer la longévité de votre moteur.',
+            entretien: 'Un entretien régulier est essentiel pour la sécurité et la longévité de votre véhicule. Nous proposons des forfaits d\'entretien adaptés à votre voiture.',
+            remorquage: 'Service de remorquage disponible 24h/24 et 7j/7 pour toutes pannes et accidents. Intervention rapide dans tout Dakar et ses environs.',
+            diagnostic: 'Diagnostic électronique complet avec outils professionnels pour identifier toutes les pannes de votre véhicule. Rapport détaillé fourni.',
+            location: 'Location de véhicules pour toutes occasions. Court et long terme. Véhicules régulièrement entretenus et assurances comprises.',
+            vente: 'Vente de véhicules d\'occasion vérifiés et garantis. Large choix de modèles. Financement possible.'
+        };
+
+        // Initialize AOS animations
+        AOS.init({
+            duration: 800,
+            easing: 'ease-in-out',
+            once: true
+        });
+
+        // Initialize feather icons
+        feather.replace();
+
+        // Navigation functions
+        window.showPage = function(pageId) {
+            document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
+            document.getElementById(pageId).classList.add('active');
+            document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+            const navItem = document.querySelector(`.nav-item[onclick="showPage('${pageId}')"]`);
+            if (navItem) navItem.classList.add('active');
+            if (pageId === 'home') loadHome();
+            if (pageId === 'services') loadAllServices();
+            if (pageId === 'boutique') loadProducts();
+            if (pageId === 'cart') loadCart();
+            if (pageId === 'admin-vente') loadHistory('vente');
+            if (pageId === 'admin-location') loadHistory('location');
+            if (pageId === 'admin-boutique') loadHistory('boutique');
+            if (pageId === 'admin-autres') loadAutresForm();
+            if (pageId === 'admin-commandes') loadOrders();
+        };
+
+        window.navigateToService = function(serviceId) {
+            showPage('service-' + serviceId);
+            loadServiceDetails(serviceId);
+        };
+
+        window.goBack = function() {
+            showPage('home');
+        };
+
+        // Contact options
+        window.showContactOptions = function() {
+            document.getElementById('contactModal').classList.remove('hidden');
+        };
+
+        window.hideContactOptions = function() {
+            document.getElementById('contactModal').classList.add('hidden');
+        };
+
+        // Appointment booking
+        window.bookAppointment = async function() {
+            const appointment = {
+                fullName: document.getElementById('fullName').value,
+                phoneNumber: document.getElementById('phoneNumber').value,
+                email: document.getElementById('email').value,
+                service: document.getElementById('appointmentService').value,
+                date: document.getElementById('appointmentDate').value,
+                time: document.getElementById('appointmentTime').value,
+                timestamp: new Date().toISOString()
+            };
+
+            if (!appointment.fullName || !appointment.phoneNumber || !appointment.service || !appointment.date || !appointment.time) {
+                alert('Veuillez remplir tous les champs obligatoires');
+                return;
+            }
+
+            await addDoc(collection(db, 'appointments'), appointment);
+
+            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            const formattedDate = new Date(appointment.date).toLocaleDateString('fr-FR', options);
+            document.getElementById('appointmentDetails').textContent = `Votre rendez-vous pour ${appointment.service} est confirmé pour le ${formattedDate} à ${appointment.time}.`;
+            document.getElementById('appointmentModal').classList.remove('hidden');
+
+            // Clear form
+            document.querySelectorAll('#rendezvous input, #rendezvous select').forEach(el => el.value = '');
+
+            scheduleNotification(appointment);
+        };
+
+        window.hideAppointmentModal = function() {
+            document.getElementById('appointmentModal').classList.add('hidden');
+            showPage('home');
+        };
+
+        window.showAdminModal = function() {
+            document.getElementById('adminModal').classList.remove('hidden');
+        };
+
+        window.hideAdminModal = function() {
+            document.getElementById('adminModal').classList.add('hidden');
+            document.getElementById('adminCode').value = '';
+        };
+
+        window.checkAdminCode = function() {
+            if (document.getElementById('adminCode').value === 'ADMIN123') {
+                hideAdminModal();
+                showPage('admin');
+            } else {
+                alert('Code incorrect');
+            }
+        };
+
+        function scheduleNotification(appointment) {
+            if ('Notification' in window) {
+                Notification.requestPermission().then(permission => {
+                    if (permission === 'granted') {
+                        const appointmentTime = new Date(`${appointment.date}T${appointment.time}`);
+                        const notificationTime = new Date(appointmentTime.getTime() - 3600000);
+                        const delay = notificationTime - new Date();
+                        if (delay > 0) {
+                            setTimeout(() => {
+                                new Notification('Rappel de rendez-vous', {
+                                    body: `Vous avez un rendez-vous pour ${appointment.service} dans 1 heure.`,
+                                    icon: 'http://static.photos/automotive/200x200/1'
+                                });
+                            }, delay);
+                        }
+                    }
+                });
+            }
+        }
+
+        // Price estimate
+        document.getElementById('serviceSelect').addEventListener('change', function() {
+            const service = this.value;
+            const estimateDiv = document.getElementById('priceEstimate');
+            const estimateText = document.getElementById('estimateText');
+            if (!service) return estimateDiv.classList.add('hidden');
+            let estimate = '';
+            switch(service) {
+                case 'vidange': estimate = 'À partir de 25 000 FCFA'; break;
+                case 'entretien': estimate = 'À partir de 50 000 FCFA (selon le véhicule)'; break;
+                case 'diagnostic': estimate = 'À partir de 15 000 FCFA'; break;
+                case 'remorquage': estimate = 'À partir de 30 000 FCFA (selon la distance)'; break;
+                default: estimate = 'Veuillez demander un devis personnalisé'; break;
+            }
+            estimateText.textContent = estimate;
+            estimateDiv.classList.remove('hidden');
+        });
+
+        // Dark mode
+        document.getElementById('darkModeToggle').addEventListener('click', function() {
+            document.body.classList.toggle('dark-mode');
+            const icon = this.querySelector('i');
+            icon.setAttribute('data-feather', document.body.classList.contains('dark-mode') ? 'sun' : 'moon');
+            feather.replace();
+        });
+
+        // Load home
+        async function loadHome() {
+            const docRef = doc(db, 'config', 'servicesImages');
+            const docSnap = await getDoc(docRef);
+            const images = docSnap.exists() ? docSnap.data().images : Array(10).fill(defaultImage);
+
+            const cards = document.getElementById('service-cards');
+            cards.innerHTML = '';
+            services.forEach((id, i) => {
+                const div = document.createElement('div');
+                div.className = 'service-card rounded-lg shadow-md p-4 text-white';
+                div.style.backgroundImage = `url('${images[i]}')`;
+                div.onclick = () => navigateToService(id);
+                div.innerHTML = `<div class="service-card-content"><h4 class="font-bold">${serviceTitles[id]}</h4></div>`;
+                div.setAttribute('data-aos', 'fade-up');
+                cards.appendChild(div);
+            });
+
+            const aboutRef = doc(db, 'config', 'about');
+            const aboutSnap = await getDoc(aboutRef);
+            if (aboutSnap.exists()) {
+                document.getElementById('about-text').textContent = aboutSnap.data().text || serviceTexts.about;
+                document.getElementById('about-image').src = aboutSnap.data().image || defaultImage;
+            }
+
+            const partners = await getDocs(collection(db, 'partners'));
+            const grid = document.getElementById('partners-grid');
+            grid.innerHTML = '';
+            partners.forEach(p => {
+                const img = document.createElement('img');
+                img.src = p.data().url || defaultImage;
+                img.alt = 'Partenaire';
+                img.className = 'rounded-lg';
+                grid.appendChild(img);
+            });
+            if (partners.empty) {
+                for (let i = 0; i < 5; i++) {
+                    const img = document.createElement('img');
+                    img.src = defaultImage;
+                    img.className = 'rounded-lg';
+                    grid.appendChild(img);
+                }
+            }
+        }
+
+        // Load all services
+        function loadAllServices() {
+            const list = document.getElementById('all-services');
+            list.innerHTML = '';
+            services.forEach(id => {
+                const div = document.createElement('div');
+                div.className = 'bg-white rounded-lg shadow-md p-4';
+                div.onclick = () => navigateToService(id);
+                div.innerHTML = `<h3 class="font-semibold">${serviceTitles[id]}</h3><p class="text-gray-600 text-sm">${serviceTexts[id]}</p>`;
+                list.appendChild(div);
+            });
+        }
+
+        // Load service details
+        async function loadServiceDetails(id) {
+            const docRef = doc(db, 'services', id);
+            const docSnap = await getDoc(docRef);
+            const data = docSnap.exists() ? docSnap.data() : {text: serviceTexts[id], images: [defaultImage]};
+            document.getElementById(`service-${id}-text`).textContent = data.text;
+            const imagesDiv = document.getElementById(`service-${id}-images`);
+            imagesDiv.innerHTML = '';
+            (data.images || [defaultImage]).forEach(url => {
+                const img = document.createElement('img');
+                img.src = url;
+                img.className = 'rounded-lg h-48 object-cover';
+                imagesDiv.appendChild(img);
+            });
+        }
+
+        // Load cars for vente/location
+        async function loadCars(type) {
+            const content = document.getElementById(`service-${type}-content`);
+            content.innerHTML = '';
+            const querySnapshot = await getDocs(collection(db, type));
+            querySnapshot.forEach((doc) => {
+                const car = doc.data();
+                const div = document.createElement('div');
+                div.innerHTML = `
+                    <img src="${car.mainImage || defaultImage}" class="rounded mb-2">
+                    <h3>${car.marque || ''} ${car.modele || ''}</h3>
+                    <p>${car.details || ''}</p>
+                    <!-- Detail images if clicked, but for now list -->
+                `;
+                content.appendChild(div);
+            });
+            if (querySnapshot.empty) content.innerHTML = '<p>Aucun véhicule disponible.</p>';
+        }
+
+        // Admin: show add car form
+        let currentType = '';
+        window.showAddCarForm = function(type) {
+            currentType = type;
+            document.getElementById('addCarModal').classList.remove('hidden');
+        };
+
+        window.hideAddCarModal = function() {
+            document.getElementById('addCarModal').classList.add('hidden');
+            clearCarForm();
+        };
+
+        window.saveCar = async function() {
+            const car = {
+                marque: document.getElementById('car-marque').value,
+                modele: document.getElementById('car-modele').value,
+                etat: document.getElementById('car-etat').value,
+                transmission: document.getElementById('car-transmission').value,
+                annee: document.getElementById('car-annee').value,
+                carburant: document.getElementById('car-carburant').value,
+                kilometrage: document.getElementById('car-kilometrage').value,
+                details: document.getElementById('car-details').value,
+                mainImage: document.getElementById('car-main-image').value || defaultImage,
+                detailImages: document.getElementById('car-detail-images').value.split(',').map(s => s.trim()) || []
+            };
+            await addDoc(collection(db, currentType), car);
+            hideAddCarModal();
+            loadHistory(currentType);
+        };
+
+        function clearCarForm() {
+            document.querySelectorAll('#addCarModal input, #addCarModal textarea').forEach(el => el.value = '');
+        }
+
+        // Admin: show add product form
+        window.showAddProductForm = function() {
+            document.getElementById('addProductModal').classList.remove('hidden');
+        };
+
+        window.hideAddProductModal = function() {
+            document.getElementById('addProductModal').classList.add('hidden');
+            clearProductForm();
+        };
+
+        window.saveProduct = async function() {
+            const product = {
+                name: document.getElementById('product-name').value,
+                price: document.getElementById('product-price').value,
+                modele: document.getElementById('product-modele').value,
+                marque: document.getElementById('product-marque').value,
+                etat: document.getElementById('product-etat').value,
+                details: document.getElementById('product-details').value,
+                stock: document.getElementById('product-stock').value,
+                mainImage: document.getElementById('product-main-image').value || defaultImage,
+                detailImages: document.getElementById('product-detail-images').value.split(',').map(s => s.trim()) || []
+            };
+            if (Object.values(product).some(v => v)) {  // At least one field
+                await addDoc(collection(db, 'boutique'), product);
+            }
+            hideAddProductModal();
+            loadHistory('boutique');
+        };
+
+        function clearProductForm() {
+            document.querySelectorAll('#addProductModal input, #addProductModal textarea').forEach(el => el.value = '');
+        }
+
+        // Load history for admin
+        async function loadHistory(type) {
+            const historyDiv = document.getElementById(`${type}-history`);
+            historyDiv.innerHTML = '';
+            const querySnapshot = await getDocs(collection(db, type));
+            querySnapshot.forEach((d) => {
+                const item = d.data();
+                const div = document.createElement('div');
+                div.className = 'border p-2 mb-2';
+                div.innerHTML = `
+                    <p>${item.name || item.marque || ''} ${item.modele || ''} - ${item.price || item.details || ''}</p>
+                    <button onclick="editItem('${type}', '${d.id}')" class="bg-yellow-500 text-white px-2 py-1">Modifier</button>
+                    <button onclick="deleteItem('${type}', '${d.id}')" class="bg-red-500 text-white px-2 py-1">Supprimer</button>
+                `;
+                historyDiv.appendChild(div);
+            });
+        }
+
+        window.deleteItem = async function(type, id) {
+            await deleteDoc(doc(db, type, id));
+            loadHistory(type);
+            if (type === 'vente' || type === 'location') loadCars(type);
+            if (type === 'boutique') loadProducts();
+        };
+
+        // Edit would show form with prefilled, but simplify to alert for now or reuse add form with update
+        window.editItem = async function(type, id) {
+            const d = await getDoc(doc(db, type, id));
+            const data = d.data();
+            // For car or product, populate form and change save to update
+            alert('Edit not fully implemented; delete and add new.');
+        };
+
+        // Autres form
+        async function loadAutresForm() {
+            const docRef = doc(db, 'config', 'servicesImages');
+            const docSnap = await getDoc(docRef);
+            const images = docSnap.exists() ? docSnap.data().images : Array(10).fill('');
+            const form = document.getElementById('services-images-form');
+            form.innerHTML = '';
+            images.forEach((img, i) => {
+                const input = document.createElement('input');
+                input.type = 'text';
+                input.placeholder = `Image ${serviceTitles[services[i]]}`;
+                input.value = img;
+                input.id = `service-img-${i}`;
+                form.appendChild(input);
+            });
+
+            const aboutRef = doc(db, 'config', 'about');
+            const aboutSnap = await getDoc(aboutRef);
+            document.getElementById('about-image-input').value = aboutSnap.exists() ? aboutSnap.data().image : '';
+
+            const partners = await getDocs(collection(db, 'partners'));
+            const hist = document.getElementById('partners-history');
+            hist.innerHTML = '';
+            partners.forEach(p => {
+                const div = document.createElement('div');
+                div.innerHTML = `
+                    <img src="${p.data().url}" class="w-20">
+                    <button onclick="deletePartner('${p.id}')" class="bg-red-500 text-white px-2">Supprimer</button>
+                `;
+                hist.appendChild(div);
+            });
+
+            // Service select
+            const select = document.getElementById('serviceSelectAdmin');
+            select.innerHTML = '';
+            services.forEach(id => {
+                const opt = document.createElement('option');
+                opt.value = id;
+                opt.text = serviceTitles[id];
+                select.appendChild(opt);
+            });
+            select.addEventListener('change', loadServiceAdmin);
+        }
+
+        async function loadServiceAdmin() {
+            const id = document.getElementById('serviceSelectAdmin').value;
+            const docRef = doc(db, 'services', id);
+            const docSnap = await getDoc(docRef);
+            document.getElementById('service-text-input').value = docSnap.exists() ? docSnap.data().text : '';
+            document.getElementById('service-images-input').value = docSnap.exists() ? docSnap.data().images.join(', ') : '';
+        }
+
+        window.saveServicesImages = async function() {
+            const images = Array.from({length: 10}, (_, i) => document.getElementById(`service-img-${i}`).value || defaultImage);
+            await setDoc(doc(db, 'config', 'servicesImages'), {images});
+            loadHome();
+        };
+
+        window.saveAboutImage = async function() {
+            const image = document.getElementById('about-image-input').value || defaultImage;
+            await setDoc(doc(db, 'config', 'about'), {image}, {merge: true});
+            loadHome();
+        };
+
+        window.addPartner = async function() {
+            const url = document.getElementById('partner-image-input').value || defaultImage;
+            await addDoc(collection(db, 'partners'), {url});
+            document.getElementById('partner-image-input').value = '';
+            loadAutresForm();
+            loadHome();
+        };
+
+        window.deletePartner = async function(id) {
+            await deleteDoc(doc(db, 'partners', id));
+            loadAutresForm();
+            loadHome();
+        };
+
+        window.saveServiceDetails = async function() {
+            const id = document.getElementById('serviceSelectAdmin').value;
+            const text = document.getElementById('service-text-input').value;
+            const images = document.getElementById('service-images-input').value.split(',').map(s => s.trim()) || [defaultImage];
+            await setDoc(doc(db, 'services', id), {text, images});
+        };
+
+        // Boutique
+        let products = [];
+        async function loadProducts() {
+            products = [];
+            const querySnapshot = await getDocs(collection(db, 'boutique'));
+            const grid = document.getElementById('products-grid');
+            grid.innerHTML = '';
+            querySnapshot.forEach((doc) => {
+                const p = {id: doc.id, ...doc.data()};
+                products.push(p);
+                const div = document.createElement('div');
+                div.className = 'product-card';
+                div.onclick = () => showProductDetail(p.id);
+                div.innerHTML = `
+                    <img src="${p.mainImage}" class="mb-2 rounded">
+                    <h4>${p.name || 'Produit'}</h4>
+                    <p>${p.price ? p.price + ' FCFA' : ''}</p>
+                    <button class="bg-blue-600 text-white py-1 px-2 rounded" onclick="addToCart('${p.id}', event)">Acheter</button>
+                `;
+                grid.appendChild(div);
+            });
+            document.getElementById('searchInput').addEventListener('input', filterProducts);
+        }
+
+        function filterProducts(e) {
+            const term = e.target.value.toLowerCase();
+            const grid = document.getElementById('products-grid');
+            grid.innerHTML = '';
+            products.filter(p => p.name?.toLowerCase().includes(term) || p.marque?.toLowerCase().includes(term)).forEach(p => {
+                const div = document.createElement('div');
+                div.className = 'product-card';
+                div.onclick = () => showProductDetail(p.id);
+                div.innerHTML = `
+                    <img src="${p.mainImage}" class="mb-2 rounded">
+                    <h4>${p.name || 'Produit'}</h4>
+                    <p>${p.price ? p.price + ' FCFA' : ''}</p>
+                    <button class="bg-blue-600 text-white py-1 px-2 rounded" onclick="addToCart('${p.id}', event)">Acheter</button>
+                `;
+                grid.appendChild(div);
+            });
+        }
+
+        async function showProductDetail(id) {
+            const docRef = doc(db, 'boutique', id);
+            const docSnap = await getDoc(docRef);
+            const p = docSnap.data();
+            document.getElementById('product-title').textContent = p.name || 'Produit';
+            document.getElementById('product-brand').textContent = p.marque || '';
+            document.getElementById('product-price').textContent = p.price ? p.price + ' FCFA' : '';
+            document.getElementById('product-stock').textContent = `Stock: ${p.stock || 0}`;
+            const imagesDiv = document.getElementById('product-images');
+            imagesDiv.innerHTML = '';
+            [p.mainImage, ...p.detailImages].forEach(url => {
+                const img = document.createElement('img');
+                img.src = url || defaultImage;
+                imagesDiv.appendChild(img);
+            });
+            const related = document.getElementById('related-products');
+            related.innerHTML = '';
+            const shuffled = products.sort(() => 0.5 - Math.random()).slice(0, 8);
+            shuffled.forEach(r => {
+                if (r.id === id) return;
+                const div = document.createElement('div');
+                div.className = 'product-card';
+                div.onclick = () => showProductDetail(r.id);
+                div.innerHTML = `
+                    <img src="${r.mainImage}" class="mb-2 rounded">
+                    <h4>${r.name || 'Produit'}</h4>
+                    <p>${r.price ? r.price + ' FCFA' : ''}</p>
+                `;
+                related.appendChild(div);
+            });
+            showPage('product-detail');
+            currentProductId = id;  // For addToCart
+        }
+
+        let cart = JSON.parse(localStorage.getItem('cart')) || [];
+        let currentProductId = '';
+
+        window.addToCart = function(id = currentProductId, e) {
+            if (e) e.stopPropagation();
+            const item = cart.find(i => i.id === id);
+            if (item) item.qty++;
+            else cart.push({id, qty: 1});
+            localStorage.setItem('cart', JSON.stringify(cart));
+            alert('Ajouté au panier');
+        };
+
+        async function loadCart() {
+            const itemsDiv = document.getElementById('cart-items');
+            itemsDiv.innerHTML = '';
+            let total = 0;
+            for (let c of cart) {
+                const docRef = doc(db, 'boutique', c.id);
+                const docSnap = await getDoc(docRef);
+                if (!docSnap.exists()) continue;
+                const p = docSnap.data();
+                const price = parseFloat(p.price) || 0;
+                const sub = price * c.qty;
+                total += sub;
+                const div = document.createElement('div');
+                div.innerHTML = `
+                    <p>${p.name} - ${sub} FCFA</p>
+                    <button onclick="changeQty('${c.id}', -1)">-</button> ${c.qty} <button onclick="changeQty('${c.id}', 1)">+</button>
+                `;
+                itemsDiv.appendChild(div);
+            }
+            document.getElementById('total-price').textContent = `Total: ${total} FCFA`;
+            document.getElementById('delivery-note').textContent = total > 10000 ? 'Livraison gratuite' : 'Livraison: 500 FCFA (exclu)';
+        }
+
+        window.changeQty = function(id, delta) {
+            const item = cart.find(i => i.id === id);
+            item.qty += delta;
+            if (item.qty <= 0) cart = cart.filter(i => i.id !== id);
+            localStorage.setItem('cart', JSON.stringify(cart));
+            loadCart();
+        };
+
+        window.showOrderForm = function() {
+            document.getElementById('orderModal').classList.remove('hidden');
+        };
+
+        window.hideOrderModal = function() {
+            document.getElementById('orderModal').classList.add('hidden');
+        };
+
+        window.submitOrder = async function() {
+            const order = {
+                name: document.getElementById('orderName').value,
+                phone: document.getElementById('orderPhone').value,
+                address: document.getElementById('orderAddress').value,
+                items: cart,
+                timestamp: new Date().toISOString()
+            };
+            await addDoc(collection(db, 'orders'), order);
+            cart = [];
+            localStorage.setItem('cart', JSON.stringify(cart));
+            hideOrderModal();
+            showPage('boutique');
+            alert('Commande validée');
+        };
+
+        // Load orders for admin
+        async function loadOrders() {
+            const list = document.getElementById('orders-list');
+            list.innerHTML = '';
+            const querySnapshot = await getDocs(collection(db, 'orders'));
+            querySnapshot.forEach((doc) => {
+                const o = doc.data();
+                const div = document.createElement('div');
+                div.innerHTML = `
+                    <p>${o.name} - ${o.phone} - ${o.address}</p>
+                    <p>Items: ${o.items.map(i => i.id + ' x' + i.qty).join(', ')}</p>
+                `;
+                list.appendChild(div);
+            });
+        }
+
+        // Service Worker
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js');
+            });
+        }
+
+        // Initial load
+        loadHome();
+    </script>
+</body>
+</html>
