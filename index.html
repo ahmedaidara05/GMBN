@@ -184,7 +184,9 @@
            <div class="bg-white rounded-lg shadow-md p-6 mb-6" data-aos="fade-up">
                 <h3 class="text-xl font-semibold mb-4">À propos de nous</h3>
                 <p class="text-gray-700 mb-4">
-                   Garage Medina Baye est une entreprise spécialisée dans le domaine de l’automobile Cette structure familiale dynamique qui a fêté ses 20 ans en 2017, jouit d'une excellente réputation dans tout le territoire national. Trois générations et une équipe bien organisée sont à votre service et son fondateur, El hadji Ibrahima Niasse dit Baye peut témoigner d'une expérience de plus de 30 ans dans le domaine. Active dans le domaine de l’automobile vous pouvez être sûr d'un service performant, rapide et efficace. Son équipement, ultra sophistiqué, sans cesse renouvelé, à la pointe de la dernière technologie lui a permis de réaliser des missions toujours plus performantes dans des délais toujours plus stricts. Toutes ces expériences l'ont amenée à aborder avec succès et compétences les entreprises et à décrocher des marchés au niveau des plus grandes structures du pays. Profitez d’un équipement à la fine pointe de la technologie
+                   Garage Medina Baye est une entreprise spécialisée dans le domaine de l’automobile Cette structure familiale dynamique qui a fêté ses 20 ans en 2017, jouit d'une excellente réputation dans tout le territoire national. Trois générations et une équipe bien organisée sont à votre service et son fondateur, El hadji Ibrahima <span onclick="showAdminModal()" style="cursor: pointer; color: black; text-decoration: none;">Niasse</span>
+ dit <span onclick="showAdminModal()" style="cursor: pointer; color: black; text-decoration: none;">Baye</span>
+ peut témoigner d'une expérience de plus de 30 ans dans le domaine. Active dans le domaine de l’automobile vous pouvez être sûr d'un service performant, rapide et efficace. Son équipement, ultra sophistiqué, sans cesse renouvelé, à la pointe de la dernière technologie lui a permis de réaliser des missions toujours plus performantes dans des délais toujours plus stricts. Toutes ces expériences l'ont amenée à aborder avec succès et compétences les entreprises et à décrocher des marchés au niveau des plus grandes structures du pays. Profitez d’un équipement à la fine pointe de la technologie
                 </p>
                 <div class="flex justify-center">
                     <img src="http://static.photos/workspace/640x360/1" alt="Notre équipe" class="rounded-lg w-full max-w-md">
@@ -565,7 +567,55 @@
                 </button>
             </div>
         </div>
+<div id="admin" class="page">
+    <h2 class="text-2xl font-bold mb-6">Espace Admin</h2>
+    <div class="grid grid-cols-2 gap-4">
+        <button onclick="showPage('admin-vente')" class="bg-blue-600 text-white py-4 rounded-lg">VENTE</button>
+        <button onclick="showPage('admin-location')" class="bg-blue-600 text-white py-4 rounded-lg">LOCATION</button>
+        <button onclick="showPage('admin-boutique')" class="bg-blue-600 text-white py-4 rounded-lg">BOUTIQUE</button>
+        <button onclick="showPage('admin-autres')" class="bg-blue-600 text-white py-4 rounded-lg">AUTRES</button>
+    </div>
+</div>
 
+<div id="admin-vente" class="page">
+    <div class="flex items-center mb-4">
+        <button onclick="showPage('admin')" class="mr-2"><i data-feather="arrow-left"></i></button>
+        <h2 class="text-xl font-bold">Vente Admin</h2>
+    </div>
+    <div class="bg-white rounded-lg shadow-md p-6">
+        <!-- Contenu Vente Admin ici -->
+    </div>
+</div>
+
+<div id="admin-location" class="page">
+    <div class="flex items-center mb-4">
+        <button onclick="showPage('admin')" class="mr-2"><i data-feather="arrow-left"></i></button>
+        <h2 class="text-xl font-bold">Location Admin</h2>
+    </div>
+    <div class="bg-white rounded-lg shadow-md p-6">
+        <!-- Contenu Location Admin ici -->
+    </div>
+</div>
+
+<div id="admin-boutique" class="page">
+    <div class="flex items-center mb-4">
+        <button onclick="showPage('admin')" class="mr-2"><i data-feather="arrow-left"></i></button>
+        <h2 class="text-xl font-bold">Boutique Admin</h2>
+    </div>
+    <div class="bg-white rounded-lg shadow-md p-6">
+        <!-- Contenu Boutique Admin ici -->
+    </div>
+</div>
+
+<div id="admin-autres" class="page">
+    <div class="flex items-center mb-4">
+        <button onclick="showPage('admin')" class="mr-2"><i data-feather="arrow-left"></i></button>
+        <h2 class="text-xl font-bold">Autres Admin</h2>
+    </div>
+    <div class="bg-white rounded-lg shadow-md p-6">
+        <!-- Contenu Autres Admin ici -->
+    </div>
+</div>
         <!-- Appointment Confirmation Modal -->
         <div id="appointmentModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50">
             <div class="bg-white rounded-lg p-6 w-full max-w-sm mx-4">
@@ -579,6 +629,16 @@
                 </button>
             </div>
         </div>
+      <div id="adminModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50">
+    <div class="bg-white rounded-lg p-6 w-full max-w-sm mx-4">
+        <h3 class="text-xl font-bold mb-4 text-center">ESPACE ADMIN</h3>
+        <input type="password" id="adminCode" class="w-full p-2 border rounded mb-4" placeholder="Entrez le code">
+        <div class="flex justify-between">
+            <button onclick="checkAdminCode()" class="bg-blue-600 text-white py-2 px-4 rounded">Entré</button>
+            <button onclick="hideAdminModal()" class="bg-gray-200 py-2 px-4 rounded">Annuler</button>
+        </div>
+    </div>
+</div>
     </main>
 
     <!-- Bottom Navigation -->
@@ -707,7 +767,24 @@
             document.getElementById('appointmentModal').classList.add('hidden');
             showPage('home');
         }
+function showAdminModal() {
+    document.getElementById('adminModal').classList.remove('hidden');
+}
 
+function hideAdminModal() {
+    document.getElementById('adminModal').classList.add('hidden');
+    document.getElementById('adminCode').value = '';
+}
+
+function checkAdminCode() {
+    const code = document.getElementById('adminCode').value;
+    if (code === 'ADMIN123') {
+        hideAdminModal();
+        showPage('admin');
+    } else {
+        alert('Code incorrect');
+    }
+}
         function scheduleNotification(appointment) {
             if ('Notification' in window) {
                 Notification.requestPermission().then(permission => {
