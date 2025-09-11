@@ -118,7 +118,17 @@
       .add-to-cart-btn {
     transition: background-color 0.3s ease; /* Transition fluide pour la couleur */
 }
-      
+ .gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+}
+.gallery-grid img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 8px;
+}     
     </style>
 </head>
 <body class="relative">
@@ -145,16 +155,18 @@
     <main class="container mx-auto p-4">
         <!-- Home Page -->
         <div id="home" class="page active">
+           <div class="flex justify-center">
+                    <img src="https://i.postimg.cc/BbHPw3Wb/5915606491874838712.jpg" alt="Notre équipe" class="rounded-lg w-full max-w-md">
+                </div>
             <div class="text-center mb-8" data-aos="fade-up">
-                <h2 class="text-2xl font-bold mb-2">Garage Médina Baye Niass</h2>
-                <p class="text-gray-600">Votre expert en mécanique automobile depuis 2005</p>
+                <p class="text-gray-600">Votre expert en mécanique automobile depuis 1997</p>
             </div>
 
            
             <h3 class="text-xl font-semibold mb-4 mt-8">Nos Services</h3>
             <div class="grid grid-cols-2 gap-4">
                 <div class="service-card rounded-lg shadow-md p-4 text-white" 
-                     style="background-image: url('http://static.photos/automotive/640x360/1')"
+                     style="background-image: url('https://i.postimg.cc/XvNQ0GqF/5915544683000482204.jpg')"
                      onclick="navigateToService('tolerie')"
                      data-aos="fade-up">
                     <div class="service-card-content">
@@ -162,7 +174,7 @@
                     </div>
                 </div>
                 <div class="service-card rounded-lg shadow-md p-4 text-white" 
-                     style="background-image: url('http://static.photos/automotive/640x360/2')"
+                     style="background-image: url('https://i.postimg.cc/FsstDRgf/5915544683000482231.jpg')"
                      onclick="navigateToService('mecanique')"
                      data-aos="fade-up">
                     <div class="service-card-content">
@@ -170,7 +182,7 @@
                     </div>
                 </div>
                 <div class="service-card rounded-lg shadow-md p-4 text-white" 
-                     style="background-image: url('http://static.photos/automotive/640x360/3')"
+                     style="background-image: url('https://i.postimg.cc/pTT8sKTG/5915544683000482192.jpg')"
                      onclick="navigateToService('peinture')"
                      data-aos="fade-up">
                     <div class="service-card-content">
@@ -178,7 +190,7 @@
                     </div>
                 </div>
                 <div class="service-card rounded-lg shadow-md p-4 text-white" 
-                     style="background-image: url('http://static.photos/automotive/640x360/4')"
+                     style="background-image: url('https://i.postimg.cc/8cc2kXCR/climatisation-liquide-remplissage.jpg')"
                      onclick="navigateToService('froid')"
                      data-aos="fade-up">
                     <div class="service-card-content">
@@ -186,7 +198,7 @@
                     </div>
                 </div>
                 <div class="service-card rounded-lg shadow-md p-4 text-white" 
-                     style="background-image: url('http://static.photos/automotive/640x360/5')"
+                     style="background-image: url('https://i.postimg.cc/jdN86YBW/5915544683000482201.jpg')"
                      onclick="navigateToService('vidange')"
                      data-aos="fade-up">
                     <div class="service-card-content">
@@ -194,7 +206,7 @@
                     </div>
                 </div>
                 <div class="service-card rounded-lg shadow-md p-4 text-white" 
-                     style="background-image: url('http://static.photos/automotive/640x360/6')"
+                     style="background-image: url('https://i.postimg.cc/X72RhbQs/5915544683000482232.jpg')"
                      onclick="navigateToService('entretien')"
                      data-aos="fade-up">
                     <div class="service-card-content">
@@ -204,7 +216,7 @@
                 
                 <!-- Nouveaux services ajoutés -->
                 <div class="service-card rounded-lg shadow-md p-4 text-white" 
-                     style="background-image: url('http://static.photos/automotive/640x360/7')"
+                     style="background-image: url('https://i.postimg.cc/G25DV9Tc/5915544683000482185.jpg')"
                      onclick="navigateToService('remorquage')"
                      data-aos="fade-up">
                     <div class="service-card-content">
@@ -212,7 +224,7 @@
                     </div>
                 </div>
                 <div class="service-card rounded-lg shadow-md p-4 text-white" 
-                     style="background-image: url('http://static.photos/automotive/640x360/8')"
+                     style="background-image: url('https://i.postimg.cc/rw1PT2J6/5915544683000482239.jpg')"
                      onclick="navigateToService('diagnostic')"
                      data-aos="fade-up">
                     <div class="service-card-content">
@@ -220,7 +232,7 @@
                     </div>
                 </div>
                 <div class="service-card rounded-lg shadow-md p-4 text-white" 
-                     style="background-image: url('http://static.photos/automotive/640x360/9')"
+                     style="background-image: url('https://i.postimg.cc/SR07nH6G/5913292883186796971.jpg')"
                      onclick="navigateToService('location')"
                      data-aos="fade-up">
                     <div class="service-card-content">
@@ -228,7 +240,7 @@
                     </div>
                 </div>
                 <div class="service-card rounded-lg shadow-md p-4 text-white" 
-                     style="background-image: url('http://static.photos/automotive/640x360/10')"
+                     style="background-image: url('https://i.postimg.cc/JnXjCKfH/5913292883186796965.jpg')"
                      onclick="navigateToService('vente')"
                      data-aos="fade-up">
                     <div class="service-card-content">
@@ -245,19 +257,20 @@
  peut témoigner d'une expérience de plus de 30 ans dans le domaine. Active dans le domaine de l’automobile vous pouvez être sûr d'un service performant, rapide et efficace. Son équipement, ultra sophistiqué, sans cesse renouvelé, à la pointe de la dernière technologie lui a permis de réaliser des missions toujours plus performantes dans des délais toujours plus stricts. Toutes ces expériences l'ont amenée à aborder avec succès et compétences les entreprises et à décrocher des marchés au niveau des plus grandes structures du pays. Profitez d’un équipement à la fine pointe de la technologie
                 </p>
                 <div class="flex justify-center">
-                    <img src="http://static.photos/workspace/640x360/1" alt="Notre équipe" class="rounded-lg w-full max-w-md">
+                    <img src="https://i.postimg.cc/C1nsLwq1/5913292883186796973.jpg" alt="Notre équipe" class="rounded-lg w-full max-w-md">
+                  
                 </div>
+             <p class="text-white cursor-pointer" onclick="showPage('gallery')"> galerie  </p>
+<div class="flex justify-center">
+    <button class="bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors" onclick="showPage('gallery')">GALLERIE</button>
+</div>
             </div>
 
           
             <div class="mt-8">
                 <h3 class="text-xl font-semibold mb-4">Nos Partenaires</h3>
                 <div class="grid grid-cols-3 gap-4">
-                    <img src="http://static.photos/automotive/200x200/10" alt="Partenaire 1" class="rounded-lg">
-                    <img src="http://static.photos/automotive/200x200/11" alt="Partenaire 2" class="rounded-lg">
-                    <img src="http://static.photos/automotive/200x200/12" alt="Partenaire 3" class="rounded-lg">
-                    <img src="http://static.photos/automotive/200x200/13" alt="Partenaire 4" class="rounded-lg">
-                    <img src="http://static.photos/automotive/200x200/14" alt="Partenaire 5" class="rounded-lg">
+                    <img src="https://i.postimg.cc/QtZXY30F/Image-1.png" alt="Partenaire 2" class="rounded-lg">
                 </div>
             </div>
         </div>
@@ -440,7 +453,10 @@
                 </button>
                 <h2 class="text-xl font-bold">Tôlerie</h2>
             </div>
-            <div class="service-card rounded-lg shadow-md mb-6 h-48" style="background-image: url('http://static.photos/automotive/640x360/1')"></div>
+            <div class="service-card rounded-lg shadow-md mb-6 h-48" style="background-image: url('https://i.postimg.cc/fLpKX8Kj/5915544683000482219.jpg')"></div>
+                      <div class="service-card rounded-lg shadow-md mb-6 h-48" style="background-image: url('https://i.postimg.cc/XvNQ0GqF/5915544683000482204.jpg')"></div>
+            <div class="service-card rounded-lg shadow-md mb-6 h-48" style="background-image: url('https://i.postimg.cc/tR8SV4vQ/5915544683000482202.jpg')"></div>
+<div class="service-card rounded-lg shadow-md mb-6 h-48" style="background-image: url('https://i.postimg.cc/rpgxGf8R/5915544683000482190.jpg')"></div>
             <div class="bg-white rounded-lg shadow-md p-6">
                 <p class="mb-4">Nos experts en tôlerie vous offrent des réparations de qualité pour redonner à votre véhicule son aspect d'origine après un accident ou des dommages.</p>
                 <button onclick="showContactOptions()" class="w-full bg-blue-600 text-white py-2 rounded-lg">
@@ -456,7 +472,10 @@
                 </button>
                 <h2 class="text-xl font-bold">Mécanique</h2>
             </div>
-            <div class="service-card rounded-lg shadow-md mb-6 h-48" style="background-image: url('http://static.photos/automotive/640x360/2')"></div>
+            <div class="service-card rounded-lg shadow-md mb-6 h-48" style="background-image: url('https://i.postimg.cc/jdN86YBW/5915544683000482201.jpg')"></div>
+                      <div class="service-card rounded-lg shadow-md mb-6 h-48" style="background-image: url('https://i.postimg.cc/XYbsQD0s/5915544683000482209.jpg')"></div>
+            <div class="service-card rounded-lg shadow-md mb-6 h-48" style="background-image: url('https://i.postimg.cc/fRfBFjzD/5915544683000482210.jpg')"></div>
+<div class="service-card rounded-lg shadow-md mb-6 h-48" style="background-image: url('https://i.postimg.cc/mrdVZL1n/5915544683000482212.jpg')"></div>
             <div class="bg-white rounded-lg shadow-md p-6">
                 <p class="mb-4">Notre équipe de mécaniciens qualifiés prend en charge toutes les réparations mécaniques de votre véhicule, du simple entretien aux réparations complexes.</p>
                 <button onclick="showContactOptions()" class="w-full bg-blue-600 text-white py-2 rounded-lg">
@@ -472,7 +491,7 @@
                 </button>
                 <h2 class="text-xl font-bold">Peinture</h2>
             </div>
-            <div class="service-card rounded-lg shadow-md mb-6 h-48" style="background-image: url('http://static.photos/automotive/640x360/3')"></div>
+            <div class="service-card rounded-lg shadow-md mb-6 h-48" style="background-image: url('https://i.postimg.cc/pTT8sKTG/5915544683000482192.jpg')"></div>
             <div class="bg-white rounded-lg shadow-md p-6">
                 <p class="mb-4">Nous proposons des services de peinture automobile professionnelle avec des finitions de haute qualité et une large gamme de couleurs disponibles.</p>
                 <button onclick="showContactOptions()" class="w-full bg-blue-600 text-white py-2 rounded-lg">
@@ -488,7 +507,7 @@
                 </button>
                 <h2 class="text-xl font-bold">Froid</h2>
             </div>
-            <div class="service-card rounded-lg shadow-md mb-6 h-48" style="background-image: url('http://static.photos/automotive/640x360/4')"></div>
+            <div class="service-card rounded-lg shadow-md mb-6 h-48" style="background-image: url('https://i.postimg.cc/8cc2kXCR/climatisation-liquide-remplissage.jpg')"></div>
             <div class="bg-white rounded-lg shadow-md p-6">
                 <p class="mb-4">Nos techniciens spécialisés interviennent sur tous les systèmes de climatisation et de refroidissement de votre véhicule pour un confort optimal.</p>
                 <button onclick="showContactOptions()" class="w-full bg-blue-600 text-white py-2 rounded-lg">
@@ -504,7 +523,7 @@
                 </button>
                 <h2 class="text-xl font-bold">Vidange</h2>
             </div>
-            <div class="service-card rounded-lg shadow-md mb-6 h-48" style="background-image: url('http://static.photos/automotive/640x360/5')"></div>
+            <div class="service-card rounded-lg shadow-md mb-6 h-48" style="background-image: url('https://i.postimg.cc/X72RhbQs/5915544683000482232.jpg')"></div>
             <div class="bg-white rounded-lg shadow-md p-6">
                 <p class="mb-4">Nous effectuons des vidanges complètes avec des huiles de qualité pour assurer la longévité de votre moteur.</p>
                 <button onclick="showContactOptions()" class="w-full bg-blue-600 text-white py-2 rounded-lg">
@@ -520,7 +539,10 @@
                 </button>
                 <h2 class="text-xl font-bold">Entretien général</h2>
             </div>
-            <div class="service-card rounded-lg shadow-md mb-6 h-48" style="background-image: url('http://static.photos/automotive/640x360/6')"></div>
+            <div class="service-card rounded-lg shadow-md mb-6 h-48" style="background-image: url('https://i.postimg.cc/X72RhbQs/5915544683000482232.jpg')"></div>
+                      <div class="service-card rounded-lg shadow-md mb-6 h-48" style="background-image: url('https://i.postimg.cc/FsstDRgf/5915544683000482231.jpg')"></div>
+            <div class="service-card rounded-lg shadow-md mb-6 h-48" style="background-image: url('https://i.postimg.cc/C1nsLwq1/5913292883186796973.jpg')"></div>
+<div class="service-card rounded-lg shadow-md mb-6 h-48" style="background-image: url('https://i.postimg.cc/VvzyysxV/5915544683000482233.jpg')"></div>
             <div class="bg-white rounded-lg shadow-md p-6">
                 <p class="mb-4">Un entretien régulier est essentiel pour la sécurité et la longévité de votre véhicule. Nous proposons des forfaits d'entretien adaptés à votre voiture.</p>
                 <button onclick="showContactOptions()" class="w-full bg-blue-600 text-white py-2 rounded-lg">
@@ -537,7 +559,10 @@
                 </button>
                 <h2 class="text-xl font-bold">Remorquage</h2>
             </div>
-            <div class="service-card rounded-lg shadow-md mb-6 h-48" style="background-image: url('http://static.photos/automotive/640x360/7')"></div>
+            <div class="service-card rounded-lg shadow-md mb-6 h-48" style="background-image: url('https://i.postimg.cc/G25DV9Tc/5915544683000482185.jpg')"></div>
+                      <div class="service-card rounded-lg shadow-md mb-6 h-48" style="background-image: url('https://i.postimg.cc/z3mgDMk6/5915544683000482194.jpg')"></div>
+            <div class="service-card rounded-lg shadow-md mb-6 h-48" style="background-image: url('https://i.postimg.cc/8PNMxRts/5913292883186796962.jpg')"></div>
+<div class="service-card rounded-lg shadow-md mb-6 h-48" style="background-image: url('https://i.postimg.cc/L5gPpRjj/5915544683000482184.jpg')"></div>
             <div class="bg-white rounded-lg shadow-md p-6">
                 <p class="mb-4">Service de remorquage disponible 24h/24 et 7j/7 pour toutes pannes et accidents. Intervention rapide dans tout Dakar et ses environs.</p>
                 <button onclick="showContactOptions()" class="w-full bg-blue-600 text-white py-2 rounded-lg">
@@ -553,7 +578,7 @@
                 </button>
                 <h2 class="text-xl font-bold">Diagnostic</h2>
             </div>
-            <div class="service-card rounded-lg shadow-md mb-6 h-48" style="background-image: url('http://static.photos/automotive/640x360/8')"></div>
+            <div class="service-card rounded-lg shadow-md mb-6 h-48" style="background-image: url('https://i.postimg.cc/rw1PT2J6/5915544683000482239.jpg')"></div>
             <div class="bg-white rounded-lg shadow-md p-6">
                 <p class="mb-4">Diagnostic électronique complet avec outils professionnels pour identifier toutes les pannes de votre véhicule. Rapport détaillé fourni.</p>
                 <button onclick="showContactOptions()" class="w-full bg-blue-600 text-white py-2 rounded-lg">
@@ -569,7 +594,7 @@
            </button>
            <h2 class="text-xl font-bold">Location</h2>
        </div>
-       <div class="service-card rounded-lg shadow-md mb-6 h-48" style="background-image: url('http://static.photos/automotive/640x360/9')"></div>
+       <div class="service-card rounded-lg shadow-md mb-6 h-48" style="background-image: url('https://i.postimg.cc/SR07nH6G/5913292883186796971.jpg')"></div>
        <div class="bg-white rounded-lg shadow-md p-6">
            <h3 class="text-lg font-semibold mb-4">Véhicules en location</h3>
            <div id="liste-location-client" class="space-y-4">
@@ -588,7 +613,7 @@
         </button>
         <h2 class="text-xl font-bold">Vente</h2>
     </div>
-    <div class="service-card rounded-lg shadow-md mb-6 h-48" style="background-image: url('http://static.photos/automotive/640x360/10')"></div>
+    <div class="service-card rounded-lg shadow-md mb-6 h-48" style="background-image: url('https://i.postimg.cc/JnXjCKfH/5913292883186796965.jpg')"></div>
     <div class="bg-white rounded-lg shadow-md p-6">
         <h3 class="text-lg font-semibold mb-4">Véhicules en vente</h3>
         <div id="liste-vente-client" class="space-y-4">
@@ -1056,31 +1081,102 @@
         <button onclick="showPage('admin')" class="mr-2"><i data-feather="arrow-left"></i></button>
         <h2 class="text-xl font-bold">Autres Admin</h2>
     </div>
-    
+
+    <!-- Gestion des images des services -->
     <div class="bg-white rounded-lg shadow-md p-6 mb-6">
-        <h3 class="text-lg font-semibold mb-4">Gestion des services</h3>
-        <div class="grid grid-cols-2 gap-4 mb-4">
-            <!-- Les 10 services seront listés ici avec option de modification -->
-        </div>
-    </div>
-    
-    <div class="bg-white rounded-lg shadow-md p-6 mb-6">
-        <h3 class="text-lg font-semibold mb-4">Image section À propos</h3>
-        <div class="flex items-center space-x-4">
-            <img id="a-propos-image-preview" src="http://static.photos/workspace/640x360/1" alt="Aperçu image à propos" class="w-32 h-20 object-cover rounded">
-            <div class="flex-1">
-                <input type="url" id="a-propos-image-url" class="w-full p-2 border rounded mb-2" placeholder="URL PostImage">
-                <button onclick="updateAProposImage()" class="bg-blue-600 text-white py-1 px-3 rounded text-sm">Mettre à jour</button>
+        <h3 class="text-lg font-semibold mb-4">Images des pages de services</h3>
+        <div id="services-images-list" class="grid grid-cols-1 gap-4">
+            <!-- Tôlerie -->
+            <div class="flex items-center space-x-4 p-4 border rounded-lg">
+                <img id="preview-tolerie" src="http://static.photos/automotive/640x360/1" alt="Tôlerie" class="w-[100px] h-[56px] object-cover rounded">
+                <div class="flex-1">
+                    <p class="font-semibold">Tôlerie</p>
+                    <input type="url" id="service-image-tolerie" class="w-full p-2 border rounded mb-2" placeholder="URL PostImage pour Tôlerie">
+                    <button onclick="updateServiceImage('tolerie')" class="bg-blue-600 text-white py-1 px-3 rounded text-sm">Mettre à jour</button>
+                </div>
+            </div>
+            <!-- Mécanique -->
+            <div class="flex items-center space-x-4 p-4 border rounded-lg">
+                <img id="preview-mecanique" src="http://static.photos/automotive/640x360/2" alt="Mécanique" class="w-[100px] h-[56px] object-cover rounded">
+                <div class="flex-1">
+                    <p class="font-semibold">Mécanique</p>
+                    <input type="url" id="service-image-mecanique" class="w-full p-2 border rounded mb-2" placeholder="URL PostImage pour Mécanique">
+                    <button onclick="updateServiceImage('mecanique')" class="bg-blue-600 text-white py-1 px-3 rounded text-sm">Mettre à jour</button>
+                </div>
+            </div>
+            <!-- Peinture -->
+            <div class="flex items-center space-x-4 p-4 border rounded-lg">
+                <img id="preview-peinture" src="http://static.photos/automotive/640x360/3" alt="Peinture" class="w-[100px] h-[56px] object-cover rounded">
+                <div class="flex-1">
+                    <p class="font-semibold">Peinture</p>
+                    <input type="url" id="service-image-peinture" class="w-full p-2 border rounded mb-2" placeholder="URL PostImage pour Peinture">
+                    <button onclick="updateServiceImage('peinture')" class="bg-blue-600 text-white py-1 px-3 rounded text-sm">Mettre à jour</button>
+                </div>
+            </div>
+            <!-- Froid -->
+            <div class="flex items-center space-x-4 p-4 border rounded-lg">
+                <img id="preview-froid" src="http://static.photos/automotive/640x360/4" alt="Froid" class="w-[100px] h-[56px] object-cover rounded">
+                <div class="flex-1">
+                    <p class="font-semibold">Froid</p>
+                    <input type="url" id="service-image-froid" class="w-full p-2 border rounded mb-2" placeholder="URL PostImage pour Froid">
+                    <button onclick="updateServiceImage('froid')" class="bg-blue-600 text-white py-1 px-3 rounded text-sm">Mettre à jour</button>
+                </div>
+            </div>
+            <!-- Vidange -->
+            <div class="flex items-center space-x-4 p-4 border rounded-lg">
+                <img id="preview-vidange" src="http://static.photos/automotive/640x360/5" alt="Vidange" class="w-[100px] h-[56px] object-cover rounded">
+                <div class="flex-1">
+                    <p class="font-semibold">Vidange</p>
+                    <input type="url" id="service-image-vidange" class="w-full p-2 border rounded mb-2" placeholder="URL PostImage pour Vidange">
+                    <button onclick="updateServiceImage('vidange')" class="bg-blue-600 text-white py-1 px-3 rounded text-sm">Mettre à jour</button>
+                </div>
+            </div>
+            <!-- Entretien général -->
+            <div class="flex items-center space-x-4 p-4 border rounded-lg">
+                <img id="preview-entretien" src="http://static.photos/automotive/640x360/6" alt="Entretien général" class="w-[100px] h-[56px] object-cover rounded">
+                <div class="flex-1">
+                    <p class="font-semibold">Entretien général</p>
+                    <input type="url" id="service-image-entretien" class="w-full p-2 border rounded mb-2" placeholder="URL PostImage pour Entretien">
+                    <button onclick="updateServiceImage('entretien')" class="bg-blue-600 text-white py-1 px-3 rounded text-sm">Mettre à jour</button>
+                </div>
+            </div>
+            <!-- Remorquage -->
+            <div class="flex items-center space-x-4 p-4 border rounded-lg">
+                <img id="preview-remorquage" src="http://static.photos/automotive/640x360/7" alt="Remorquage" class="w-[100px] h-[56px] object-cover rounded">
+                <div class="flex-1">
+                    <p class="font-semibold">Remorquage</p>
+                    <input type="url" id="service-image-remorquage" class="w-full p-2 border rounded mb-2" placeholder="URL PostImage pour Remorquage">
+                    <button onclick="updateServiceImage('remorquage')" class="bg-blue-600 text-white py-1 px-3 rounded text-sm">Mettre à jour</button>
+                </div>
+            </div>
+            <!-- Diagnostic -->
+            <div class="flex items-center space-x-4 p-4 border rounded-lg">
+                <img id="preview-diagnostic" src="http://static.photos/automotive/640x360/8" alt="Diagnostic" class="w-[100px] h-[56px] object-cover rounded">
+                <div class="flex-1">
+                    <p class="font-semibold">Diagnostic</p>
+                    <input type="url" id="service-image-diagnostic" class="w-full p-2 border rounded mb-2" placeholder="URL PostImage pour Diagnostic">
+                    <button onclick="updateServiceImage('diagnostic')" class="bg-blue-600 text-white py-1 px-3 rounded text-sm">Mettre à jour</button>
+                </div>
+            </div>
+            <!-- Location -->
+            <div class="flex items-center space-x-4 p-4 border rounded-lg">
+                <img id="preview-location" src="http://static.photos/automotive/640x360/9" alt="Location" class="w-[100px] h-[56px] object-cover rounded">
+                <div class="flex-1">
+                    <p class="font-semibold">Location</p>
+                    <input type="url" id="service-image-location" class="w-full p-2 border rounded mb-2" placeholder="URL PostImage pour Location">
+                    <button onclick="updateServiceImage('location')" class="bg-blue-600 text-white py-1 px-3 rounded text-sm">Mettre à jour</button>
+                </div>
+            </div>
+            <!-- Vente -->
+            <div class="flex items-center space-x-4 p-4 border rounded-lg">
+                <img id="preview-vente" src="http://static.photos/automotive/640x360/10" alt="Vente" class="w-[100px] h-[56px] object-cover rounded">
+                <div class="flex-1">
+                    <p class="font-semibold">Vente</p>
+                    <input type="url" id="service-image-vente" class="w-full p-2 border rounded mb-2" placeholder="URL PostImage pour Vente">
+                    <button onclick="updateServiceImage('vente')" class="bg-blue-600 text-white py-1 px-3 rounded text-sm">Mettre à jour</button>
+                </div>
             </div>
         </div>
-    </div>
-    
-    <div class="bg-white rounded-lg shadow-md p-6">
-        <h3 class="text-lg font-semibold mb-4">Images des partenaires</h3>
-        <div id="partenaires-list" class="space-y-4">
-            <!-- Les partenaires seront listés ici avec option de modification -->
-        </div>
-        <button onclick="addPartenaire()" class="mt-4 bg-blue-600 text-white py-2 px-4 rounded">Ajouter un partenaire</button>
     </div>
 </div>
         <!-- Appointment Confirmation Modal -->
@@ -1106,6 +1202,19 @@
         </div>
     </div>
 </div>
+      <div id="gallery" class="page">
+    <div class="flex items-center mb-4">
+        <button onclick="showPage('home')" class="mr-2"><i data-feather="arrow-left"></i></button>
+        <h2 class="text-2xl font-bold">Galerie</h2>
+    </div>
+    <div class="gallery-grid" data-aos="fade-up">
+        <img src="https://i.postimg.cc/PJmbYKKn/5913292883186796972.jpg" alt="Image 1">
+        <img src="https://i.postimg.cc/KvshsMNK/5915544683000482214.jpg" alt="Image 2">
+        <img src="https://i.postimg.cc/wx0C7mnW/5915544683000482229.jpg" alt="Image 3">
+        <img src="https://i.postimg.cc/WbvwTLbN/5913292883186796969.jpg" alt="Image 4">
+    </div>
+</div>
+      
     </main>
 
     <!-- Bottom Navigation -->
@@ -2282,6 +2391,77 @@ window.updateQuantity = updateQuantity;
 window.showCheckoutForm = showCheckoutForm;
 window.deleteVehicle = deleteVehicle;
 window.deleteProduct = deleteProduct;
+        
+        async function loadServicesImages() {
+    const services = [
+        'tolerie', 'mecanique', 'peinture', 'froid', 'vidange',
+        'entretien', 'remorquage', 'diagnostic', 'location', 'vente'
+    ];
+
+    for (const service of services) {
+        const docRef = window.firebase.doc(window.firebase.db, 'services_images', service);
+        const docSnap = await window.firebase.getDoc(docRef);
+        const imageUrl = docSnap.exists() ? docSnap.data().imageUrl : `http://static.photos/automotive/640x360/${services.indexOf(service) + 1}`;
+        const input = document.getElementById(`service-image-${service}`);
+        const preview = document.getElementById(`preview-${service}`);
+        if (input && preview) {
+            input.value = imageUrl;
+            preview.src = imageUrl;
+        }
+    }
+}
+
+async function updateServiceImage(serviceId) {
+    const imageUrl = document.getElementById(`service-image-${serviceId}`).value;
+    if (!imageUrl) {
+        alert('Veuillez entrer une URL valide');
+        return;
+    }
+
+    try {
+        await window.firebase.setDoc(
+            window.firebase.doc(window.firebase.db, 'services_images', serviceId),
+            { imageUrl }
+        );
+        document.getElementById(`preview-${serviceId}`).src = imageUrl;
+        alert('Image du service mise à jour avec succès');
+        updateServicePageImages();
+    } catch (error) {
+        console.error('Erreur lors de la mise à jour de l\'image:', error);
+        alert('Erreur lors de la mise à jour de l\'image');
+    }
+}
+
+async function updateServicePageImages() {
+    const servicePages = document.querySelectorAll('.page[id^="service-"] .service-card');
+    for (const page of servicePages) {
+        const serviceId = page.parentElement.id.replace('service-', '');
+        const docRef = window.firebase.doc(window.firebase.db, 'services_images', serviceId);
+        const docSnap = await window.firebase.getDoc(docRef);
+        if (docSnap.exists()) {
+            page.style.backgroundImage = `url('${docSnap.data().imageUrl}')`;
+        }
+    }
+}
+
+// Charger les images au chargement de la page admin-autres
+document.addEventListener('DOMContentLoaded', () => {
+    if (document.getElementById('admin-autres')?.classList.contains('active')) {
+        loadServicesImages();
+    }
+    updateServicePageImages();
+});
+
+// Mettre à jour showPage pour charger les images des services
+const originalShowPage = window.showPage;
+window.showPage = function(pageId) {
+    originalShowPage(pageId);
+    if (pageId === 'admin-autres') {
+        loadServicesImages();
+    } else if (pageId.startsWith('service-')) {
+        updateServicePageImages();
+    }
+};
     </script>
     <script>
      async function loadCommandes() {
@@ -2403,6 +2583,8 @@ function showPage(pageId) {
 
 // Exposer la fonction globalement
 window.deleteOrder = deleteOrder;
+      
+      
     </script>
 
 </body>
