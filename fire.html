@@ -8,6 +8,31 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+  <!-- SweetAlert2 - Remplace les alertes natives par des jolies notifications -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.js"></script>
+
+<script>
+// Cette petite fonction redirigera toutes les alertes vers SweetAlert2
+const originalAlert = window.alert;
+window.alert = function(message) {
+    Swal.fire({
+        title: 'Notification',
+        text: message,
+        icon: 'info',
+        confirmButtonText: 'OK',
+        confirmButtonColor: '#f68b1e',
+        showClass: {
+            popup: '',  // Désactive l'animation d'apparition
+            backdrop: '' // Désactive l'animation du fond
+        },
+        hideClass: {
+            popup: '',  // Désactive l'animation de disparition
+            backdrop: '' // Désactive l'animation du fond
+        }
+    });
+};
+</script>
     <style>
         /* Reset et styles de base */
         * {
