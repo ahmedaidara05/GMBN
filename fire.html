@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AutoMarket - Produits et Véhicules</title>
+    <title>GMBN - Produits et Véhicules</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
@@ -993,6 +993,122 @@ window.alert = function(message) {
     margin-bottom: 25px;
     color: #666;
 }
+      /* Page détail produit */
+.product-detail-page {
+    padding: 20px 0;
+}
+
+.product-detail-header {
+    margin-bottom: 30px;
+    display: flex;
+    align-items: center;
+}
+
+.back-button {
+    background: none;
+    border: none;
+    color: #f68b1e;
+    font-size: 16px;
+    cursor: pointer;
+    margin-right: 20px;
+    display: flex;
+    align-items: center;
+}
+
+.back-button i {
+    margin-right: 5px;
+}
+
+.product-detail-body {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+    margin-bottom: 50px;
+}
+
+.product-detail-images {
+    position: relative;
+}
+
+.main-image img {
+    width: 100%;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.image-gallery {
+    display: flex;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+.image-gallery img {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 4px;
+    cursor: pointer;
+    opacity: 0.7;
+    transition: opacity 0.3s;
+}
+
+.image-gallery img:hover {
+    opacity: 1;
+}
+
+.product-detail-info {
+    padding: 20px;
+}
+
+.product-detail-info .product-price {
+    font-size: 28px;
+    color: #f68b1e;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.product-detail-info .product-description {
+    font-size: 16px;
+    line-height: 1.6;
+    margin: 20px 0;
+}
+
+.product-features {
+    margin-top: 30px;
+}
+
+.product-features p {
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+}
+
+.product-features i {
+    margin-right: 10px;
+    color: #f68b1e;
+}
+
+.related-products {
+    margin-top: 50px;
+    padding-top: 30px;
+    border-top: 1px solid #eee;
+}
+
+.related-products h2 {
+    margin-bottom: 20px;
+    font-size: 24px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .product-detail-body {
+        grid-template-columns: 1fr;
+    }
+    
+    .product-detail-info {
+        padding: 0;
+    }
+}
     </style>
 </head>
 <body>
@@ -1094,6 +1210,25 @@ window.alert = function(message) {
     </div>
 </div>
 
+      
+      <!-- Page de détail produit -->
+<div id="product-detail" class="page">
+    <div class="product-detail-page">
+        <div class="container">
+            <!-- Le contenu sera chargé dynamiquement par JavaScript -->
+            <div id="product-detail-content"></div>
+            
+            <!-- Section produits similaires -->
+            <div class="related-products">
+                <h2>Autres produits </h2>
+                <div class="product-grid" id="related-products-container">
+                    <!-- Produits similaires chargés dynamiquement -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+      
 <!-- Page de catégorie -->
 <div id="category-page" class="page">
     <div class="category-page">
@@ -1275,8 +1410,7 @@ window.alert = function(message) {
                             <button onclick="increaseQuantity()">+</button>
                         </div>
                         <button class="add-to-cart" onclick="addToCartFromModal()">Ajouter au panier</button>
-                        <button class="buy-now" onclick="buyNow()">Acheter maintenant</button>
-                    </div>
+                  </div>
                     
                     <div style="margin-top: 20px;">
                         <p><i class="fas fa-truck"></i> Livraison gratuite</p>
@@ -1549,61 +1683,137 @@ function generateUniqueOrderNumber(existingNumbers) {
     } while (existingNumbers.includes(newNumber));
     return newNumber;
 } 
-        function createProductCard(product) {
-            const card = document.createElement('div');
-            card.className = 'product-card';
-            card.innerHTML = `
-                <div class="product-image">
-                    <img src="${product.image}" alt="${product.name}">
-                </div>
-                <div class="product-info">
-                    <h3 class="product-title">${product.name}</h3>
-                    <div class="product-price">${parseInt(product.price).toLocaleString()} FCFA</div>
-                    <div class="product-rating">
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star-half-alt"></i>
-                    </div>
-                    <div class="product-actions">
-                        <button class="add-to-cart" onclick="addToCart('${product.id}')">Ajouter au panier</button>
-                    </div>
-                </div>
-            `;
-            card.addEventListener('click', () => openProductModal(product.id));
-            return card;
-        }
+       function createProductCard(product) {
+    const card = document.createElement('div');
+    card.className = 'product-card';
+    card.innerHTML = `
+        <div class="product-image">
+            <img src="${product.image}" alt="${product.name}">
+        </div>
+        <div class="product-info">
+            <h3 class="product-title">${product.name}</h3>
+            <div class="product-price">${parseInt(product.price).toLocaleString()} FCFA</div>
+            <div class="product-rating">
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star-half-alt"></i>
+            </div>
+            <div class="product-actions">
+                <button class="add-to-cart" onclick="addToCart('${product.id}'); event.stopPropagation();">Ajouter au panier</button>
+            </div>
+        </div>
+    `;
+    
+    // Ouvrir la page de détail au clic sur le produit
+    card.addEventListener('click', () => openProductDetailPage(product.id));
+    
+    return card;
+}
 
         // Fonctions modales
-        function openProductModal(productId) {
-            currentProduct = products.find(p => p.id === productId);
-            if (!currentProduct) return;
+       function openProductDetailPage(productId) {
+    currentProduct = products.find(p => p.id === productId);
+    if (!currentProduct) return;
+    
+    // Afficher la page de détail
+    showPage('product-detail');
+    
+    // Charger les détails du produit
+    displayProductDetails(currentProduct);
+    
+    // Charger les produits similaires
+    displayRelatedProducts(currentProduct);
+}
+
+function displayProductDetails(product) {
+    const container = document.getElementById('product-detail-content');
+    
+    container.innerHTML = `
+        <div class="product-detail-header">
+            <button class="back-button" onclick="showPage('home')">
+                <i class="fas fa-arrow-left"></i> Retour
+            </button>
+            <h1>${product.name}</h1>
+        </div>
+        
+        <div class="product-detail-body">
+            <div class="product-detail-images">
+                <div class="main-image">
+                    <img src="${product.image}" alt="${product.name}" onclick="openImageModal(this.src)">
+                </div>
+                ${product.images ? `
+                <div class="image-gallery">
+                    ${product.images.split(',').map(imgUrl => `
+                        <img src="${imgUrl.trim()}" alt="${product.name}" onclick="openImageModal(this.src)">
+                    `).join('')}
+                </div>
+                ` : ''}
+            </div>
             
-            document.getElementById('modalTitle').textContent = currentProduct.name;
-            document.getElementById('modalPrice').textContent = `${parseInt(currentProduct.price).toLocaleString()} FCFA`;
-            document.getElementById('modalImg').src = currentProduct.image;
-            document.getElementById('modalDescription').textContent = currentProduct.description;
-            
-            // Gestion de la galerie d'images
-            const gallery = document.getElementById('imageGallery');
-            gallery.innerHTML = '';
-            
-            // Ajouter l'image principale à la galerie
-            addImageToGallery(currentProduct.image, gallery, true);
-            
-            // Ajouter les images supplémentaires si elles existent
-            if (currentProduct.images && currentProduct.images.length > 0) {
-                currentProduct.images.split(',').forEach(imgUrl => {
-                    if (imgUrl.trim()) {
-                        addImageToGallery(imgUrl.trim(), gallery, false);
-                    }
-                });
-            }
-            
-            document.getElementById('productModal').style.display = 'block';
-            document.body.style.overflow = 'hidden';
-        }
+            <div class="product-detail-info">
+                <div class="product-price">${parseInt(product.price).toLocaleString()} FCFA</div>
+                <div class="product-rating">
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star-half-alt"></i>
+                </div>
+                
+                <p class="product-description">${product.description}</p>
+                
+                <div class="product-actions">
+                    <div class="quantity">
+                        <button onclick="decreaseQuantity()">-</button>
+                        <input type="number" id="detail-quantity" value="1" min="1">
+                        <button onclick="increaseQuantity()">+</button>
+                    </div>
+                    <button class="add-to-cart" onclick="addToCartFromDetailPage()">Ajouter au panier</button>
+                </div>
+                
+                <div class="product-features">
+                    <p><i class="fas fa-truck"></i> Livraison gratuite</p>
+                    <p><i class="fas fa-undo"></i> Retours sous 30 jours</p>
+                    <p><i class="fas fa-shield-alt"></i> Garantie 2 ans</p>
+                </div>
+            </div>
+        </div>
+    `;
+}
+      function increaseDetailQuantity() {
+    const quantityInput = document.getElementById('detail-quantity');
+    quantityInput.value = parseInt(quantityInput.value) + 1;
+}
+
+function decreaseDetailQuantity() {
+    const quantityInput = document.getElementById('detail-quantity');
+    if (parseInt(quantityInput.value) > 1) {
+        quantityInput.value = parseInt(quantityInput.value) - 1;
+    }
+}
+      function displayRelatedProducts(currentProduct) {
+    const container = document.getElementById('related-products-container');
+    
+    // Filtrer les produits de même catégorie (exclure le produit actuel)
+    const relatedProducts = products
+        .filter(p => p.id !== currentProduct.id && p.category === currentProduct.category)
+        .slice(0, 4); // Maximum 4 produits
+    
+    container.innerHTML = '';
+    
+    if (relatedProducts.length === 0) {
+        container.innerHTML = '<p>Aucun produit similaire trouvé.</p>';
+        return;
+    }
+    
+    relatedProducts.forEach(product => {
+        const productCard = createProductCard(product);
+        container.appendChild(productCard);
+    });
+}
+      
 
         function addImageToGallery(imageUrl, galleryElement, isActive) {
             const img = document.createElement('img');
@@ -1642,7 +1852,39 @@ function generateUniqueOrderNumber(existingNumbers) {
                 quantityInput.value = parseInt(quantityInput.value) - 1;
             }
         }
+function addToCartFromDetailPage() {
+    if (!currentProduct) return;
+    
+    const quantity = parseInt(document.getElementById('detail-quantity').value);
+    addToCartWithQuantity(currentProduct.id, quantity);
+    showNotification('Produit ajouté au panier!', 'success');
+}
 
+function buyNowFromDetailPage() {
+    addToCartFromDetailPage();
+    showPage('cart');
+}
+
+function addToCartWithQuantity(productId, quantity) {
+    const product = products.find(p => p.id === productId);
+    if (!product) return;
+    
+    const existingItem = cart.find(item => item.id === productId);
+    
+    if (existingItem) {
+        existingItem.quantity += quantity;
+    } else {
+        cart.push({
+            id: product.id,
+            name: product.name,
+            price: product.price,
+            image: product.image,
+            quantity: quantity
+        });
+    }
+    
+    updateCartStorage();
+}
         // Fonctions panier
         function addToCart(productId) {
             const product = products.find(p => p.id === productId);
@@ -1689,10 +1931,10 @@ function generateUniqueOrderNumber(existingNumbers) {
             alert('Produit ajouté au panier!');
         }
 
-        function buyNow() {
-            addToCartFromModal();
-            showPage('cart');
-        }
+       function buyNow() {
+    addToCartFromModal();
+    showPage('cart');
+}
 
         function updateCartStorage() {
             localStorage.setItem('cart', JSON.stringify(cart));
@@ -1730,10 +1972,15 @@ function generateUniqueOrderNumber(existingNumbers) {
                             <p>${parseInt(item.price).toLocaleString()} FCFA x ${item.quantity}</p>
                         </div>
                     </div>
+                    <div class="quantity">
+    <button onclick="decreaseDetailQuantity()">-</button>
+    <input type="number" id="detail-quantity" value="1" min="1">
+    <button onclick="increaseDetailQuantity()">+</button>
+</div>
                     <div>
-                        <button class="btn-edit" onclick="changeQuantity(${index}, ${item.quantity - 1})">-</button>
-                        <span>${item.quantity}</span>
-                        <button class="btn-edit" onclick="changeQuantity(${index}, ${item.quantity + 1})">+</button>
+    <button onclick="decreaseDetailQuantity()">-</button>
+    <input type="number" id="detail-quantity" value="1" min="1">
+    <button onclick="increaseDetailQuantity()">+</button>
                         <button class="btn-delete" onclick="removeFromCart(${index})"><i class="fas fa-trash"></i></button>
                     </div>
                 `;
