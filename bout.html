@@ -875,22 +875,9 @@
                         <i class="fas fa-shopping-cart"></i> Panier <span class="cart-count" id="cartCount">0</span>
                     </button>
                 </div>
-                <div class="user-actions">
-                    <a href="#" onclick="showPage('account')"><i class="fas fa-user"></i> Compte</a>
-                    <a href="#" onclick="showPage('help')"><i class="fas fa-question-circle"></i> Aide</a>
-                </div>
+              
             </div>
-            <nav>
-                <ul>
-                    <li onclick="showPage('home')">Accueil</li>
-                    <li onclick="filterByCategory('Pièces auto')">Pièces auto</li>
-                    <li onclick="filterByCategory('Accessoires')">Accessoires</li>
-                    <li onclick="filterByCategory('Véhicules')">Véhicules</li>
-                    <li onclick="filterByCategory('Pneus & Jantes')">Pneus & Jantes</li>
-                    <li onclick="filterByCategory('Entretien')">Entretien</li>
-                    <li onclick="filterByCategory('Promotions')">Promotions</li>
-                </ul>
-            </nav>
+           
         </div>
     </header>
 
@@ -911,30 +898,30 @@
             <section class="categories">
                 <h2 class="section-title">Catégories populaires</h2>
                 <div class="category-grid">
-                    <div class="category-item" onclick="filterByCategory('Pièces moteur')">
-                        <i class="fas fa-car"></i>
-                        <p>Pièces moteur</p>
-                    </div>
-                    <div class="category-item" onclick="filterByCategory('Outillage')">
-                        <i class="fas fa-tools"></i>
-                        <p>Outillage</p>
-                    </div>
-                    <div class="category-item" onclick="filterByCategory('Lubrifiants')">
-                        <i class="fas fa-oil-can"></i>
-                        <p>Lubrifiants</p>
-                    </div>
-                    <div class="category-item" onclick="filterByCategory('Accessoires')">
-                        <i class="fas fa-puzzle-piece"></i>
-                        <p>Accessoires</p>
-                    </div>
-                    <div class="category-item" onclick="filterByCategory('Pneus')">
-                        <i class="fas fa-tire"></i>
-                        <p>Pneus</p>
-                    </div>
-                    <div class="category-item" onclick="filterByCategory('Batteries')">
-                        <i class="fas fa-car-battery"></i>
-                        <p>Batteries</p>
-                    </div>
+                   <div class="category-item" onclick="filterByCategory('Pièces moteur')">
+    <i class="fas fa-car"></i>
+    <p>Pièces moteur</p>
+</div>
+<div class="category-item" onclick="filterByCategory('Outillage')">
+    <i class="fas fa-tools"></i>
+    <p>Outillage</p>
+</div>
+<div class="category-item" onclick="filterByCategory('Lubrifiants')">
+    <i class="fas fa-oil-can"></i>
+    <p>Lubrifiants</p>
+</div>
+<div class="category-item" onclick="filterByCategory('Accessoires')">
+    <i class="fas fa-puzzle-piece"></i>
+    <p>Accessoires</p>
+</div>
+<div class="category-item" onclick="filterByCategory('Pneus')">
+    <i class="fas fa-tire"></i>
+    <p>Pneus</p>
+</div>
+<div class="category-item" onclick="filterByCategory('Batteries')">
+    <i class="fas fa-car-battery"></i>
+    <p>Batteries</p>
+</div>
                 </div>
             </section>
 
@@ -958,6 +945,10 @@
         <!-- Page Panier -->
         <div id="cart" class="page">
             <div class="cart-page">
+               <ul>
+                    <li onclick="showPage('home')">Retour</li>
+                   
+                </ul>
                 <h2 class="section-title">Votre Panier</h2>
                 
                 <div class="cart-items" id="cart-items-container">
@@ -1000,10 +991,19 @@
                                 <label for="product-price">Prix (FCFA)</label>
                                 <input type="number" id="product-price" required>
                             </div>
-                            <div class="form-group">
-                                <label for="product-category">Catégorie</label>
-                                <input type="text" id="product-category" required>
-                            </div>
+                           <div class="form-group">
+    <label for="product-category">Catégorie</label>
+    <select id="product-category" required>
+        <option value="">Sélectionnez une catégorie</option>
+        <option value="Pièces moteur">Pièces moteur</option>
+        <option value="Outillage">Outillage</option>
+        <option value="Lubrifiants">Lubrifiants</option>
+        <option value="Accessoires">Accessoires</option>
+        <option value="Pneus">Pneus</option>
+        <option value="Batteries">Batteries</option>
+        <option value="Véhicules">Véhicules</option>
+    </select>
+</div>
                             <div class="form-group">
                                 <label for="product-description">Description</label>
                                 <input type="text" id="product-description" required>
@@ -1700,6 +1700,7 @@
                         alert('Produit mis à jour avec succès!');
                         resetProductForm();
                         loadAdminProducts();
+                  loadProducts();
                     })
                     .catch(error => {
                         console.error('Erreur lors de la mise à jour: ', error);
