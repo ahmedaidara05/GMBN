@@ -675,18 +675,23 @@ window.alert = function(message) {
             border-bottom: 1px solid #ddd;
         }
         
-        .admin-tabs {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 20px;
-        }
-        
-        .admin-tab {
-            padding: 10px 20px;
-            background-color: #eee;
-            border-radius: 4px;
-            cursor: pointer;
-        }
+       .admin-tabs {
+    display: flex;
+    gap: 5px; /* Réduire l'espacement */
+    margin-bottom: 20px;
+    flex-wrap: wrap; /* Passage à la ligne si nécessaire */
+}
+
+.admin-tab {
+    padding: 8px 12px; /* Réduire le padding */
+    background-color: #eee;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px; /* Réduire la taille de police */
+    flex: 1;
+    min-width: 100px; /* Largeur minimale réduite */
+    text-align: center;
+}
         
         .admin-tab.active {
             background-color: #1e40af;
@@ -1179,11 +1184,10 @@ window.alert = function(message) {
         <div class="container">
             <div class="header-top">
                 <div class="logo">
-                    <a href="#" onclick="showPage('home')">Boutique GMBN</a>
                 </div>
                 <div class="search-container">
                     <div class="search-bar">
-                        <input type="text" id="searchInput" placeholder="Rechercher sur GMBN.">
+                        <input type="text" id="searchInput" placeholder="Rechercher sur GMBN...">
                         <button onclick="performSearch()"><i class="fas fa-search"></i></button>
                     </div>
                     <button class="cart-btn" onclick="showPage('cart')">
@@ -1203,13 +1207,12 @@ window.alert = function(message) {
             <!-- Bannière -->
             <div class="banner">
                 <div class="banner-content">
-                    <h1></h1>
-                    <p>Découvrez nos produits et véhicules à prix imbattables</p>
+                    <h1>Boutique GMBN</h1>
+                    <p>Découvrez nos produits et véhicules à des prix imbattables</p>
                 </div>
             </div>
 
-            <!-- Catégories -->
-            <section class="categories">
+             <section class="categories">
                 <h2 class="section-title">Catégories</h2>
                 <div class="category-grid">
                    <div class="category-item" onclick="filterByCategory('Pièces')">
@@ -1444,7 +1447,7 @@ window.alert = function(message) {
     <div class="notification-list">
         <h3>Affiches actuelles</h3>
         <div id="notifications-container">
-            <!-- Les notifications seront chargées ici -->
+            <!-- Les notifications seront chargées  ici -->
         </div>
     </div>
 </div>
