@@ -1379,6 +1379,28 @@ window.alert = function(message) {
         <option value="Véhicules">Véhicules</option>
     </select>
 </div>
+                          <div class="form-group vehicle-fields" style="display: none;">
+    <label for="vehicle-year">Année de sortie</label>
+    <input type="number" id="vehicle-year" min="1900" max="2030">
+</div>
+
+<div class="form-group vehicle-fields" style="display: none;">
+    <label for="vehicle-mileage">Kilométrage</label>
+    <input type="number" id="vehicle-mileage" min="0">
+</div>
+
+<div class="form-group vehicle-fields" style="display: none;">
+    <label for="vehicle-fuel">Type de carburant</label>
+    <select id="vehicle-fuel">
+        <option value="">Sélectionner</option>
+        <option value="Essence">Essence</option>
+        <option value="Diesel">Diesel</option>
+        <option value="Électrique">Électrique</option>
+        <option value="Hybride">Hybride</option>  
+        <option value="GPL">GPL</option>
+    </select>
+</div>
+                          
                             <div class="form-group">
                                 <label for="product-description">Description</label>
                                 <input type="text" id="product-description" required>
@@ -1733,31 +1755,38 @@ function displayCategoryProducts(products, category) {
             });
         }
 
-        function displayVehicles(vehicles) {
-            const container = document.getElementById('vehicles-container');
-            container.innerHTML = '';
-            
-            vehicles.forEach(vehicle => {
-                const vehicleCard = document.createElement('div');
-                vehicleCard.className = 'vehicle-card';
-                vehicleCard.innerHTML = `
-                    <div class="vehicle-image">
-                        <img src="${vehicle.image}" alt="${vehicle.name}">
-                    </div>
-                    <div class="vehicle-info">
-                        <h3 class="vehicle-title">${vehicle.name}</h3>
-                        <div class="vehicle-price">${parseInt(vehicle.price).toLocaleString()} FCFA</div>
-                        <div class="vehicle-details">
-                            <span><i class="fas fa-calendar-alt"></i> ${vehicle.year || 'N/A'}</span>
-                            <span><i class="fas fa-road"></i> ${vehicle.mileage || 'N/A'} km</span>
-                            <span><i class="fas fa-gas-pump"></i> ${vehicle.fuel || 'N/A'}</span>
-                        </div>
-                        <button class="add-to-cart" onclick="openProductModal('${vehicle.id}')">Voir détails</button>
-                    </div>
-                `;
-                container.appendChild(vehicleCard);
-            });
-        }
+function displayVehicles(vehicles) {
+    const container = document.getElementById('vehicles-container');
+    container.innerHTML = '';
+    
+    vehicles.forEach(vehicle => {
+        const vehicleCard = document.createElement('div');
+        vehicleCard.className = 'vehicle-card';
+        
+        // Ajouter les informations véhicule si elles existent
+        const year = vehicle.year ? vehicle.year : 'N/A';
+        const mileage = vehicle.mileage ? vehicle.mileage.toLocaleString() + ' km' : 'N/A';
+        const fuel = vehicle.fuel ? vehicle.fuel : 'N/A';
+        
+        vehicleCard.innerHTML = `
+            <div class="vehicle-image">
+                <img src="${vehicle.image}" alt="${vehicle.name}">
+            </div>
+            <div class="vehicle-info">
+                <h3 class="vehicle-title">${vehicle.name}</h3>
+                <div class="vehicle-price">${parseInt(vehicle.price).toLocaleString()} FCFA</div>
+                <div class="vehicle-details">
+                    <span><i class="fas fa-calendar-alt"></i> ${year}</span>
+                    <span><i class="fas fa-road"></i> ${mileage}</span>
+                    <span><i class="fas fa-gas-pump"></i> ${fuel}</span>
+                </div>
+                <button class="add-to-cart" onclick="openProductDetailPage('${vehicle.id}')">Voir détails</button>
+            </div>
+        `;
+        container.appendChild(vehicleCard);
+    });
+}
+      
 function generateOrderNumber() {
     // Génère un nombre aléatoire entre 700000 et 799999
     return Math.floor(400000 + Math.random() * 500000);
@@ -1817,6 +1846,34 @@ function generateUniqueOrderNumber(existingNumbers) {
 function displayProductDetails(product) {
     const container = document.getElementById('product-detail-content');
     
+    // Vérifier si c'est un véhicule et préparer les détails spécifiques
+    let vehicleDetails = '';
+    if (product.category === 'Véhicules') {
+        const year = product.year ? product.year : 'Non spécifiée';
+        const mileage = product.mileage ? product.mileage.toLocaleString() + ' km' : 'Non spécifié';
+        const fuel = product.fuel ? product.fuel : 'Non spécifié';
+        
+        vehicleDetails = `
+            <div class="vehicle-specs">
+                <h3>Spécifications du véhicule</h3>
+                <div class="spec-grid">
+                    <div class="spec-item">
+                        <i class="fas fa-calendar-alt"></i>
+                        <span>Année: <strong>${year}</strong></span>
+                    </div>
+                    <div class="spec-item">
+                        <i class="fas fa-road"></i>
+                        <span>Kilométrage: <strong>${mileage}</strong></span>
+                    </div>
+                    <div class="spec-item">
+                        <i class="fas fa-gas-pump"></i>
+                        <span>Carburant: <strong>${fuel}</strong></span>
+                    </div>
+                </div>
+            </div>
+        `;
+    }
+    
     container.innerHTML = `
         <div class="product-detail-header">
             <button class="back-button" onclick="showPage('home')">
@@ -1851,24 +1908,28 @@ function displayProductDetails(product) {
                 
                 <p class="product-description">${product.description}</p>
                 
+                ${vehicleDetails} <!-- Ici s'affichent les détails véhicule si c'est un véhicule -->
+                
                 <div class="product-actions">
                     <div class="quantity">
-                        <button onclick="decreaseQuantity()">-</button>
+                        <button onclick="decreaseDetailQuantity()">-</button>
                         <input type="number" id="detail-quantity" value="1" min="1">
-                        <button onclick="increaseQuantity()">+</button>
+                        <button onclick="increaseDetailQuantity()">+</button>
                     </div>
                     <button class="add-to-cart" onclick="addToCartFromDetailPage()">Ajouter au panier</button>
+                    <button class="buy-now" onclick="buyNowFromDetailPage()">Acheter maintenant</button>
                 </div>
                 
                 <div class="product-features">
                     <p><i class="fas fa-truck"></i> Livraison gratuite</p>
-                    <p><i class="fas fa-undo"></i> Retours sous 30 jours</p>
-                    <p><i class="fas fa-shield-alt"></i> Garantie 2 ans</p>
+                    <p><i class="fas fa-undo"></i> Retours sous 7 jours</p>
+                    <p><i class="fas fa-shield-alt"></i> Garantie 1 ans</p>
                 </div>
             </div>
         </div>
     `;
 }
+      
       function increaseDetailQuantity() {
     const quantityInput = document.getElementById('detail-quantity');
     quantityInput.value = parseInt(quantityInput.value) + 1;
@@ -2461,7 +2522,18 @@ function closeOrderConfirmation() {
                 document.getElementById(previewId).src = url;
             }
         }
-
+document.getElementById('product-category').addEventListener('change', function() {
+    const isVehicle = this.value === 'Véhicules';
+    document.querySelectorAll('.vehicle-fields').forEach(field => {
+        field.style.display = isVehicle ? 'block' : 'none';
+    });
+    
+    // Rendre les champs obligatoires seulement pour les véhicules
+    document.getElementById('vehicle-year').required = isVehicle;
+    document.getElementById('vehicle-mileage').required = isVehicle;
+    document.getElementById('vehicle-fuel').required = isVehicle;
+});
+      
         function saveProduct() {
             const productId = document.getElementById('product-id').value;
             const name = document.getElementById('product-name').value;
@@ -2471,6 +2543,7 @@ function closeOrderConfirmation() {
             const image = document.getElementById('product-image').value;
             const images = document.getElementById('product-images').value;
             
+          
             const productData = {
                 name,
                 price: parseInt(price),
