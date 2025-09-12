@@ -3,2561 +3,2001 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GMBN - Garage Médina Baye Niass</title>
-    <meta name="theme-color" content="#1e40af">
-    <link rel="manifest" href="/manifest.json">
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
-    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
-    <script src="https://unpkg.com/feather-icons"></script>
-    
-    <!-- Intégration Firebase -->
-   <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
-    import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-analytics.js";
-    import { getFirestore, collection, addDoc, getDocs, updateDoc, deleteDoc, doc, getDoc, onSnapshot, query, where, orderBy } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
-    
-    const firebaseConfig = {
-        apiKey: "AIzaSyCX1Q0i-L33RNZIVsJ8V1iRsDY6CJm1Lmc",
-        authDomain: "gmbn-9ba54.firebaseapp.com",
-        projectId: "gmbn-9ba54",
-        storageBucket: "gmbn-9ba54.firebasestorage.app",
-        messagingSenderId: "968684169673",
-        appId: "1:968684169673:web:d6b2796b396f8e62eda018",
-        measurementId: "G-MQXSQQQHBC"
-    };
-
-    const app = initializeApp(firebaseConfig);
-    const analytics = getAnalytics(app);
-    const db = getFirestore(app);
-    
-    window.firebase = {
-        db,
-        collection,
-        addDoc,
-        getDocs,
-        getDoc, // Ensure getDoc is included
-        updateDoc,
-        deleteDoc,
-        doc,
-        onSnapshot,
-        query,
-        where,
-        orderBy
-    };
-</script>
+    <title>AutoMarket - Produits et Véhicules</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
-        body {
-            font-family: 'Poppins', sans-serif;
-            padding-bottom: 80px;
-            background-color: #f3f4f6;
+        /* Reset et styles de base */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
-        .service-card {
+        
+        body {
+            background-color: #f8f9fa;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+        
+        ul {
+            list-style: none;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+        
+        /* Header */
+        header {
+            background-color: #f68b1e;
+            padding: 10px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 10px;
+        }
+        
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: white;
+        }
+        
+        .search-container {
+            display: flex;
+            flex-grow: 1;
+            margin: 0 20px;
+            align-items: center;
+        }
+        
+        .search-bar {
+            flex-grow: 1;
+            position: relative;
+        }
+        
+        .search-bar input {
+            width: 100%;
+            padding: 10px 15px;
+            border-radius: 4px 0 0 4px;
+            border: none;
+            font-size: 16px;
+        }
+        
+        .search-bar button {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: #f68b1e;
+            cursor: pointer;
+        }
+        
+        .cart-btn {
+            background-color: #2c3e50;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 0 4px 4px 0;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            white-space: nowrap;
+        }
+        
+        .cart-btn i {
+            margin-right: 5px;
+        }
+        
+        .cart-count {
+            background-color: #e74c3c;
+            color: white;
+            border-radius: 50%;
+            padding: 2px 6px;
+            font-size: 12px;
+            margin-left: 5px;
+        }
+        
+        .user-actions a {
+            color: white;
+            margin-left: 15px;
+            font-size: 14px;
+        }
+        
+        .user-actions a i {
+            margin-right: 5px;
+        }
+        
+        nav ul {
+            display: flex;
+            background-color: #e67e22;
+            padding: 8px 0;
+        }
+        
+        nav ul li {
+            margin-right: 20px;
+            color: white;
+            font-size: 14px;
+            cursor: pointer;
+        }
+        
+        /* Bannière */
+        .banner {
+            background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url('https://i.postimg.cc/V5P0Dmqk/5913292883186796964-1.jpg');
             background-size: cover;
             background-position: center;
-            position: relative;
+            height: 300px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            text-align: center;
+            margin-bottom: 30px;
+            border-radius: 8px;
+            margin-top: 15px;
+        }
+        
+        .banner-content h1 {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+        }
+        
+        .banner-content p {
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+        }
+        
+        .btn {
+            background-color: #f68b1e;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 4px;
+            display: inline-block;
+            font-weight: bold;
+            transition: background-color 0.3s;
+            cursor: pointer;
+            border: none;
+        }
+        
+        .btn:hover {
+            background-color: #e67e22;
+        }
+        
+        /* Catégories */
+        .categories {
+            margin: 30px 0;
+        }
+        
+        .section-title {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #f68b1e;
+            display: inline-block;
+        }
+        
+        .category-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 15px;
+        }
+        
+        .category-item {
+            background-color: white;
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+            cursor: pointer;
+        }
+        
+        .category-item:hover {
+            transform: translateY(-5px);
+        }
+        
+        .category-item i {
+            font-size: 2rem;
+            color: #f68b1e;
+            margin-bottom: 10px;
+        }
+        
+        /* Produits */
+        .products {
+            margin: 30px 0;
+        }
+        
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 20px;
+        }
+        
+        .product-card {
+            background-color: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+        }
+        
+        .product-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .product-image {
+            height: 180px;
             overflow: hidden;
         }
-        .service-card::before {
-            content: '';
-            position: absolute;
+        
+        .product-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s;
+        }
+        
+        .product-card:hover .product-image img {
+            transform: scale(1.05);
+        }
+        
+        .product-info {
+            padding: 15px;
+        }
+        
+        .product-title {
+            font-size: 16px;
+            margin-bottom: 10px;
+            height: 40px;
+            overflow: hidden;
+        }
+        
+        .product-price {
+            font-weight: bold;
+            color: #f68b1e;
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+        
+        .product-rating {
+            color: #ffc107;
+            margin-bottom: 10px;
+        }
+        
+        .product-actions {
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        .add-to-cart {
+            background-color: #f68b1e;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        
+        /* Véhicules */
+        .vehicles {
+            margin: 30px 0;
+        }
+        
+        .vehicle-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+        }
+        
+        .vehicle-card {
+            background-color: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .vehicle-image {
+            height: 180px;
+            overflow: hidden;
+        }
+        
+        .vehicle-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .vehicle-info {
+            padding: 15px;
+        }
+        
+        .vehicle-title {
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+        
+        .vehicle-price {
+            font-weight: bold;
+            color: #f68b1e;
+            font-size: 20px;
+            margin-bottom: 10px;
+        }
+        
+        .vehicle-details {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+            font-size: 14px;
+            color: #666;
+        }
+        
+        /* Footer */
+        footer {
+            background-color: #2c3e50;
+            color: white;
+            padding: 40px 0 20px;
+            margin-top: 50px;
+        }
+        
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+        
+        .footer-column h3 {
+            font-size: 18px;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #f68b1e;
+            padding-bottom: 10px;
+            display: inline-block;
+        }
+        
+        .footer-column ul li {
+            margin-bottom: 10px;
+        }
+        
+        .footer-column ul li a:hover {
+            color: #f68b1e;
+        }
+        
+        .social-icons {
+            display: flex;
+            gap: 15px;
+            margin-top: 15px;
+        }
+        
+        .social-icons a {
+            color: white;
+            font-size: 20px;
+        }
+        
+        .footer-bottom {
+            text-align: center;
+            padding-top: 20px;
+            border-top: 1px solid #3e546b;
+        }
+        
+        /* Modal de produit */
+        .product-modal {
+            display: none;
+            position: fixed;
             top: 0;
             left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.5);
-            z-index: 1;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.7);
+            z-index: 1000;
+            overflow-y: auto;
         }
-        .service-card-content {
-            position: relative;
-            z-index: 2;
+        
+        .modal-content {
+            background-color: white;
+            margin: 50px auto;
+            max-width: 900px;
+            border-radius: 8px;
+            overflow: hidden;
+            animation: modalFade 0.3s;
         }
-        .nav-item.active {
-            color: #1e40af;
+        
+        @keyframes modalFade {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
-        .nav-item.active svg {
-            stroke: #1e40af;
+        
+        .modal-header {
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #eee;
         }
+        
+        .close-modal {
+            font-size: 24px;
+            cursor: pointer;
+        }
+        
+        .modal-body {
+            padding: 20px;
+            display: flex;
+            flex-wrap: wrap;
+        }
+        
+        .modal-image {
+            flex: 1;
+            min-width: 300px;
+        }
+        
+        .modal-image img {
+            width: 100%;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+        
+        .image-gallery {
+            display: flex;
+            overflow-x: auto;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        
+        .image-gallery img {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 4px;
+            cursor: pointer;
+            opacity: 0.7;
+            transition: opacity 0.3s;
+        }
+        
+        .image-gallery img:hover, .image-gallery img.active {
+            opacity: 1;
+        }
+        
+        .modal-details {
+            flex: 1;
+            padding: 0 20px;
+            min-width: 300px;
+        }
+        
+        .modal-title {
+            font-size: 24px;
+            margin-bottom: 15px;
+        }
+        
+        .modal-price {
+            font-size: 28px;
+            color: #f68b1e;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+        
+        .modal-rating {
+            margin-bottom: 15px;
+            color: #ffc107;
+        }
+        
+        .modal-description {
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+        
+        .modal-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        
+        .quantity {
+            display: flex;
+            align-items: center;
+            margin-right: 15px;
+        }
+        
+        .quantity button {
+            width: 30px;
+            height: 30px;
+            background-color: #eee;
+            border: none;
+            cursor: pointer;
+        }
+        
+        .quantity input {
+            width: 40px;
+            height: 30px;
+            text-align: center;
+            border: 1px solid #eee;
+            margin: 0 5px;
+        }
+        
+        .buy-now {
+            background-color: #e74c3c;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        
+        /* Modal d'image plein écran */
+        .image-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.9);
+            z-index: 1100;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .image-modal-content {
+            max-width: 90%;
+            max-height: 90%;
+        }
+        
+        .image-modal-content img {
+            width: 100%;
+            height: auto;
+            object-fit: contain;
+        }
+        
+        .close-image-modal {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            color: white;
+            font-size: 40px;
+            cursor: pointer;
+        }
+        
+        /* Modal de commande */
+        .order-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.7);
+            z-index: 1000;
+            overflow-y: auto;
+        }
+        
+        .order-modal-content {
+            background-color: white;
+            margin: 50px auto;
+            max-width: 600px;
+            border-radius: 8px;
+            overflow: hidden;
+            animation: modalFade 0.3s;
+        }
+        
+        .order-form {
+            padding: 20px;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        
+        .form-group input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        
+        /* Pages */
         .page {
             display: none;
         }
-        .page.active {
+        
+        .active-page {
             display: block;
         }
-        .accordion-content {
-            max-height: 0;
-            overflow: hidden;
-            transition: max-height 0.3s ease-out;
+        
+        /* Admin */
+        .admin-panel {
+            padding: 20px;
         }
-        .dark-mode {
-            background-color: #1f2937;
-            color: #f3f4f6;
+        
+        .admin-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #ddd;
         }
-      header button:hover {
-    transform: translateY(-1px);
-    transition: transform 0.2s ease;
+        
+        .admin-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .admin-tab {
+            padding: 10px 20px;
+            background-color: #eee;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        
+        .admin-tab.active {
+            background-color: #f68b1e;
+            color: white;
+        }
+        
+        .admin-content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .product-form {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+        
+        .form-full-width {
+            grid-column: 1 / -1;
+        }
+        
+        .image-preview {
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+            border-radius: 4px;
+            margin-top: 10px;
+        }
+        
+        .product-list {
+            margin-top: 20px;
+        }
+        
+        .product-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .product-item img {
+            width: 60px;
+            height: 60px;
+            object-fit: cover;
+            border-radius: 4px;
+        }
+        
+        .product-actions {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .btn-edit {
+            background-color: #3498db;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            border: none;
+        }
+        
+        .btn-delete {
+            background-color: #e74c3c;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            border: none;
+        }
+        
+        /* Commandes */
+        .order-list {
+            margin-top: 20px;
+        }
+        
+        .order-item {
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+        
+        .order-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .order-details {
+            margin-top: 10px;
+        }
+        
+        .order-product {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        
+        /* Panier */
+        .cart-page {
+            padding: 20px;
+        }
+        
+        .cart-items {
+            margin-bottom: 20px;
+        }
+        
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            margin-bottom: 15px;
+        }
+        
+        .cart-item-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .cart-item img {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 4px;
+        }
+        
+        .cart-summary {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .cart-total {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            text-align: right;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header-top {
+                flex-direction: column;
+            }
+            
+            .search-container {
+                width: 100%;
+                margin: 10px 0;
+            }
+            
+            .user-actions {
+                width: 100%;
+                display: flex;
+                justify-content: space-around;
+                margin-top: 10px;
+            }
+            
+            nav ul {
+                flex-wrap: wrap;
+            }
+            
+            .banner {
+                height: 200px;
+            }
+            
+            .banner-content h1 {
+                font-size: 1.8rem;
+            }
+            
+            .modal-body {
+                flex-direction: column;
+            }
+            
+            .modal-details {
+                padding: 20px 0;
+            }
+            
+            .product-form {
+                grid-template-columns: 1fr;
+            }
+        }
+      .search-results-page, .category-page {
+    padding: 20px;
 }
-     #produits-container {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr); /* Deux colonnes de taille égale */
-    gap: 16px; /* Espacement entre les cartes */
-    padding: 7px;
-} 
-      #cart-notification {
-    transition: opacity 0.3s ease-in-out;
+
+.no-products {
+    text-align: center;
+    padding: 40px;
+    font-size: 18px;
+    color: #666;
 }
-#cart-notification:not(.hidden) {
-    opacity: 1;
-}
-#cart-notification.hidden {
-    opacity: 0;
-}
-      
-      .add-to-cart-btn {
-    transition: background-color 0.3s ease; /* Transition fluide pour la couleur */
-}
-      
     </style>
 </head>
-<body class="relative">
+<body>
     <!-- Header -->
-   <header class="bg-blue-800 text-white p-4 shadow-md">
-    <div class="container mx-auto flex justify-between items-center">
-        <div class="flex items-center space-x-2">
-            <img src="https://i.postimg.cc/vBxynkc6/Design-sans-titre-2.png" alt="Logo GMBN" class="w-10 h-10 rounded-full">
-            <h1 class="text-xl font-bold">GMBN</h1>
-        </div>
-        <div class="flex items-center space-x-4">
-            <button onclick="showPage('contact')" class="text-white hover:text-blue-200 px-2 py-1 rounded-lg flex items-center transition-colors">
-                <i data-feather="phone" class="mr-1 w-4 h-4"></i>
-                <span class="text-sm"></span>
-            </button>
-            <button id="darkModeToggle" class="p-2 rounded-full hover:bg-blue-700">
-                <i data-feather="moon"></i>
-            </button>
-        </div>
-    </div>
-</header>
-
-    <!-- Main Content -->
-    <main class="container mx-auto p-4">
-        <!-- Home Page -->
-        <div id="home" class="page active">
-           <div class="flex justify-center">
-                    <img src="https://i.postimg.cc/x1jGNvzB/5913292883186796968.jpg" alt="Notre équipe" class="rounded-lg w-full max-w-md">
+    <header>
+        <div class="container">
+            <div class="header-top">
+                <div class="logo">
+                    <a href="#" onclick="showPage('home')">Boutique GMBN</a>
                 </div>
-            <div class="text-center mb-8" data-aos="fade-up">
-                <p class="text-gray-600">Votre expert en mécanique automobile depuis 1997</p>
+                <div class="search-container">
+                    <div class="search-bar">
+                        <input type="text" id="searchInput" placeholder="Rechercher sur GMBN.">
+                        <button onclick="performSearch()"><i class="fas fa-search"></i></button>
+                    </div>
+                    <button class="cart-btn" onclick="showPage('cart')">
+                        <i class="fas fa-shopping-cart"></i> Panier <span class="cart-count" id="cartCount">0</span>
+                    </button>
+                </div>
+              
             </div>
-
            
-            <h3 class="text-xl font-semibold mb-4 mt-8">Nos Services</h3>
-            <div class="grid grid-cols-2 gap-4">
-                <div class="service-card rounded-lg shadow-md p-4 text-white" 
-                     style="background-image: url('https://i.postimg.cc/XvNQ0GqF/5915544683000482204.jpg')"
-                     onclick="navigateToService('tolerie')"
-                     data-aos="fade-up">
-                    <div class="service-card-content">
-                        <h4 class="font-bold">Tôlerie</h4>
-                    </div>
+        </div>
+    </header>
+
+    <!-- Pages -->
+    <div class="container">
+        <!-- Page d'accueil -->
+        <div id="home" class="page active-page">
+            <!-- Bannière -->
+            <div class="banner">
+                <div class="banner-content">
+                    <h1></h1>
+                    <p>Découvrez nos produits et véhicules à prix imbattables</p>
                 </div>
-                <div class="service-card rounded-lg shadow-md p-4 text-white" 
-                     style="background-image: url('https://i.postimg.cc/FsstDRgf/5915544683000482231.jpg')"
-                     onclick="navigateToService('mecanique')"
-                     data-aos="fade-up">
-                    <div class="service-card-content">
-                        <h4 class="font-bold">Mécanique</h4>
-                    </div>
+            </div>
+
+            <!-- Catégories -->
+            <section class="categories">
+                <h2 class="section-title">Catégories</h2>
+                <div class="category-grid">
+                   <div class="category-item" onclick="filterByCategory('Pièces')">
+    <i class="fas fa-car"></i>
+    <p>Pièces moteur</p>
+</div>
+<div class="category-item" onclick="filterByCategory('Outillage')">
+    <i class="fas fa-tools"></i>
+    <p>Outillage</p>
+</div>
+<div class="category-item" onclick="filterByCategory('Lubrifiants')">
+    <i class="fas fa-oil-can"></i>
+    <p>Lubrifiants</p>
+</div>
+<div class="category-item" onclick="filterByCategory('Accessoires')">
+    <i class="fas fa-puzzle-piece"></i>
+    <p>Accessoires</p>
+</div>
+<div class="category-item" onclick="filterByCategory('Pneus')">
+    <i class="fas fa-tire"></i>
+    <p>Pneus</p>
+</div>
+<div class="category-item" onclick="filterByCategory('Batteries')">
+    <i class="fas fa-car-battery"></i>
+    <p>Batteries</p>
+</div>
                 </div>
-                <div class="service-card rounded-lg shadow-md p-4 text-white" 
-                     style="background-image: url('https://i.postimg.cc/pTT8sKTG/5915544683000482192.jpg')"
-                     onclick="navigateToService('peinture')"
-                     data-aos="fade-up">
-                    <div class="service-card-content">
-                        <h4 class="font-bold">Peinture</h4>
-                    </div>
+            </section>
+
+            <!-- Produits -->
+            <section class="products" id="products-section">
+                <h2 class="section-title">Produits</h2>
+                <div class="product-grid" id="products-container">
+                    <!-- Les produits seront chargés dynamiquement -->
                 </div>
-                <div class="service-card rounded-lg shadow-md p-4 text-white" 
-                     style="background-image: url('https://i.postimg.cc/8cc2kXCR/climatisation-liquide-remplissage.jpg')"
-                     onclick="navigateToService('froid')"
-                     data-aos="fade-up">
-                    <div class="service-card-content">
-                        <h4 class="font-bold">Froid</h4>
-                    </div>
+            </section>
+
+            <!-- Véhicules -->
+            <section class="vehicles">
+                <h2 class="section-title">Véhicules en vente</h2>
+                <div class="vehicle-grid" id="vehicles-container">
+                    <!-- Les véhicules seront chargés dynamiquement -->
                 </div>
-                <div class="service-card rounded-lg shadow-md p-4 text-white" 
-                     style="background-image: url('https://i.postimg.cc/jdN86YBW/5915544683000482201.jpg')"
-                     onclick="navigateToService('vidange')"
-                     data-aos="fade-up">
-                    <div class="service-card-content">
-                        <h4 class="font-bold">Vidange</h4>
-                    </div>
-                </div>
-                <div class="service-card rounded-lg shadow-md p-4 text-white" 
-                     style="background-image: url('https://i.postimg.cc/X72RhbQs/5915544683000482232.jpg')"
-                     onclick="navigateToService('entretien')"
-                     data-aos="fade-up">
-                    <div class="service-card-content">
-                        <h4 class="font-bold">Entretien général</h4>
-                    </div>
+            </section>
+        </div>
+<!-- Page de résultats -->
+<div id="search-results" class="page">
+    <div class="search-results-page">
+       <ul>
+                   <li onclick="showPage('home')">
+  <i class="fas fa-arrow-left"></i>
+</li>
+
+                   
+                </ul>
+        <h2 class="section-title">Résultats de recherche</h2>
+        <div id="search-results-container" class="product-grid">
+            <!-- Les résultats de recherche seront chargés ici -->
+        </div>
+    </div>
+</div>
+
+<!-- Page de catégorie -->
+<div id="category-page" class="page">
+    <div class="category-page">
+        <ul>
+                    <li onclick="showPage('home')">
+  <i class="fas fa-arrow-left"></i>
+</li>
+
+                   
+                </ul>
+        <h2 class="section-title" id="category-title">Catégorie</h2>
+        <div id="category-products-container" class="product-grid">
+            <!-- Les produits de la catégorie seront chargés ici -->
+        </div>
+    </div>
+</div>
+        <!-- Page Panier -->
+        <div id="cart" class="page">
+            <div class="cart-page">
+               <ul>
+                    <li onclick="showPage('home')">
+  <i class="fas fa-arrow-left"></i>
+</li>
+
+                   
+                </ul>
+                <h2 class="section-title">Votre Panier</h2>
+                
+                <div class="cart-items" id="cart-items-container">
+                    <!-- Les articles du panier seront chargés dynamiquement -->
                 </div>
                 
-                <!-- Nouveaux services ajoutés -->
-                <div class="service-card rounded-lg shadow-md p-4 text-white" 
-                     style="background-image: url('https://i.postimg.cc/G25DV9Tc/5915544683000482185.jpg')"
-                     onclick="navigateToService('remorquage')"
-                     data-aos="fade-up">
-                    <div class="service-card-content">
-                        <h4 class="font-bold">Remorquage</h4>
-                    </div>
-                </div>
-                <div class="service-card rounded-lg shadow-md p-4 text-white" 
-                     style="background-image: url('http://static.photos/automotive/640x360/8')"
-                     onclick="navigateToService('diagnostic')"
-                     data-aos="fade-up">
-                    <div class="service-card-content">
-                        <h4 class="font-bold">Diagnostic</h4>
-                    </div>
-                </div>
-                <div class="service-card rounded-lg shadow-md p-4 text-white" 
-                     style="background-image: url('https://i.postimg.cc/SR07nH6G/5913292883186796971.jpg')"
-                     onclick="navigateToService('location')"
-                     data-aos="fade-up">
-                    <div class="service-card-content">
-                        <h4 class="font-bold">Location</h4>
-                    </div>
-                </div>
-                <div class="service-card rounded-lg shadow-md p-4 text-white" 
-                     style="background-image: url('https://i.postimg.cc/JnXjCKfH/5913292883186796965.jpg')"
-                     onclick="navigateToService('vente')"
-                     data-aos="fade-up">
-                    <div class="service-card-content">
-                        <h4 class="font-bold">Vente</h4>
-                    </div>
-                </div>
-            </div>
-
-           <div class="bg-white rounded-lg shadow-md p-6 mb-6" data-aos="fade-up">
-                <h3 class="text-xl font-semibold mb-4">À propos de nous</h3>
-                <p class="text-gray-700 mb-4">
-                   Garage Medina Baye est une entreprise spécialisée dans le domaine de l’automobile Cette structure familiale dynamique qui a fêté ses 20 ans en 2017, jouit d'une excellente réputation dans tout le territoire national. Trois générations et une équipe bien organisée sont à votre service et son fondateur, El hadji Ibrahima <span onclick="showAdminModal()" style="cursor: pointer; color: black; text-decoration: none;">Niasse</span>
- dit <span onclick="showAdminModal()" style="cursor: pointer; color: black; text-decoration: none;">Baye</span>
- peut témoigner d'une expérience de plus de 30 ans dans le domaine. Active dans le domaine de l’automobile vous pouvez être sûr d'un service performant, rapide et efficace. Son équipement, ultra sophistiqué, sans cesse renouvelé, à la pointe de la dernière technologie lui a permis de réaliser des missions toujours plus performantes dans des délais toujours plus stricts. Toutes ces expériences l'ont amenée à aborder avec succès et compétences les entreprises et à décrocher des marchés au niveau des plus grandes structures du pays. Profitez d’un équipement à la fine pointe de la technologie
-                </p>
-                <div class="flex justify-center">
-                    <img src="https://i.postimg.cc/C1nsLwq1/5913292883186796973.jpg" alt="Notre équipe" class="rounded-lg w-full max-w-md">
-                </div>
-            </div>
-
-          
-            <div class="mt-8">
-                <h3 class="text-xl font-semibold mb-4">Nos Partenaires</h3>
-                <div class="grid grid-cols-3 gap-4">
-                    <img src="https://i.postimg.cc/QtZXY30F/Image-1.png" alt="Partenaire 2" class="rounded-lg">
+                <div class="cart-summary">
+                    <div class="cart-total" id="cart-total">Total: 0 FCFA</div>
+                    <button class="btn" onclick="showOrderModal()">Commander</button>
                 </div>
             </div>
         </div>
 
-        <!-- Services Page -->
-        <div id="services" class="page">
-            <h2 class="text-2xl font-bold mb-6">Tous nos services</h2>
-            <div class="grid grid-cols-1 gap-4">
-                <div class="bg-white rounded-lg shadow-md p-4" onclick="navigateToService('tolerie')">
-                    <h3 class="font-semibold">Tôlerie</h3>
-                    <p class="text-gray-600 text-sm">Réparation de carrosserie et tôlerie</p>
-                </div>
-                <div class="bg-white rounded-lg shadow-md p-4" onclick="navigateToService('mecanique')">
-                    <h3 class="font-semibold">Mécanique</h3>
-                    <p class="text-gray-600 text-sm">Réparation mécanique générale</p>
-                </div>
-                <div class="bg-white rounded-lg shadow-md p-4" onclick="navigateToService('peinture')">
-                    <h3 class="font-semibold">Peinture</h3>
-                    <p class="text-gray-600 text-sm">Peinture automobile professionnelle</p>
-                </div>
-                <div class="bg-white rounded-lg shadow-md p-4" onclick="navigateToService('froid')">
-                    <h3 class="font-semibold">Froid</h3>
-                    <p class="text-gray-600 text-sm">Climatisation et système de refroidissement</p>
-                </div>
-                <div class="bg-white rounded-lg shadow-md p-4" onclick="navigateToService('vidange')">
-                    <h3 class="font-semibold">Vidange</h3>
-                    <p class="text-gray-600 text-sm">Vidange et changement d'huile</p>
-                </div>
-                <div class="bg-white rounded-lg shadow-md p-4" onclick="navigateToService('entretien')">
-                    <h3 class="font-semibold">Entretien général</h3>
-                    <p class="text-gray-600 text-sm">Entretien complet de votre véhicule</p>
+        <!-- Page Admin -->
+        <div id="admin" class="page">
+            <div class="admin-panel">
+                <div class="admin-header">
+                    <h2>Espace Admin</h2>
+                    <button class="btn" onclick="logoutAdmin()">Déconnexion</button>
                 </div>
                 
-                <!-- Nouveaux services ajoutés -->
-                <div class="bg-white rounded-lg shadow-md p-4" onclick="navigateToService('remorquage')">
-                    <h3 class="font-semibold">Remorquage</h3>
-                    <p class="text-gray-600 text-sm">Service de remorquage 24h/24</p>
+                <div class="admin-tabs">
+                    <div class="admin-tab active" onclick="showAdminTab('products')">Produits</div>
+                    <div class="admin-tab" onclick="showAdminTab('orders')">Commandes en attente</div>
+                    <div class="admin-tab" onclick="showAdminTab('completed-orders')">Commandes effectuées</div>
+                    <div class="admin-tab" onclick="showAdminTab('rejected-orders')">Commandes rejetées</div>
                 </div>
-                <div class="bg-white rounded-lg shadow-md p-4" onclick="navigateToService('diagnostic')">
-                    <h3 class="font-semibold">Diagnostic</h3>
-                    <p class="text-gray-600 text-sm">Diagnostic électronique complet</p>
-                </div>
-                <div class="bg-white rounded-lg shadow-md p-4" onclick="navigateToService('location')">
-                    <h3 class="font-semibold">Location</h3>
-                    <p class="text-gray-600 text-sm">Location de véhicules</p>
-                </div>
-                <div class="bg-white rounded-lg shadow-md p-4" onclick="navigateToService('vente')">
-                    <h3 class="font-semibold">Vente</h3>
-                    <p class="text-gray-600 text-sm">Vente de véhicules d'occasion</p>
-                </div>
-            </div>
-        </div>
-
-        <!-- Devis Page -->
-        <div id="devis" class="page">
-            <h2 class="text-2xl font-bold mb-6">Demander un devis</h2>
-            <div class="bg-white rounded-lg shadow-md p-6">
-                <div class="mb-4">
-                    <label class="block text-gray-700 mb-2">Service</label>
-                    <select id="serviceSelect" class="w-full p-2 border rounded">
-                        <option value="">Sélectionnez un service</option>
-                        <option value="tolerie">Tôlerie</option>
-                        <option value="mecanique">Mécanique</option>
-                        <option value="peinture">Peinture</option>
-                        <option value="froid">Froid</option>
-                        <option value="vidange">Vidange</option>
-                        <option value="entretien">Entretien général</option>
-                        <option value="remorquage">Remorquage</option>
-                        <option value="diagnostic">Diagnostic</option>
-                        <option value="location">Location</option>
-                        <option value="vente">Vente</option>
-                        <option value="autres">Autres</option>
-                    </select>
-                </div>
-                <div id="priceEstimate" class="bg-blue-50 p-4 rounded-lg mb-4 hidden">
-                    <h3 class="font-semibold mb-2">Estimation indicative</h3>
-                    <p id="estimateText"></p>
-                </div>
-                <button onclick="showContactOptions()" class="w-full bg-blue-600 text-white py-2 rounded-lg">
-                    Contacter le gérant
-                </button>
-            </div>
-        </div>
-
-        <!-- Rendez-vous Page -->
-        <div id="rendezvous" class="page">
-            <h2 class="text-2xl font-bold mb-6">Prendre rendez-vous</h2>
-            <div class="bg-white rounded-lg shadow-md p-6">
-                <div class="mb-4">
-                    <label class="block text-gray-700 mb-2">Nom complet</label>
-                    <input type="text" id="fullName" class="w-full p-2 border rounded">
-                </div>
-                <div class="mb-4">
-                    <label class="block text-gray-700 mb-2">Numéro de téléphone</label>
-                    <input type="tel" id="phoneNumber" class="w-full p-2 border rounded">
-                </div>
-                <div class="mb-4">
-                    <label class="block text-gray-700 mb-2">Email</label>
-                    <input type="email" id="email" class="w-full p-2 border rounded">
-                </div>
-                <div class="mb-4">
-                    <label class="block text-gray-700 mb-2">Service</label>
-                    <select id="appointmentService" class="w-full p-2 border rounded">
-                        <option value="">Sélectionnez un service</option>
-                        <option value="tolerie">Tôlerie</option>
-                        <option value="mecanique">Mécanique</option>
-                        <option value="peinture">Peinture</option>
-                        <option value="froid">Froid</option>
-                        <option value="vidange">Vidange</option>
-                        <option value="entretien">Entretien général</option>
-                        <option value="remorquage">Remorquage</option>
-                        <option value="diagnostic">Diagnostic</option>
-                        <option value="location">Location</option>
-                        <option value="vente">Vente</option>
-                    </select>
-                </div>
-                <div class="mb-4">
-                    <label class="block text-gray-700 mb-2">Date</label>
-                    <input type="date" id="appointmentDate" class="w-full p-2 border rounded">
-                </div>
-                <div class="mb-4">
-                    <label class="block text-gray-700 mb-2">Heure</label>
-                    <input type="time" id="appointmentTime" class="w-full p-2 border rounded">
-                </div>
-                <button onclick="bookAppointment()" class="w-full bg-blue-600 text-white py-2 rounded-lg">
-                    Confirmer le rendez-vous
-                </button>
-            </div>
-        </div>
-
-        <!-- Contact Page -->
-        <div id="contact" class="page">
-            <h2 class="text-2xl font-bold mb-6">Contactez-nous</h2>
-            <div class="bg-white rounded-lg shadow-md p-6 mb-6">
-                <div class="flex items-center mb-4">
-                    <i data-feather="phone" class="mr-2"></i>
-                    <div>
-                        <p class="font-semibold">Téléphone</p>
-                        <p>33 825 32 42 / 77 470 47 42</p>
+                
+                <div class="admin-content">
+                    <!-- Gestion des produits -->
+                    <div id="admin-products" class="admin-tab-content">
+                        <h3>Ajouter un produit</h3>
+                        <form class="product-form" id="product-form">
+                            <input type="hidden" id="product-id">
+                            <div class="form-group">
+                                <label for="product-name">Nom du produit</label>
+                                <input type="text" id="product-name" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="product-price">Prix (FCFA)</label>
+                                <input type="number" id="product-price" required>
+                            </div>
+                           <div class="form-group">
+    <label for="product-category">Catégorie</label>
+    <select id="product-category" required>
+        <option value="">Sélectionnez une catégorie</option>
+        <option value="Pièces moteur">Pièces </option>
+        <option value="Outillage">Outillage</option>
+        <option value="Lubrifiants">Lubrifiants</option>
+        <option value="Accessoires">Accessoires</option>
+        <option value="Pneus">Pneus</option>
+        <option value="Batteries">Batteries</option>
+        <option value="Véhicules">Véhicules</option>
+    </select>
+</div>
+                            <div class="form-group">
+                                <label for="product-description">Description</label>
+                                <input type="text" id="product-description" required>
+                            </div>
+                            <div class="form-group form-full-width">
+                                <label for="product-image">Image principale (URL)</label>
+                                <input type="text" id="product-image" onchange="previewImage(this, 'main-preview')" required>
+                                <img id="main-preview" class="image-preview" src="" alt="Aperçu">
+                            </div>
+                            <div class="form-group form-full-width">
+                                <label for="product-images">Images supplémentaires (URLs séparées par des virgules)</label>
+                                <input type="text" id="product-images" onchange="previewImage(this, 'gallery-preview')">
+                                <img id="gallery-preview" class="image-preview" src="" alt="Aperçu">
+                            </div>
+                            <div class="form-group form-full-width">
+                                <button type="submit" class="btn" id="product-submit">Ajouter le produit</button>
+                            </div>
+                        </form>
+                        
+                        <div class="product-list">
+                            <h3>Liste des produits</h3>
+                            <div id="admin-products-list">
+                                <!-- Les produits seront chargés dynamiquement -->
+                            </div>
+                        </div>
                     </div>
-                </div>
-                <div class="flex items-center mb-4">
-                    <i data-feather="mail" class="mr-2"></i>
-                    <div>
-                        <p class="font-semibold">Email</p>
-                        <p>contact@garage-gmbn.com</p>
+                    
+                    <!-- Commandes en attente -->
+                    <div id="admin-orders" class="admin-tab-content" style="display: none;">
+                        <h3>Commandes en attente</h3>
+                        <div id="pending-orders-list">
+                            <!-- Les commandes en attente seront chargées dynamiquement -->
+                        </div>
                     </div>
-                </div>
-                <div class="flex items-center mb-4">
-                    <i data-feather="map-pin" class="mr-2"></i>
-                    <div>
-                        <p class="font-semibold">Adresse</p>
-                        <p>Garage GMBN - Dakar, Sénégal</p>
+                    
+                    <!-- Commandes effectuées -->
+                    <div id="admin-completed-orders" class="admin-tab-content" style="display: none;">
+                        <h3>Commandes effectuées</h3>
+                        <button class="btn" onclick="deleteAllOrders('completed')">Supprimer tous</button>
+                        <div id="completed-orders-list">
+                            <!-- Les commandes effectuées seront chargées dynamiquement -->
+                        </div>
+                    </div>
+                    
+                    <!-- Commandes rejetées -->
+                    <div id="admin-rejected-orders" class="admin-tab-content" style="display: none;">
+                        <h3>Commandes rejetées</h3>
+                        <button class="btn" onclick="deleteAllOrders('rejected')">Supprimer tous</button>
+                        <div id="rejected-orders-list">
+                            <!-- Les commandes rejetées seront chargées dynamiquement -->
+                        </div>
                     </div>
                 </div>
             </div>
-
-            <div class="grid grid-cols-2 gap-4 mb-6">
-                <button onclick="window.location.href='tel:+221774704742'" class="bg-green-600 text-white py-2 rounded-lg flex items-center justify-center">
-                    <i data-feather="phone" class="mr-2"></i> Appeler
-                </button>
-                <button onclick="window.location.href='https://wa.me/221774704742'" class="bg-blue-600 text-white py-2 rounded-lg flex items-center justify-center">
-                    <i data-feather="message-square" class="mr-2"></i> WhatsApp
-                </button>
-            </div>
-
-            <div class="bg-white rounded-lg shadow-md p-4">
-                <h3 class="font-semibold mb-2">Nos horaires</h3>
-                <p class="mb-1">Lundi - Vendredi: 8h - 18h</p>
-                <p class="mb-1">Samedi: 8h - 13h</p>
-                <p>Dimanche: Fermé</p>
-            </div>
         </div>
 
-        <!-- Service Detail Pages -->
-        <div id="service-tolerie" class="page">
-            <div class="flex items-center mb-4">
-                <button onclick="goBack()" class="mr-2">
-                    <i data-feather="arrow-left"></i>
-                </button>
-                <h2 class="text-xl font-bold">Tôlerie</h2>
-            </div>
-            <div class="service-card rounded-lg shadow-md mb-6 h-48" style="background-image: url('https://i.postimg.cc/fLpKX8Kj/5915544683000482219.jpg')"></div>
-                      <div class="service-card rounded-lg shadow-md mb-6 h-48" style="background-image: url('https://i.postimg.cc/XvNQ0GqF/5915544683000482204.jpg')"></div>
-            <div class="service-card rounded-lg shadow-md mb-6 h-48" style="background-image: url('https://i.postimg.cc/tR8SV4vQ/5915544683000482202.jpg')"></div>
-<div class="service-card rounded-lg shadow-md mb-6 h-48" style="background-image: url('https://i.postimg.cc/rpgxGf8R/5915544683000482190.jpg')"></div>
-            <div class="bg-white rounded-lg shadow-md p-6">
-                <p class="mb-4">Nos experts en tôlerie vous offrent des réparations de qualité pour redonner à votre véhicule son aspect d'origine après un accident ou des dommages.</p>
-                <button onclick="showContactOptions()" class="w-full bg-blue-600 text-white py-2 rounded-lg">
-                    Demander un devis
-                </button>
-            </div>
+        <!-- Autres pages -->
+        <div id="account" class="page">
+            <h2 class="section-title">Mon Compte</h2>
+            <p>Page en construction</p>
         </div>
 
-        <div id="service-mecanique" class="page">
-            <div class="flex items-center mb-4">
-                <button onclick="goBack()" class="mr-2">
-                    <i data-feather="arrow-left"></i>
-                </button>
-                <h2 class="text-xl font-bold">Mécanique</h2>
-            </div>
-            <div class="service-card rounded-lg shadow-md mb-6 h-48" style="background-image: url('https://i.postimg.cc/jdN86YBW/5915544683000482201.jpg')"></div>
-                      <div class="service-card rounded-lg shadow-md mb-6 h-48" style="background-image: url('https://i.postimg.cc/XYbsQD0s/5915544683000482209.jpg')"></div>
-            <div class="service-card rounded-lg shadow-md mb-6 h-48" style="background-image: url('https://i.postimg.cc/fRfBFjzD/5915544683000482210.jpg')"></div>
-<div class="service-card rounded-lg shadow-md mb-6 h-48" style="background-image: url('https://i.postimg.cc/mrdVZL1n/5915544683000482212.jpg')"></div>
-            <div class="bg-white rounded-lg shadow-md p-6">
-                <p class="mb-4">Notre équipe de mécaniciens qualifiés prend en charge toutes les réparations mécaniques de votre véhicule, du simple entretien aux réparations complexes.</p>
-                <button onclick="showContactOptions()" class="w-full bg-blue-600 text-white py-2 rounded-lg">
-                    Demander un devis
-                </button>
-            </div>
-        </div>
-
-        <div id="service-peinture" class="page">
-            <div class="flex items-center mb-4">
-                <button onclick="goBack()" class="mr-2">
-                    <i data-feather="arrow-left"></i>
-                </button>
-                <h2 class="text-xl font-bold">Peinture</h2>
-            </div>
-            <div class="service-card rounded-lg shadow-md mb-6 h-48" style="background-image: url('https://i.postimg.cc/pTT8sKTG/5915544683000482192.jpg')"></div>
-            <div class="bg-white rounded-lg shadow-md p-6">
-                <p class="mb-4">Nous proposons des services de peinture automobile professionnelle avec des finitions de haute qualité et une large gamme de couleurs disponibles.</p>
-                <button onclick="showContactOptions()" class="w-full bg-blue-600 text-white py-2 rounded-lg">
-                    Demander un devis
-                </button>
-            </div>
-        </div>
-
-        <div id="service-froid" class="page">
-            <div class="flex items-center mb-4">
-                <button onclick="goBack()" class="mr-2">
-                    <i data-feather="arrow-left"></i>
-                </button>
-                <h2 class="text-xl font-bold">Froid</h2>
-            </div>
-            <div class="service-card rounded-lg shadow-md mb-6 h-48" style="background-image: url('https://i.postimg.cc/8cc2kXCR/climatisation-liquide-remplissage.jpg')"></div>
-            <div class="bg-white rounded-lg shadow-md p-6">
-                <p class="mb-4">Nos techniciens spécialisés interviennent sur tous les systèmes de climatisation et de refroidissement de votre véhicule pour un confort optimal.</p>
-                <button onclick="showContactOptions()" class="w-full bg-blue-600 text-white py-2 rounded-lg">
-                    Demander un devis
-                </button>
-            </div>
-        </div>
-
-        <div id="service-vidange" class="page">
-            <div class="flex items-center mb-4">
-                <button onclick="goBack()" class="mr-2">
-                    <i data-feather="arrow-left"></i>
-                </button>
-                <h2 class="text-xl font-bold">Vidange</h2>
-            </div>
-            <div class="service-card rounded-lg shadow-md mb-6 h-48" style="background-image: url('https://i.postimg.cc/X72RhbQs/5915544683000482232.jpg')"></div>
-            <div class="bg-white rounded-lg shadow-md p-6">
-                <p class="mb-4">Nous effectuons des vidanges complètes avec des huiles de qualité pour assurer la longévité de votre moteur.</p>
-                <button onclick="showContactOptions()" class="w-full bg-blue-600 text-white py-2 rounded-lg">
-                    Demander un devis
-                </button>
-            </div>
-        </div>
-
-        <div id="service-entretien" class="page">
-            <div class="flex items-center mb-4">
-                <button onclick="goBack()" class="mr-2">
-                    <i data-feather="arrow-left"></i>
-                </button>
-                <h2 class="text-xl font-bold">Entretien général</h2>
-            </div>
-            <div class="service-card rounded-lg shadow-md mb-6 h-48" style="background-image: url('https://i.postimg.cc/X72RhbQs/5915544683000482232.jpg')"></div>
-                      <div class="service-card rounded-lg shadow-md mb-6 h-48" style="background-image: url('https://i.postimg.cc/FsstDRgf/5915544683000482231.jpg')"></div>
-            <div class="service-card rounded-lg shadow-md mb-6 h-48" style="background-image: url('https://i.postimg.cc/C1nsLwq1/5913292883186796973.jpg')"></div>
-<div class="service-card rounded-lg shadow-md mb-6 h-48" style="background-image: url('https://i.postimg.cc/VvzyysxV/5915544683000482233.jpg')"></div>
-            <div class="bg-white rounded-lg shadow-md p-6">
-                <p class="mb-4">Un entretien régulier est essentiel pour la sécurité et la longévité de votre véhicule. Nous proposons des forfaits d'entretien adaptés à votre voiture.</p>
-                <button onclick="showContactOptions()" class="w-full bg-blue-600 text-white py-2 rounded-lg">
-                    Demander un devis
-                </button>
-            </div>
-        </div>
-
-        <!-- Nouveaux services détaillés -->
-        <div id="service-remorquage" class="page">
-            <div class="flex items-center mb-4">
-                <button onclick="goBack()" class="mr-2">
-                    <i data-feather="arrow-left"></i>
-                </button>
-                <h2 class="text-xl font-bold">Remorquage</h2>
-            </div>
-            <div class="service-card rounded-lg shadow-md mb-6 h-48" style="background-image: url('https://i.postimg.cc/G25DV9Tc/5915544683000482185.jpg')"></div>
-                      <div class="service-card rounded-lg shadow-md mb-6 h-48" style="background-image: url('https://i.postimg.cc/z3mgDMk6/5915544683000482194.jpg')"></div>
-            <div class="service-card rounded-lg shadow-md mb-6 h-48" style="background-image: url('https://i.postimg.cc/8PNMxRts/5913292883186796962.jpg')"></div>
-<div class="service-card rounded-lg shadow-md mb-6 h-48" style="background-image: url('https://i.postimg.cc/L5gPpRjj/5915544683000482184.jpg')"></div>
-            <div class="bg-white rounded-lg shadow-md p-6">
-                <p class="mb-4">Service de remorquage disponible 24h/24 et 7j/7 pour toutes pannes et accidents. Intervention rapide dans tout Dakar et ses environs.</p>
-                <button onclick="showContactOptions()" class="w-full bg-blue-600 text-white py-2 rounded-lg">
-                    Contacter pour remorquage
-                </button>
-            </div>
-        </div>
-
-        <div id="service-diagnostic" class="page">
-            <div class="flex items-center mb-4">
-                <button onclick="goBack()" class="mr-2">
-                    <i data-feather="arrow-left"></i>
-                </button>
-                <h2 class="text-xl font-bold">Diagnostic</h2>
-            </div>
-            <div class="service-card rounded-lg shadow-md mb-6 h-48" style="background-image: url('https://i.postimg.cc/rw1PT2J6/5915544683000482239.jpg')"></div>
-            <div class="bg-white rounded-lg shadow-md p-6">
-                <p class="mb-4">Diagnostic électronique complet avec outils professionnels pour identifier toutes les pannes de votre véhicule. Rapport détaillé fourni.</p>
-                <button onclick="showContactOptions()" class="w-full bg-blue-600 text-white py-2 rounded-lg">
-                    Demander un diagnostic
-                </button>
-            </div>
-        </div>
-
-       <div id="service-location" class="page">
-       <div class="flex items-center mb-4">
-           <button onclick="goBack()" class="mr-2">
-               <i data-feather="arrow-left"></i>
-           </button>
-           <h2 class="text-xl font-bold">Location</h2>
-       </div>
-       <div class="service-card rounded-lg shadow-md mb-6 h-48" style="background-image: url('https://i.postimg.cc/SR07nH6G/5913292883186796971.jpg')"></div>
-       <div class="bg-white rounded-lg shadow-md p-6">
-           <h3 class="text-lg font-semibold mb-4">Véhicules en location</h3>
-           <div id="liste-location-client" class="space-y-4">
-               <!-- Les véhicules seront chargés ici dynamiquement -->
-           </div>
-           <button onclick="showContactOptions()" class="w-full bg-blue-600 text-white py-2 rounded-lg mt-4">
-               Contacter pour réserver
-           </button>
-       </div>
-   </div>
-
-       <div id="service-vente" class="page">
-    <div class="flex items-center mb-4">
-        <button onclick="goBack()" class="mr-2">
-            <i data-feather="arrow-left"></i>
-        </button>
-        <h2 class="text-xl font-bold">Vente</h2>
-    </div>
-    <div class="service-card rounded-lg shadow-md mb-6 h-48" style="background-image: url('https://i.postimg.cc/JnXjCKfH/5913292883186796965.jpg')"></div>
-    <div class="bg-white rounded-lg shadow-md p-6">
-        <h3 class="text-lg font-semibold mb-4">Véhicules en vente</h3>
-        <div id="liste-vente-client" class="space-y-4">
-            <!-- Les véhicules seront chargés ici dynamiquement -->
-        </div>
-        <button onclick="showContactOptions()" class="w-full bg-blue-600 text-white py-2 rounded-lg mt-4">
-            Contacter pour plus d'infos
-        </button>
-    </div>
-</div>
-      <div id="location-vehicle-detail" class="page">
-    <div class="flex items-center mb-4">
-        <button onclick="showPage('service-location')" class="mr-2">
-            <i data-feather="arrow-left"></i>
-        </button>
-        <h2 class="text-xl font-bold">Détails du véhicule</h2>
-    </div>
-    <div id="location-vehicle-images" class="overflow-x-auto flex snap-x snap-mandatory mb-6 whitespace-nowrap">
-        <!-- Images chargées dynamiquement ici -->
-    </div>
-    <div class="bg-white rounded-lg shadow-md p-6 mb-6">
-        <h3 id="location-vehicle-name" class="text-xl font-bold mb-1"></h3>
-        <p id="location-vehicle-price" class="text-blue-600 font-bold text-lg mb-2"></p>
-        <p id="location-vehicle-info" class="text-gray-600 mb-4"></p>
-        <p class="text-sm text-gray-500 mb-4">Contactez-nous pour réserver ou pour plus d'informations</p>
-        <button onclick="showContactOptions()" class="w-full bg-blue-600 text-white py-2 rounded-lg mb-4">
-            Contacter
-        </button>
-        <div id="location-vehicle-description" class="text-gray-700"></div>
-    </div>
-</div>
-              <!-- bOUTIQUE ahmed said aidara -->
-
-<!-- Boutique Page -->
-<div id="boutique" class="page">
-    <div class="flex items-center justify-between mb-6 bg-white p-4 rounded-lg shadow-md">
-        <button onclick="showPage('home')" class="text-blue-600">
-            <i data-feather="arrow-left"></i>
-        </button>
-        <div class="flex-1 mx-4">
-            <input type="text" placeholder="Rechercher un produit..." class="w-full p-2 border rounded">
-        </div>
-        <button onclick="showPage('panier')" class="relative">
-            <i data-feather="shopping-cart"></i>
-            <span id="cart-count" class="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs">0</span>
-        </button>
-    </div>
-
-    <div class="mb-6">
-        <h2 class="text-2xl font-bold mb-2">Boutique</h2>
-        <p class="text-blue-600 font-semibold">Commandez et soyez livré en moins de 24h</p>
-    </div>
-
-    <div class="product-grid" id="produits-container">
-        <!-- Les produits seront chargés ici dynamiquement -->
-    </div>
-</div>
-<!-- Ajoutez cette nouvelle page pour les détails du produit -->
-<div id="product-detail" class="page">
-    <div class="flex items-center mb-4">
-        <button onclick="showPage('boutique')" class="mr-2">
-            <i data-feather="arrow-left"></i>
-        </button>
-        <h2 class="text-xl font-bold">Détails du produit</h2>
-    </div>
-    <div id="product-images" class="overflow-x-auto flex snap-x snap-mandatory mb-6 whitespace-nowrap">
-        <!-- Images chargées dynamiquement ici -->
-    </div>
-    <div class="bg-white rounded-lg shadow-md p-6 mb-6">
-        <h3 id="product-name" class="text-xl font-bold mb-1"></h3>
-        <p id="product-brand" class="text-gray-600 mb-2"></p>
-        <p id="product-price" class="text-blue-600 font-bold text-lg mb-2"></p>
-        <p id="product-stock" class="text-gray-600 mb-4"></p>
-        <p class="text-sm text-gray-500 mb-4">Livraison à partir de 500 FCFA, gratuit si supérieur à 10 000 FCFA</p>
-        <button id="add-to-cart-btn" class="w-full bg-blue-600 text-white py-2 rounded-lg mb-4">
-            Ajouter au panier
-        </button>
-        <div id="product-description" class="text-gray-700"></div>
-    </div>
-    <div class="mb-6">
-        <h3 class="text-lg font-semibold mb-4">Autres produits</h3>
-        <div id="related-products" class="grid grid-cols-2 gap-4 md:grid-cols-4">
-            <!-- Produits aléatoires chargés ici -->
+        <div id="help" class="page">
+            <h2 class="section-title">Aide</h2>
+            <p>Page en construction</p>
         </div>
     </div>
-</div>
-<!-- Page Panier -->
-<div id="panier" class="page">
-    <div class="flex items-center mb-6">
-        <button onclick="showPage('boutique')" class="mr-2">
-            <i data-feather="arrow-left"></i>
-        </button>
-        <h2 class="text-2xl font-bold">Mon Panier</h2>
-    </div>
 
-    <div id="cart-items" class="bg-white rounded-lg shadow-md p-4 mb-4">
-        <!-- Les articles du panier seront chargés ici -->
-        <p class="text-center text-gray-500 py-4" id="empty-cart-message">Votre panier est vide</p>
-    </div>
-
-    <div class="bg-white rounded-lg shadow-md p-4 mb-4">
-        <div class="flex justify-between items-center mb-2">
-            <span>Total:</span>
-            <span id="cart-total">0 FCFA</span>
-        </div>
-        <div class="text-sm text-gray-500 mb-4" id="delivery-info">
-            Frais de livraison: 500 FCFA (gratuit à partir de 10 000 FCFA)
-        </div>
-        <button onclick="showCheckoutForm()" class="w-full bg-blue-600 text-white py-2 rounded-lg">
-            Commander
-        </button>
-    </div>
-</div>
-
-<!-- Formulaire de commande -->
-<div id="checkout" class="page">
-    <div class="flex items-center mb-6">
-        <button onclick="showPage('panier')" class="mr-2">
-            <i data-feather="arrow-left"></i>
-        </button>
-        <h2 class="text-2xl font-bold">Finaliser la commande</h2>
-    </div>
-
-    <div class="bg-white rounded-lg shadow-md p-6">
-        <form id="checkout-form" class="space-y-4">
-            <div>
-                <label class="block text-gray-700 mb-2">Prénom</label>
-                <input type="text" id="checkout-prenom" class="w-full p-2 border rounded" required>
+    <!-- Footer -->
+   
+    <!-- Modal de produit -->
+    <div id="productModal" class="product-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Détails du produit</h2>
+                <span class="close-modal" onclick="closeProductModal()">&times;</span>
             </div>
-            <div>
-                <label class="block text-gray-700 mb-2">Nom</label>
-                <input type="text" id="checkout-nom" class="w-full p-2 border rounded" required>
-            </div>
-            <div>
-                <label class="block text-gray-700 mb-2">Numéro de téléphone</label>
-                <input type="tel" id="checkout-phone" class="w-full p-2 border rounded" required>
-            </div>
-            <div>
-                <label class="block text-gray-700 mb-2">Adresse</label>
-                <textarea id="checkout-adresse" class="w-full p-2 border rounded" rows="3" required></textarea>
-            </div>
-            
-            <div class="bg-gray-100 p-4 rounded-lg">
-                <div class="flex justify-between items-center mb-2">
-                    <span class="font-semibold">Total à payer:</span>
-                    <span id="checkout-total" class="font-bold">0 FCFA</span>
+            <div class="modal-body">
+                <div class="modal-image">
+                    <img id="modalImg" src="" alt="Produit" onclick="openImageModal(this.src)">
+                    <div class="image-gallery" id="imageGallery">
+                        <!-- Les images de la galerie seront ajoutées dynamiquement -->
+                    </div>
                 </div>
-            </div>
-            
-            <button type="submit" class="w-full bg-blue-600 text-white py-2 rounded-lg">
-                Valider la commande
-            </button>
-        </form>
-    </div>
-</div>
-
-<!-- Confirmation de commande -->
-<div id="confirmation" class="page">
-    <div class="text-center py-10">
-        <i data-feather="check-circle" class="text-green-500 w-16 h-16 mx-auto mb-4"></i>
-        <h2 class="text-2xl font-bold mb-2">Commande confirmée !</h2>
-        <p class="mb-6">Votre commande a été enregistrée avec succès.</p>
-        <button onclick="showPage('home')" class="bg-blue-600 text-white py-2 px-6 rounded-lg">
-            Retour à l'accueil
-        </button>
-    </div>
-</div>
-        <!-- Contact Options Modal -->
-        <div id="contactModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50">
-            <div class="bg-white rounded-lg p-6 w-full max-w-sm mx-4">
-                <h3 class="text-xl font-bold mb-4">Comment souhaitez-vous nous contacter ?</h3>
-                <button onclick="window.location.href='https://wa.me/221774704742'" class="w-full bg-green-500 text-white py-2 rounded-lg mb-2 flex items-center justify-center">
-                    <i data-feather="message-square" class="mr-2"></i> WhatsApp
-                </button>
-                <button onclick="window.location.href='sms:+221774704742'" class="w-full bg-blue-500 text-white py-2 rounded-lg mb-2 flex items-center justify-center">
-                    <i data-feather="smartphone" class="mr-2"></i> SMS
-                </button>
-                <button onclick="window.location.href='tel:+221774704742'" class="w-full bg-red-500 text-white py-2 rounded-lg mb-2 flex items-center justify-center">
-                    <i data-feather="phone" class="mr-2"></i> Appel
-                </button>
-                <button onclick="hideContactOptions()" class="w-full bg-gray-200 py-2 rounded-lg mt-4">
-                    Annuler
-                </button>
-            </div>
-        </div>
-      
-      <div id="vehicle-detail" class="page">
-    <div class="flex items-center mb-4">
-        <button onclick="showPage('service-vente')" class="mr-2">
-            <i data-feather="arrow-left"></i>
-        </button>
-        <h2 class="text-xl font-bold">Détails du véhicule</h2>
-    </div>
-    <div id="vehicle-images" class="overflow-x-auto flex snap-x snap-mandatory mb-6 whitespace-nowrap">
-        <!-- Images chargées dynamiquement ici -->
-    </div>
-    <div class="bg-white rounded-lg shadow-md p-6 mb-6">
-        <h3 id="vehicle-name" class="text-xl font-bold mb-1"></h3>
-        <p id="vehicle-price" class="text-blue-600 font-bold text-lg mb-2"></p>
-        <p id="vehicle-info" class="text-gray-600 mb-4"></p>
-        <p class="text-sm text-gray-500 mb-4">Contactez-nous pour plus d'informations ou pour un essai</p>
-        <button onclick="showContactOptions()" class="w-full bg-blue-600 text-white py-2 rounded-lg mb-4">
-            Contacter
-        </button>
-        <div id="vehicle-description" class="text-gray-700"></div>
-    </div>
-        <!-- Ajoutez ce conteneur pour la notification -->
-  <div id="cart-notification" class="fixed bottom-4 right-4 hidden bg-green-600 text-white px-4 py-2 rounded-lg shadow-lg">
-        Article ajouté au panier avec succès
-    </div>
-</div>
-      
-<!-- Admin Page principale -->
-<div id="admin" class="page">
-    <h2 class="text-2xl font-bold mb-6">Espace Admin</h2>
-    <div class="grid grid-cols-2 gap-4">
-      <button onclick="showPage('admin-commandes')" class="bg-blue-600 text-white py-4 rounded-lg col-span-2">COMMANDES</button>
-        <button onclick="showPage('admin-vente')" class="bg-blue-600 text-white py-4 rounded-lg">VENTE</button>
-        <button onclick="showPage('admin-location')" class="bg-blue-600 text-white py-4 rounded-lg">LOCATION</button>
-        <button onclick="showPage('admin-boutique')" class="bg-blue-600 text-white py-4 rounded-lg">BOUTIQUE</button>
-        <button onclick="showPage('admin-autres')" class="bg-blue-600 text-white py-4 rounded-lg">AUTRES</button>
-    </div>
-</div>
-<!-- Nouvelle page pour les commandes -->
-<!-- Page admin-commandes modifiée -->
-  <div id="admin-commandes" class="page">
-    <div class="flex items-center mb-4">
-      <button onclick="showPage('admin')" class="mr-2"><i data-feather="arrow-left"></i></button>
-      <h2 class="text-xl font-bold">Commandes Admin</h2>
-    </div>
-    <div class="bg-white rounded-lg shadow-md p-6 mb-6">
-      <h3 class="text-lg font-semibold mb-4">Commandes en attente</h3>
-      <div id="liste-commandes" class="space-y-4">
-        <!-- Les commandes en attente seront chargées ici dynamiquement -->
-      </div>
-    </div>
-    <div class="bg-white rounded-lg shadow-md p-6">
-      <h3 class="text-lg font-semibold mb-4">Commandes livrées</h3>
-      <div id="liste-commandes-livrees" class="space-y-4">
-        <!-- Les commandes livrées seront chargées ici dynamiquement -->
-      </div>
-    </div>
-  </div>
-<!-- Admin Vente -->
-<div id="admin-vente" class="page">
-    <div class="flex items-center mb-4">
-        <button onclick="showPage('admin')" class="mr-2"><i data-feather="arrow-left"></i></button>
-        <h2 class="text-xl font-bold">Vente Admin</h2>
-    </div>
-    
-    <div class="bg-white rounded-lg shadow-md p-6 mb-6">
-        <h3 class="text-lg font-semibold mb-4">Ajouter un véhicule en vente</h3>
-        <form id="venteForm" class="space-y-4">
-            <div class="grid grid-cols-2 gap-4">
-                <div>
-                    <label class="block text-gray-700 mb-2">Marque</label>
-                    <input type="text" id="vente-marque" class="w-full p-2 border rounded" required>
-                </div>
-                <div>
-                    <label class="block text-gray-700 mb-2">Modèle</label>
-                    <input type="text" id="vente-modele" class="w-full p-2 border rounded" required>
-                </div>
-            </div>
-            
-            <div class="grid grid-cols-2 gap-4">
-                <div>
-                    <label class="block text-gray-700 mb-2">Année</label>
-                    <input type="number" id="vente-annee" class="w-full p-2 border rounded">
-                </div>
-                <div>
-                    <label class="block text-gray-700 mb-2">Kilométrage</label>
-                    <input type="number" id="vente-km" class="w-full p-2 border rounded">
-                </div>
-            </div>
-            
-            <div class="grid grid-cols-2 gap-4">
-                <div>
-                    <label class="block text-gray-700 mb-2">État</label>
-                    <select id="vente-etat" class="w-full p-2 border rounded">
-                        <option value="Neuf">Neuf</option>
-                        <option value="Occasion">Occasion</option>
-                        <option value="Bon état">Bon état</option>
-                        <option value="À réparer">À réparer</option>
-                    </select>
-                </div>
-                <div>
-                    <label class="block text-gray-700 mb-2">Transmission</label>
-                    <select id="vente-transmission" class="w-full p-2 border rounded">
-                        <option value="Manuelle">Manuelle</option>
-                        <option value="Automatique">Automatique</option>
-                    </select>
-                </div>
-            </div>
-            
-            <div class="grid grid-cols-2 gap-4">
-                <div>
-                    <label class="block text-gray-700 mb-2">Carburant</label>
-                    <select id="vente-carburant" class="w-full p-2 border rounded">
-                        <option value="Essence">Essence</option>
-                        <option value="Diesel">Diesel</option>
-                        <option value="Hybride">Hybride</option>
-                        <option value="Électrique">Électrique</option>
-                    </select>
-                </div>
-                <div>
-                    <label class="block text-gray-700 mb-2">Prix (FCFA)</label>
-                    <input type="number" id="vente-prix" class="w-full p-2 border rounded" required>
-                </div>
-            </div>
-            
-            <div>
-                <label class="block text-gray-700 mb-2">Caractéristiques</label>
-                <textarea id="vente-caracteristiques" class="w-full p-2 border rounded" rows="3"></textarea>
-            </div>
-            
-            <div>
-                <label class="block text-gray-700 mb-2">Détails</label>
-                <textarea id="vente-details" class="w-full p-2 border rounded" rows="3"></textarea>
-            </div>
-            
-            <div>
-                <label class="block text-gray-700 mb-2">Image principale (URL PostImage)</label>
-                <input type="url" id="vente-image-principale" class="w-full p-2 border rounded" required>
-            </div>
-            
-            <div>
-                <label class="block text-gray-700 mb-2">Images de détails (URLs PostImage, séparées par des virgules)</label>
-                <textarea id="vente-images-details" class="w-full p-2 border rounded" rows="2"></textarea>
-            </div>
-            
-            <div class="flex justify-end space-x-2">
-                <button type="button" onclick="document.getElementById('admin-vente').querySelector('form').reset()" class="bg-gray-200 text-gray-800 py-2 px-4 rounded">Annuler</button>
-                <button type="submit" class="bg-blue-600 text-white py-2 px-4 rounded">Ajouter</button>
-            </div>
-        </form>
-    </div>
-    
-    <div class="bg-white rounded-lg shadow-md p-6">
-        <h3 class="text-lg font-semibold mb-4">Véhicules en vente</h3>
-        <div id="liste-vente" class="space-y-4">
-            <!-- Les véhicules seront chargés ici dynamiquement -->
-        </div>
-    </div>
-</div>
-
-<!-- Admin Location (structure similaire à Vente) -->
-<div id="admin-location" class="page">
-    <div class="flex items-center mb-4">
-        <button onclick="showPage('admin')" class="mr-2"><i data-feather="arrow-left"></i></button>
-        <h2 class="text-xl font-bold">Location Admin</h2>
-    </div>
-    <div class="bg-white rounded-lg shadow-md p-6 mb-6">
-        <h3 class="text-lg font-semibold mb-4">Ajouter un véhicule</h3>
-        <form id="add-location-vehicle-form">
-            <input type="text" id="location-marque" placeholder="Marque" class="w-full p-2 mb-3 border rounded">
-            <input type="text" id="location-modele" placeholder="Modèle" class="w-full p-2 mb-3 border rounded">
-            <input type="number" id="location-annee" placeholder="Année" class="w-full p-2 mb-3 border rounded">
-            <input type="number" id="location-prixLocation" placeholder="Prix location (FCFA/jour)" class="w-full p-2 mb-3 border rounded">
-            <input type="text" id="location-carburant" placeholder="Carburant" class="w-full p-2 mb-3 border rounded">
-            <input type="text" id="location-transmission" placeholder="Transmission" class="w-full p-2 mb-3 border rounded">
-            <input type="number" id="location-capacite" placeholder="Capacité (places)" class="w-full p-2 mb-3 border rounded">
-            <select id="location-disponibilite" class="w-full p-2 mb-3 border rounded">
-                <option value="true">Disponible</option>
-                <option value="false">Non disponible</option>
-            </select>
-            <input type="text" id="location-imagePrincipale" placeholder="URL image principale" class="w-full p-2 mb-3 border rounded">
-            <input type="text" id="location-imagesDetails" placeholder="URLs images détails (séparées par des virgules)" class="w-full p-2 mb-3 border rounded">
-            <textarea id="location-caracteristiques" placeholder="Caractéristiques" class="w-full p-2 mb-3 border rounded"></textarea>
-            <textarea id="location-details" placeholder="Détails" class="w-full p-2 mb-3 border rounded"></textarea>
-            <button type="submit" class="w-full bg-blue-600 text-white py-2 rounded-lg">Ajouter</button>
-        </form>
-    </div>
-    <div class="bg-white rounded-lg shadow-md p-6">
-        <h3 class="text-lg font-semibold mb-4">Véhicules en location</h3>
-        <div id="liste-location" class="space-y-4">
-            <!-- Liste des véhicules -->
-        </div>
-    </div>
-</div>
-
-<!-- Admin Boutique -->
-<div id="admin-boutique" class="page">
-    <div class="flex items-center mb-4">
-        <button onclick="showPage('admin')" class="mr-2"><i data-feather="arrow-left"></i></button>
-        <h2 class="text-xl font-bold">Boutique Admin</h2>
-    </div>
-    
-    <div class="bg-white rounded-lg shadow-md p-6 mb-6">
-        <h3 class="text-lg font-semibold mb-4">Ajouter un produit</h3>
-        <form id="boutiqueForm" class="space-y-4">
-            <div class="grid grid-cols-2 gap-4">
-                <div>
-                    <label class="block text-gray-700 mb-2">Nom du produit</label>
-                    <input type="text" id="produit-nom" class="w-full p-2 border rounded">
-                </div>
-                <div>
-                    <label class="block text-gray-700 mb-2">Prix (FCFA)</label>
-                    <input type="number" id="produit-prix" class="w-full p-2 border rounded">
-                </div>
-            </div>
-            
-            <div class="grid grid-cols-2 gap-4">
-                <div>
-                    <label class="block text-gray-700 mb-2">Marque</label>
-                    <input type="text" id="produit-marque" class="w-full p-2 border rounded">
-                </div>
-                <div>
-                    <label class="block text-gray-700 mb-2">Modèle</label>
-                    <input type="text" id="produit-modele" class="w-full p-2 border rounded">
-                </div>
-            </div>
-            
-            <div class="grid grid-cols-2 gap-4">
-                <div>
-                    <label class="block text-gray-700 mb-2">État</label>
-                    <select id="produit-etat" class="w-full p-2 border rounded">
-                        <option value="Neuf">Neuf</option>
-                        <option value="Occasion">Occasion</option>
-                    </select>
-                </div>
-                <div>
-                    <label class="block text-gray-700 mb-2">Stock disponible</label>
-                    <input type="number" id="produit-stock" class="w-full p-2 border rounded">
-                </div>
-            </div>
-            
-            <div>
-                <label class="block text-gray-700 mb-2">Caractéristiques</label>
-                <textarea id="produit-caracteristiques" class="w-full p-2 border rounded" rows="3"></textarea>
-            </div>
-            
-            <div>
-                <label class="block text-gray-700 mb-2">Détails</label>
-                <textarea id="produit-details" class="w-full p-2 border rounded" rows="3"></textarea>
-            </div>
-            
-            <div>
-                <label class="block text-gray-700 mb-2">Image principale (URL PostImage)</label>
-                <input type="url" id="produit-image-principale" class="w-full p-2 border rounded">
-            </div>
-            
-            <div>
-                <label class="block text-gray-700 mb-2">Images de détails (URLs PostImage, séparées par des virgules)</label>
-                <textarea id="produit-images-details" class="w-full p-2 border rounded" rows="2"></textarea>
-            </div>
-            
-            <div class="flex justify-end space-x-2">
-                <button type="button" onclick="document.getElementById('boutiqueForm').reset()" class="bg-gray-200 text-gray-800 py-2 px-4 rounded">Annuler</button>
-                <button type="submit" class="bg-blue-600 text-white py-2 px-4 rounded">Ajouter</button>
-            </div>
-        </form>
-    </div>
-    
-    <div class="bg-white rounded-lg shadow-md p-6">
-        <h3 class="text-lg font-semibold mb-4">Produits en boutique</h3>
-        <div id="liste-boutique" class="space-y-4">
-            <!-- Les produits seront chargés ici dynamiquement -->
-        </div>
-    </div>
-</div>
-
-<!-- Admin Autres (Gestion des services et images) -->
-<div id="admin-autres" class="page">
-    <div class="flex items-center mb-4">
-        <button onclick="showPage('admin')" class="mr-2"><i data-feather="arrow-left"></i></button>
-        <h2 class="text-xl font-bold">Autres Admin</h2>
-    </div>
-
-    <!-- Gestion des images des services -->
-    <div class="bg-white rounded-lg shadow-md p-6 mb-6">
-        <h3 class="text-lg font-semibold mb-4">Images des pages de services</h3>
-        <div id="services-images-list" class="grid grid-cols-1 gap-4">
-            <!-- Tôlerie -->
-            <div class="flex items-center space-x-4 p-4 border rounded-lg">
-                <img id="preview-tolerie" src="http://static.photos/automotive/640x360/1" alt="Tôlerie" class="w-[100px] h-[56px] object-cover rounded">
-                <div class="flex-1">
-                    <p class="font-semibold">Tôlerie</p>
-                    <input type="url" id="service-image-tolerie" class="w-full p-2 border rounded mb-2" placeholder="URL PostImage pour Tôlerie">
-                    <button onclick="updateServiceImage('tolerie')" class="bg-blue-600 text-white py-1 px-3 rounded text-sm">Mettre à jour</button>
-                </div>
-            </div>
-            <!-- Mécanique -->
-            <div class="flex items-center space-x-4 p-4 border rounded-lg">
-                <img id="preview-mecanique" src="http://static.photos/automotive/640x360/2" alt="Mécanique" class="w-[100px] h-[56px] object-cover rounded">
-                <div class="flex-1">
-                    <p class="font-semibold">Mécanique</p>
-                    <input type="url" id="service-image-mecanique" class="w-full p-2 border rounded mb-2" placeholder="URL PostImage pour Mécanique">
-                    <button onclick="updateServiceImage('mecanique')" class="bg-blue-600 text-white py-1 px-3 rounded text-sm">Mettre à jour</button>
-                </div>
-            </div>
-            <!-- Peinture -->
-            <div class="flex items-center space-x-4 p-4 border rounded-lg">
-                <img id="preview-peinture" src="http://static.photos/automotive/640x360/3" alt="Peinture" class="w-[100px] h-[56px] object-cover rounded">
-                <div class="flex-1">
-                    <p class="font-semibold">Peinture</p>
-                    <input type="url" id="service-image-peinture" class="w-full p-2 border rounded mb-2" placeholder="URL PostImage pour Peinture">
-                    <button onclick="updateServiceImage('peinture')" class="bg-blue-600 text-white py-1 px-3 rounded text-sm">Mettre à jour</button>
-                </div>
-            </div>
-            <!-- Froid -->
-            <div class="flex items-center space-x-4 p-4 border rounded-lg">
-                <img id="preview-froid" src="http://static.photos/automotive/640x360/4" alt="Froid" class="w-[100px] h-[56px] object-cover rounded">
-                <div class="flex-1">
-                    <p class="font-semibold">Froid</p>
-                    <input type="url" id="service-image-froid" class="w-full p-2 border rounded mb-2" placeholder="URL PostImage pour Froid">
-                    <button onclick="updateServiceImage('froid')" class="bg-blue-600 text-white py-1 px-3 rounded text-sm">Mettre à jour</button>
-                </div>
-            </div>
-            <!-- Vidange -->
-            <div class="flex items-center space-x-4 p-4 border rounded-lg">
-                <img id="preview-vidange" src="http://static.photos/automotive/640x360/5" alt="Vidange" class="w-[100px] h-[56px] object-cover rounded">
-                <div class="flex-1">
-                    <p class="font-semibold">Vidange</p>
-                    <input type="url" id="service-image-vidange" class="w-full p-2 border rounded mb-2" placeholder="URL PostImage pour Vidange">
-                    <button onclick="updateServiceImage('vidange')" class="bg-blue-600 text-white py-1 px-3 rounded text-sm">Mettre à jour</button>
-                </div>
-            </div>
-            <!-- Entretien général -->
-            <div class="flex items-center space-x-4 p-4 border rounded-lg">
-                <img id="preview-entretien" src="http://static.photos/automotive/640x360/6" alt="Entretien général" class="w-[100px] h-[56px] object-cover rounded">
-                <div class="flex-1">
-                    <p class="font-semibold">Entretien général</p>
-                    <input type="url" id="service-image-entretien" class="w-full p-2 border rounded mb-2" placeholder="URL PostImage pour Entretien">
-                    <button onclick="updateServiceImage('entretien')" class="bg-blue-600 text-white py-1 px-3 rounded text-sm">Mettre à jour</button>
-                </div>
-            </div>
-            <!-- Remorquage -->
-            <div class="flex items-center space-x-4 p-4 border rounded-lg">
-                <img id="preview-remorquage" src="http://static.photos/automotive/640x360/7" alt="Remorquage" class="w-[100px] h-[56px] object-cover rounded">
-                <div class="flex-1">
-                    <p class="font-semibold">Remorquage</p>
-                    <input type="url" id="service-image-remorquage" class="w-full p-2 border rounded mb-2" placeholder="URL PostImage pour Remorquage">
-                    <button onclick="updateServiceImage('remorquage')" class="bg-blue-600 text-white py-1 px-3 rounded text-sm">Mettre à jour</button>
-                </div>
-            </div>
-            <!-- Diagnostic -->
-            <div class="flex items-center space-x-4 p-4 border rounded-lg">
-                <img id="preview-diagnostic" src="http://static.photos/automotive/640x360/8" alt="Diagnostic" class="w-[100px] h-[56px] object-cover rounded">
-                <div class="flex-1">
-                    <p class="font-semibold">Diagnostic</p>
-                    <input type="url" id="service-image-diagnostic" class="w-full p-2 border rounded mb-2" placeholder="URL PostImage pour Diagnostic">
-                    <button onclick="updateServiceImage('diagnostic')" class="bg-blue-600 text-white py-1 px-3 rounded text-sm">Mettre à jour</button>
-                </div>
-            </div>
-            <!-- Location -->
-            <div class="flex items-center space-x-4 p-4 border rounded-lg">
-                <img id="preview-location" src="http://static.photos/automotive/640x360/9" alt="Location" class="w-[100px] h-[56px] object-cover rounded">
-                <div class="flex-1">
-                    <p class="font-semibold">Location</p>
-                    <input type="url" id="service-image-location" class="w-full p-2 border rounded mb-2" placeholder="URL PostImage pour Location">
-                    <button onclick="updateServiceImage('location')" class="bg-blue-600 text-white py-1 px-3 rounded text-sm">Mettre à jour</button>
-                </div>
-            </div>
-            <!-- Vente -->
-            <div class="flex items-center space-x-4 p-4 border rounded-lg">
-                <img id="preview-vente" src="http://static.photos/automotive/640x360/10" alt="Vente" class="w-[100px] h-[56px] object-cover rounded">
-                <div class="flex-1">
-                    <p class="font-semibold">Vente</p>
-                    <input type="url" id="service-image-vente" class="w-full p-2 border rounded mb-2" placeholder="URL PostImage pour Vente">
-                    <button onclick="updateServiceImage('vente')" class="bg-blue-600 text-white py-1 px-3 rounded text-sm">Mettre à jour</button>
+                <div class="modal-details">
+                    <h2 id="modalTitle" class="modal-title"></h2>
+                    <div id="modalPrice" class="modal-price"></div>
+                    <div id="modalRating" class="modal-rating"></div>
+                    <p id="modalDescription" class="modal-description"></p>
+                    
+                    <div class="modal-actions">
+                        <div class="quantity">
+                            <button onclick="decreaseQuantity()">-</button>
+                            <input type="number" id="quantityInput" value="1" min="1">
+                            <button onclick="increaseQuantity()">+</button>
+                        </div>
+                        <button class="add-to-cart" onclick="addToCartFromModal()">Ajouter au panier</button>
+                        <button class="buy-now" onclick="buyNow()">Acheter maintenant</button>
+                    </div>
+                    
+                    <div style="margin-top: 20px;">
+                        <p><i class="fas fa-truck"></i> Livraison gratuite</p>
+                        <p><i class="fas fa-undo"></i> Retours sous 30 jours</p>
+                        <p><i class="fas fa-shield-alt"></i> Garantie 2 ans</p>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
-        <!-- Appointment Confirmation Modal -->
-        <div id="appointmentModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50">
-            <div class="bg-white rounded-lg p-6 w-full max-w-sm mx-4">
-                <div class="text-center mb-4">
-                    <i data-feather="check-circle" class="text-green-500 w-12 h-12 mx-auto"></i>
-                </div>
-                <h3 class="text-xl font-bold mb-2 text-center">Rendez-vous confirmé !</h3>
-                <p id="appointmentDetails" class="text-center mb-4"></p>
-                <button onclick="hideAppointmentModal()" class="w-full bg-blue-600 text-white py-2 rounded-lg">
-                    Fermer
-                </button>
-            </div>
-        </div>
-      <div id="adminModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50">
-    <div class="bg-white rounded-lg p-6 w-full max-w-sm mx-4">
-        <h3 class="text-xl font-bold mb-4 text-center">ESPACE ADMIN</h3>
-        <input type="password" id="adminCode" class="w-full p-2 border rounded mb-4" placeholder="Entrez le code">
-        <div class="flex justify-between">
-            <button onclick="checkAdminCode()" class="bg-blue-600 text-white py-2 px-4 rounded">Entré</button>
-            <button onclick="hideAdminModal()" class="bg-gray-200 py-2 px-4 rounded">Annuler</button>
+
+    <!-- Modal d'image plein écran -->
+    <div id="imageModal" class="image-modal">
+        <span class="close-image-modal" onclick="closeImageModal()">&times;</span>
+        <div class="image-modal-content">
+            <img id="fullscreenImage" src="" alt="Image plein écran">
         </div>
     </div>
-</div>
-    </main>
 
-    <!-- Bottom Navigation -->
-    <nav class="fixed bottom-0 left-0 right-0 bg-white shadow-lg flex justify-around items-center h-16 z-40">
-        <button onclick="showPage('home')" class="nav-item active flex flex-col items-center p-2">
-            <i data-feather="home"></i>
-            <span class="text-xs mt-1">Accueil</span>
-        </button>
-        <button onclick="showPage('services')" class="nav-item flex flex-col items-center p-2">
-            <i data-feather="settings"></i>
-            <span class="text-xs mt-1">Services</span>
-        </button>
-       
-        <button onclick="showPage('rendezvous')" class="nav-item flex flex-col items-center p-2">
-            <i data-feather="calendar"></i>
-            <span class="text-xs mt-1">RDV</span>
-        </button>
-      <button onclick="showPage('boutique')" class="nav-item flex flex-col items-center p-2">
-    <i data-feather="shopping-cart"></i>
-    <span class="text-xs mt-1">Boutique</span>
-</button>
-    </nav>
+    <!-- Modal de commande -->
+    <div id="orderModal" class="order-modal">
+        <div class="order-modal-content">
+            <div class="modal-header">
+                <h2>Finaliser votre commande</h2>
+                <span class="close-modal" onclick="closeOrderModal()">&times;</span>
+            </div>
+            <div class="order-form">
+                <div class="form-group">
+                    <label for="customer-name">Nom complet</label>
+                    <input type="text" id="customer-name" required>
+                </div>
+                <div class="form-group">
+                    <label for="customer-phone">Numéro de téléphone</label>
+                    <input type="tel" id="customer-phone" required>
+                </div>
+                <div class="form-group">
+                    <label for="customer-email">Email</label>
+                    <input type="email" id="customer-email" required>
+                </div>
+                <div class="form-group">
+                    <label for="customer-address">Adresse de livraison</label>
+                    <input type="text" id="customer-address" required>
+                </div>
+                <button class="btn" onclick="placeOrder()">Valider ma commande</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal d'admin -->
+    <div id="adminModal" class="product-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Accès administrateur</h2>
+                <span class="close-modal" onclick="closeAdminModal()">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="admin-code">Code d'accès</label>
+                    <input type="password" id="admin-code" placeholder="Entrez le code administrateur">
+                </div>
+                <button class="btn" onclick="checkAdminCode()">Accéder</button>
+            </div>
+        </div>
+    </div>
 
     <script>
-        // Initialize AOS animations
-        AOS.init({
-            duration: 800,
-            easing: 'ease-in-out',
-            once: true
-        });
+        // Configuration Firebase
+        const firebaseConfig = {
+            apiKey: "AIzaSyCX1Q0i-L33RNZIVsJ8V1iRsDY6CJm1Lmc",
+            authDomain: "gmbn-9ba54.firebaseapp.com",
+            projectId: "gmbn-9ba54",
+            storageBucket: "gmbn-9ba54.firebasestorage.app",
+            messagingSenderId: "968684169673",
+            appId: "1:968684169673:web:d6b2796b396f8e62eda018",
+            measurementId: "G-MQXSQQQHBC"
+        };
 
-        // Initialize feather icons
-        feather.replace();
+        // Initialiser Firebase
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
 
-        // Navigation functions
-        function showPage(pageId) {
-            // Hide all pages
-            document.querySelectorAll('.page').forEach(page => {
-                page.classList.remove('active');
-            });
-
-            // Show selected page
-            document.getElementById(pageId).classList.add('active');
-
-            // Update active nav item
-            document.querySelectorAll('.nav-item').forEach(item => {
-                item.classList.remove('active');
-            });
-            event.currentTarget.classList.add('active');
-        }
-
-        function navigateToService(serviceId) {
-            showPage('service-' + serviceId);
-            
-            // Update nav to show home as active (since we're not on a main page)
-            document.querySelectorAll('.nav-item').forEach(item => {
-                item.classList.remove('active');
-            });
-            document.querySelector('.nav-item[onclick="showPage(\'home\')"]').classList.add('active');
-        }
-
-        function goBack() {
-            showPage('home');
-        }
-
-        // Contact options modal
-        function showContactOptions() {
-            document.getElementById('contactModal').classList.remove('hidden');
-        }
-
-        function hideContactOptions() {
-            document.getElementById('contactModal').classList.add('hidden');
-        }
-
-        // Appointment booking
-        function bookAppointment() {
-            const fullName = document.getElementById('fullName').value;
-            const phoneNumber = document.getElementById('phoneNumber').value;
-            const email = document.getElementById('email').value;
-            const service = document.getElementById('appointmentService').value;
-            const date = document.getElementById('appointmentDate').value;
-            const time = document.getElementById('appointmentTime').value;
-
-            if (!fullName || !phoneNumber || !service || !date || !time) {
-                alert('Veuillez remplir tous les champs obligatoires');
-                return;
-            }
-
-            // Save to localStorage
-            const appointment = {
-                fullName,
-                phoneNumber,
-                email,
-                service,
-                date,
-                time,
-                timestamp: new Date().toISOString()
-            };
-
-            let appointments = JSON.parse(localStorage.getItem('appointments')) || [];
-            appointments.push(appointment);
-            localStorage.setItem('appointments', JSON.stringify(appointments));
-
-            // Show confirmation
-            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-            const formattedDate = new Date(date).toLocaleDateString('fr-FR', options);
-            
-            document.getElementById('appointmentDetails').textContent = 
-                `Votre rendez-vous pour ${service} est confirmé pour le ${formattedDate} à ${time}.`;
-            
-            document.getElementById('appointmentModal').classList.remove('hidden');
-
-            // Clear form
-            document.getElementById('fullName').value = '';
-            document.getElementById('phoneNumber').value = '';
-            document.getElementById('email').value = '';
-            document.getElementById('appointmentService').value = '';
-            document.getElementById('appointmentDate').value = '';
-            document.getElementById('appointmentTime').value = '';
-
-            // Schedule notification
-            scheduleNotification(appointment);
-        }
-
-        function hideAppointmentModal() {
-            document.getElementById('appointmentModal').classList.add('hidden');
-            showPage('home');
-        }
-function showAdminModal() {
-    document.getElementById('adminModal').classList.remove('hidden');
-}
-
-function hideAdminModal() {
-    document.getElementById('adminModal').classList.add('hidden');
-    document.getElementById('adminCode').value = '';
-}
-
-function checkAdminCode() {
-    const code = document.getElementById('adminCode').value;
-    if (code === 'ADMIN123') {
-        hideAdminModal();
-        showPage('admin');
-    } else {
-        alert('Code incorrect');
-    }
-}
-        function scheduleNotification(appointment) {
-            if ('Notification' in window) {
-                Notification.requestPermission().then(permission => {
-                    if (permission === 'granted') {
-                        // Calculate notification time (1 hour before appointment)
-                        const appointmentTime = new Date(`${appointment.date}T${appointment.time}`);
-                        const notificationTime = new Date(appointmentTime.getTime() - 3600000);
-                        
-                        const now = new Date();
-                        const delay = notificationTime - now;
-                        
-                        if (delay > 0) {
-                            setTimeout(() => {
-                                new Notification('Rappel de rendez-vous', {
-                                    body: `Vous avez un rendez-vous pour ${appointment.service} dans 1 heure.`,
-                                    icon: 'http://static.photos/automotive/200x200/1'
-                                });
-                            }, delay);
-                        }
-                    }
-                });
-            }
-        }
-
-        // Price estimate
-        document.getElementById('serviceSelect').addEventListener('change', function() {
-            const service = this.value;
-            const estimateDiv = document.getElementById('priceEstimate');
-            const estimateText = document.getElementById('estimateText');
-            
-            if (!service) {
-                estimateDiv.classList.add('hidden');
-                return;
-            }
-            
-            let estimate = '';
-            switch(service) {
-                case 'vidange':
-                    estimate = 'À partir de 25 000 FCFA';
-                    break;
-                case 'entretien':
-                    estimate = 'À partir de 50 000 FCFA (selon le véhicule)';
-                    break;
-                case 'diagnostic':
-                    estimate = 'À partir de 15 000 FCFA';
-                    break;
-                case 'remorquage':
-                    estimate = 'À partir de 30 000 FCFA (selon la distance)';
-                    break;
-                default:
-                    estimate = 'Veuillez demander un devis personnalisé';
-                    break;
-            }
-            
-            estimateText.textContent = estimate;
-            estimateDiv.classList.remove('hidden');
-        });
-
-        // Dark mode toggle
-        document.getElementById('darkModeToggle').addEventListener('click', function() {
-            document.body.classList.toggle('dark-mode');
-            const icon = this.querySelector('i');
-            if (document.body.classList.contains('dark-mode')) {
-                feather.replace();
-                icon.setAttribute('data-feather', 'sun');
-            } else {
-                feather.replace();
-                icon.setAttribute('data-feather', 'moon');
-            }
-            feather.replace();
-        });
-
-        // Service Worker Registration for PWA
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('/sw.js').then(registration => {
-                    console.log('ServiceWorker registration successful');
-                }).catch(err => {
-                    console.log('ServiceWorker registration failed: ', err);
-                });
-            });
-        }
-    </script>
-      <script>
-        // Initialisation des composants
-document.addEventListener('DOMContentLoaded', function() {
-    // Initialiser AOS (Animate On Scroll)
-    if (typeof AOS !== 'undefined') {
-        AOS.init({
-            duration: 800,
-            easing: 'ease-in-out',
-            once: true
-        });
-    }
-    
-    // Initialiser Feather Icons
-    if (typeof feather !== 'undefined') {
-        feather.replace();
-    }
-    
-    // Initialiser les gestionnaires d'événements
-    initEventHandlers();
-    
-    // Charger les données initiales
-    loadInitialData();
-});
-
-// Gestionnaires d'événements
-function initEventHandlers() {
-    // Gestionnaires pour les formulaires admin
-    document.getElementById('venteForm')?.addEventListener('submit', handleVenteSubmit);
-    document.getElementById('locationForm')?.addEventListener('submit', handleLocationSubmit);
-    document.getElementById('boutiqueForm')?.addEventListener('submit', handleBoutiqueSubmit);
-    
-    // Gestionnaire pour le formulaire de commande
-    document.getElementById('checkout-form')?.addEventListener('submit', handleCheckoutSubmit);
-    
-    // Navigation et autres interactions
-    document.querySelectorAll('.nav-item').forEach(item => {
-        item.addEventListener('click', function() {
-            const targetPage = this.getAttribute('data-target');
-            if (targetPage) showPage(targetPage);
-        });
-    });
-}
-
-// Fonctions de navigation
-function showPage(pageId) {
-    // Cacher toutes les pages
-    document.querySelectorAll('.page').forEach(page => {
-        page.classList.remove('active');
-    });
-    
-    // Afficher la page demandée
-    const targetPage = document.getElementById(pageId);
-    if (targetPage) {
-        targetPage.classList.add('active');
-        
-        // Charger les données spécifiques à la page si nécessaire
-        if (pageId === 'admin-vente') {
-            loadVenteVehicles();
-        } else if (pageId === 'admin-location') {
-            loadLocationVehicles();
-        } else if (pageId === 'admin-boutique') {
-            loadBoutiqueProducts();
-        } else if (pageId === 'boutique') {
-            loadBoutiqueProductsForCustomers();
-        } else if (pageId === 'panier') {
-            updateCartDisplay();
-        }
-    }
-}
-
-// Fonctions pour Firebase - Vente
-async function handleVenteSubmit(e) {
-    e.preventDefault();
-    
-    const vehicleData = {
-        marque: document.getElementById('vente-marque').value,
-        modele: document.getElementById('vente-modele').value,
-        annee: parseInt(document.getElementById('vente-annee').value),
-        kilometrage: parseInt(document.getElementById('vente-km').value),
-        etat: document.getElementById('vente-etat').value,
-        transmission: document.getElementById('vente-transmission').value,
-        carburant: document.getElementById('vente-carburant').value,
-        prix: parseInt(document.getElementById('vente-prix').value),
-        caracteristiques: document.getElementById('vente-caracteristiques').value,
-        details: document.getElementById('vente-details').value,
-        imagePrincipale: document.getElementById('vente-image-principale').value,
-        imagesDetails: document.getElementById('vente-images-details').value.split(',').map(url => url.trim()),
-        dateAjout: new Date()
-    };
-    
-    try {
-        const docRef = await window.firebase.addDoc(
-            window.firebase.collection(window.firebase.db, 'vehicles_vente'), 
-            vehicleData
-        );
-        console.log('Véhicule ajouté avec ID: ', docRef.id);
-        alert('Véhicule ajouté avec succès!');
-        e.target.reset();
-        loadVenteVehicles();
-    } catch (error) {
-        console.error('Erreur lors de l\'ajout du véhicule: ', error);
-        alert('Erreur lors de l\'ajout du véhicule');
-    }
-}
-
-async function loadVenteVehicles() {
-    const listeVente = document.getElementById('liste-vente');
-    if (!listeVente) return;
-    
-    try {
-        const querySnapshot = await window.firebase.getDocs(
-            window.firebase.collection(window.firebase.db, 'vehicles_vente')
-        );
-        
-        listeVente.innerHTML = '';
-        
-        querySnapshot.forEach((doc) => {
-            const vehicle = doc.data();
-            const vehicleElement = createVehicleCard(doc.id, vehicle, 'vente');
-            listeVente.appendChild(vehicleElement);
-        });
-    } catch (error) {
-        console.error('Erreur lors du chargement des véhicules: ', error);
-        listeVente.innerHTML = '<p class="text-red-500">Erreur lors du chargement des véhicules</p>';
-    }
-}
-
-function createVehicleCard(id, vehicle, type) {
-    const card = document.createElement('div');
-    card.className = 'border rounded-lg p-4';
-    card.innerHTML = `
-        <div class="flex justify-between items-start mb-2">
-            <h4 class="font-semibold">${vehicle.marque} ${vehicle.modele} (${vehicle.annee})</h4>
-            <span class="font-bold text-blue-600">${vehicle.prix.toLocaleString()} FCFA</span>
-        </div>
-        <div class="mb-2">
-            <img src="${vehicle.imagePrincipale}" alt="${vehicle.marque} ${vehicle.modele}" class="w-full h-48 object-cover rounded">
-        </div>
-        <div class="text-sm text-gray-600 mb-3">
-            <p>${vehicle.kilometrage.toLocaleString()} km • ${vehicle.carburant} • ${vehicle.transmission}</p>
-            <p>État: ${vehicle.etat}</p>
-        </div>
-        <div class="flex justify-end space-x-2">
-            <button onclick="editVehicle('${id}', '${type}')" class="bg-yellow-500 text-white px-3 py-1 rounded text-sm">
-                Modifier
-            </button>
-            <button onclick="deleteVehicle('${id}', '${type}')" class="bg-red-500 text-white px-3 py-1 rounded text-sm">
-                Supprimer
-            </button>
-        </div>
-    `;
-    return card;
-}
-
-// Fonctions pour Firebase - Location (similaires à Vente)
-async function handleLocationSubmit(e) {
-    e.preventDefault();
-    // Implémentation similaire à handleVenteSubmit mais pour la collection 'vehicles_location'
-}
-
-async function loadLocationVehicles() {
-    const listeLocation = document.getElementById('liste-location');
-    if (!listeLocation) return;
-    
-    try {
-        const querySnapshot = await window.firebase.getDocs(
-            window.firebase.collection(window.firebase.db, 'vehicles_location')
-        );
-        
-        listeLocation.innerHTML = '';
-        
-        querySnapshot.forEach((doc) => {
-            const vehicle = doc.data();
-            const vehicleElement = createLocationVehicleCard(doc.id, vehicle);
-            listeLocation.appendChild(vehicleElement);
-        });
-    } catch (error) {
-        console.error('Erreur lors du chargement des véhicules: ', error);
-        listeLocation.innerHTML = '<p class="text-red-500">Erreur lors du chargement des véhicules</p>';
-    }
-}
-
-function createLocationVehicleCard(id, vehicle) {
-    const card = document.createElement('div');
-    card.className = 'border rounded-lg p-4';
-    const prixAffichage = vehicle.prixLocation && !isNaN(vehicle.prixLocation) && vehicle.prixLocation > 0 
-        ? `${vehicle.prixLocation.toLocaleString()} FCFA/jour` 
-        : '-- FCFA';
-    
-    card.innerHTML = `
-        <div class="flex justify-between items-start mb-2">
-            <h4 class="font-semibold">${vehicle.marque} ${vehicle.modele} (${vehicle.annee || 'N/A'})</h4>
-            <span class="font-bold text-blue-600">${prixAffichage}</span>
-        </div>
-        <div class="mb-2">
-            <img src="${vehicle.imagePrincipale || 'https://via.placeholder.com/150'}" alt="${vehicle.marque} ${vehicle.modele}" class="w-full h-48 object-cover rounded">
-        </div>
-        <div class="text-sm text-gray-600 mb-3">
-            <p>${vehicle.carburant || 'N/A'} • ${vehicle.transmission || 'N/A'} • ${vehicle.capacite || 0} places</p>
-            
-        </div>
-        <div class="flex justify-end space-x-2">
-            <button onclick="editVehicle('${id}', 'location')" class="bg-yellow-500 text-white px-3 py-1 rounded text-sm">
-                Modifier
-            </button>
-            <button onclick="deleteVehicle('${id}', 'location')" class="bg-red-500 text-white px-3 py-1 rounded text-sm">
-                Supprimer
-            </button>
-        </div>
-    `;
-    return card;
-}
-
-// Fonctions pour Firebase - Boutique
-async function handleBoutiqueSubmit(e) {
-    e.preventDefault();
-    
-    const productData = {
-        nom: document.getElementById('produit-nom').value,
-        prix: parseInt(document.getElementById('produit-prix').value),
-        marque: document.getElementById('produit-marque').value,
-        modele: document.getElementById('produit-modele').value,
-        etat: document.getElementById('produit-etat').value,
-        stock: parseInt(document.getElementById('produit-stock').value),
-        caracteristiques: document.getElementById('produit-caracteristiques').value,
-        details: document.getElementById('produit-details').value,
-        imagePrincipale: document.getElementById('produit-image-principale').value,
-        imagesDetails: document.getElementById('produit-images-details').value.split(',').map(url => url.trim()),
-        dateAjout: new Date()
-    };
-    
-    try {
-        const docRef = await window.firebase.addDoc(
-            window.firebase.collection(window.firebase.db, 'products'), 
-            productData
-        );
-        console.log('Produit ajouté avec ID: ', docRef.id);
-        alert('Produit ajouté avec succès!');
-        e.target.reset();
-        loadBoutiqueProducts();
-    } catch (error) {
-        console.error('Erreur lors de l\'ajout du produit: ', error);
-        alert('Erreur lors de l\'ajout du produit');
-    }
-}
-async function addLocationVehicle(event) {
-    event.preventDefault();
-    const form = document.getElementById('add-location-vehicle-form');
-    if (!form) {
-        console.error('Formulaire introuvable');
-        return;
-    }
-
-    const vehicle = {
-        marque: document.getElementById('location-marque').value,
-        modele: document.getElementById('location-modele').value,
-        annee: parseInt(document.getElementById('location-annee').value),
-        prixLocation: parseInt(document.getElementById('location-prixLocation').value),
-        carburant: document.getElementById('location-carburant').value,
-        transmission: document.getElementById('location-transmission').value,
-        capacite: parseInt(document.getElementById('location-capacite').value),
-        disponibilite: document.getElementById('location-disponibilite').value === 'true',
-        imagePrincipale: document.getElementById('location-imagePrincipale').value,
-        imagesDetails: document.getElementById('location-imagesDetails').value.split(',').map(url => url.trim()).filter(url => url),
-        caracteristiques: document.getElementById('location-caracteristiques').value,
-        details: document.getElementById('location-details').value,
-    };
-
-    console.log('Données du véhicule:', vehicle); // Debug
-
-    try {
-        await window.firebase.addDoc(
-            window.firebase.collection(window.firebase.db, 'vehicles_location'),
-            vehicle
-        );
-        alert('Véhicule ajouté avec succès');
-        form.reset();
-        loadLocationVehicles();
-    } catch (error) {
-        console.error('Erreur lors de l\'ajout du véhicule:', error);
-        alert('Erreur lors de l\'ajout du véhicule');
-    }
-}
-
-// Attacher l'événement de soumission
-document.getElementById('add-location-vehicle-form')?.addEventListener('submit', addLocationVehicle);
-        
-async function loadBoutiqueProducts() {
-    const listeBoutique = document.getElementById('liste-boutique');
-    if (!listeBoutique) return;
-    
-    try {
-        const querySnapshot = await window.firebase.getDocs(
-            window.firebase.collection(window.firebase.db, 'products')
-        );
-        console.log('Produits récupérés:', querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })));
-        // ... reste du code
-    } catch (error) {
-        console.error('Erreur:', error);
-    }
-}
-
-async function loadBoutiqueProductsForCustomers() {
-    const produitsContainer = document.getElementById('produits-container');
-    if (!produitsContainer) return;
-    
-    try {
-        const querySnapshot = await window.firebase.getDocs(
-            window.firebase.collection(window.firebase.db, 'products')
-        );
-        
-        produitsContainer.innerHTML = '';
-        
-        querySnapshot.forEach((doc) => {
-            const product = doc.data();
-            const productElement = createCustomerProductCard(doc.id, product);
-            produitsContainer.appendChild(productElement);
-        });
-    } catch (error) {
-        console.error('Erreur lors du chargement des produits: ', error);
-        produitsContainer.innerHTML = '<p class="text-red-500">Erreur lors du chargement des produits</p>';
-    }
-}
-async function loadVenteVehiclesClient() {
-    const listeVenteClient = document.getElementById('liste-vente-client');
-    if (!listeVenteClient) return;
-
-    try {
-        const querySnapshot = await window.firebase.getDocs(
-            window.firebase.collection(window.firebase.db, 'vehicles_vente')
-        );
-
-        listeVenteClient.innerHTML = '';
-
-        querySnapshot.forEach((doc) => {
-            const vehicle = doc.data();
-            const vehicleElement = createVehicleCardClient(doc.id, vehicle);
-            listeVenteClient.appendChild(vehicleElement);
-        });
-    } catch (error) {
-        console.error('Erreur lors du chargement des véhicules:', error);
-        listeVenteClient.innerHTML = '<p class="text-red-500">Erreur lors du chargement des véhicules</p>';
-    }
-}
-
-function createVehicleCardClient(id, vehicle) {
-    const card = document.createElement('div');
-    card.className = 'bg-white rounded-lg shadow-md overflow-hidden cursor-pointer';
-    card.onclick = () => showVehicleDetail(id); // Redirige vers une page de détail (à créer)
-    card.innerHTML = `
-        <img src="${vehicle.imagePrincipale}" alt="${vehicle.marque} ${vehicle.modele}" class="w-full h-40 object-cover">
-        <div class="p-3">
-            <h3 class="font-semibold mb-1">${vehicle.marque} ${vehicle.modele} (${vehicle.annee})</h3>
-            <p class="text-blue-600 font-bold mb-1">${vehicle.prix.toLocaleString()} FCFA</p>
-            <p class="text-sm text-gray-600">${vehicle.kilometrage.toLocaleString()} km • ${vehicle.carburant} • ${vehicle.transmission}</p>
-            <p class="text-sm text-gray-600">État: ${vehicle.etat}</p>
-        </div>
-    `;
-    return card;
-}
-function createProductCard(id, product) {
-    const card = document.createElement('div');
-    card.className = 'border rounded-lg p-4';
-    card.innerHTML = `
-        <div class="flex justify-between items-start mb-2">
-            <h4 class="font-semibold">${product.nom}</h4>
-            <span class="font-bold text-blue-600">${product.prix.toLocaleString()} FCFA</span>
-        </div>
-        <div class="mb-2">
-            <img src="${product.imagePrincipale}" alt="${product.nom}" class="w-full h-48 object-cover rounded">
-        </div>
-        <div class="text-sm text-gray-600 mb-3">
-            <p>${product.marque} ${product.modele}</p>
-            <p>État: ${product.etat} • Stock: ${product.stock}</p>
-        </div>
-        <div class="flex justify-end space-x-2">
-            <button onclick="editProduct('${id}')" class="bg-yellow-500 text-white px-3 py-1 rounded text-sm">
-                Modifier
-            </button>
-            <button onclick="deleteProduct('${id}')" class="bg-red-500 text-white px-3 py-1 rounded text-sm">
-                Supprimer
-            </button>
-        </div>
-    `;
-    return card;
-}
-
-function createCustomerProductCard(id, product) {
-    const card = document.createElement('div');
-    card.className = 'bg-white rounded-lg shadow-md overflow-hidden cursor-pointer';
-    card.innerHTML = `
-        <img src="${product.imagePrincipale}" alt="${product.nom}" class="w-full h-40 object-cover">
-        <div class="p-3">
-            <h3 class="font-semibold mb-1">${product.nom}</h3>
-            <p class="text-blue-600 font-bold mb-2">${product.prix ? product.prix.toLocaleString() + ' FCFA' : '-- FCFA'}</p>
-            <button class="add-to-cart-btn w-full bg-blue-600 text-white py-2 rounded-lg transition-colors duration-300" data-id="${id}">
-                Ajouter au panier
-            </button>
-        </div>
-    `;
-    card.querySelector('.add-to-cart-btn').addEventListener('click', function(e) {
-        e.stopPropagation(); // Empêche l'ouverture des détails
-        const button = e.target;
-        button.classList.add('bg-green-600');
-        setTimeout(() => {
-            button.classList.remove('bg-green-600');
-        }, 1500);
-        // Ajouter au panier
-        addToCart(id, product);
-    });
-    card.addEventListener('click', (e) => {
-        if (!e.target.classList.contains('add-to-cart-btn')) {
-            showProductDetail(id);
-        }
-    });
-    return card;
-}
-        function addToCart(id, product) {
-    // Récupérer le panier depuis localStorage ou initialiser un tableau vide
-    let cart = JSON.parse(localStorage.getItem('cart')) || [];
-    
-    // Créer l'objet produit à ajouter
-    const cartItem = {
-        id: id,
-        nom: product.nom,
-        prix: product.prix || 0,
-        imagePrincipale: product.imagePrincipale,
-        quantite: 1
-    };
-    
-    // Vérifier si le produit existe déjà dans le panier
-    const existingItem = cart.find(item => item.id === id);
-    if (existingItem) {
-        existingItem.quantite += 1; // Augmenter la quantité
-    } else {
-        cart.push(cartItem); // Ajouter le nouveau produit
-    }
-    
-    // Sauvegarder le panier dans localStorage
-    localStorage.setItem('cart', JSON.stringify(cart));
-    
-    // Afficher la notification
-    const notification = document.getElementById('cart-notification');
-    if (notification) {
-        notification.classList.remove('hidden');
-        setTimeout(() => {
-            notification.classList.add('hidden');
-        }, 3000); // Masquer après 3 secondes
-    }
-}
-        
-        async function showVehicleDetail(vehicleId) {
-    showPage('vehicle-detail');
-    
-    try {
-        const docRef = window.firebase.doc(window.firebase.db, 'vehicles_vente', vehicleId);
-        const docSnap = await window.firebase.getDoc(docRef);
-        
-        if (docSnap.exists()) {
-            const vehicle = docSnap.data();
-            
-            // Images carousel
-            const imagesContainer = document.getElementById('vehicle-images');
-            if (imagesContainer) {
-                imagesContainer.innerHTML = '';
-                [vehicle.imagePrincipale, ...(vehicle.imagesDetails || [])].forEach(url => {
-                    if (url) {
-                        const img = document.createElement('img');
-                        img.src = url;
-                        img.className = 'w-full h-64 object-cover snap-center flex-shrink-0';
-                        imagesContainer.appendChild(img);
-                    }
-                });
-                let scrollAmount = 0;
-                const scrollInterval = setInterval(() => {
-                    if (imagesContainer && document.getElementById('vehicle-detail').classList.contains('active')) {
-                        scrollAmount += imagesContainer.offsetWidth;
-                        if (scrollAmount >= imagesContainer.scrollWidth) {
-                            scrollAmount = 0;
-                        }
-                        imagesContainer.scrollTo({ left: scrollAmount, behavior: 'smooth' });
-                    } else {
-                        clearInterval(scrollInterval);
-                    }
-                }, 3000);
-            }
-            
-            // Vehicle info
-            document.getElementById('vehicle-name').textContent = `${vehicle.marque} ${vehicle.modele} (${vehicle.annee})`;
-            document.getElementById('vehicle-price').textContent = `${vehicle.prix.toLocaleString()} FCFA`;
-            document.getElementById('vehicle-info').textContent = `${vehicle.kilometrage.toLocaleString()} km • ${vehicle.carburant} • ${vehicle.transmission} • État: ${vehicle.etat}`;
-            document.getElementById('vehicle-description').innerHTML = `
-                <p class="font-semibold mb-2">Caractéristiques:</p>
-                <p>${vehicle.caracteristiques || 'Non spécifié'}</p>
-                <p class="font-semibold mt-4 mb-2">Détails:</p>
-                <p>${vehicle.details || 'Non spécifié'}</p>
-            `;
-        } else {
-            document.getElementById('vehicle-name').textContent = 'Véhicule non trouvé';
-        }
-    } catch (error) {
-        console.error('Erreur chargement véhicule:', error);
-        document.getElementById('vehicle-name').textContent = 'Erreur de chargement';
-    }
-}
-
-window.showVehicleDetail = showVehicleDetail;
-        
-        async function loadLocationVehiclesClient() {
-       const listeLocationClient = document.getElementById('liste-location-client');
-       if (!listeLocationClient) return;
-
-       try {
-           const querySnapshot = await window.firebase.getDocs(
-               window.firebase.collection(window.firebase.db, 'vehicles_location')
-           );
-
-           listeLocationClient.innerHTML = '';
-
-           querySnapshot.forEach((doc) => {
-               const vehicle = doc.data();
-               const vehicleElement = createLocationVehicleCardClient(doc.id, vehicle);
-               listeLocationClient.appendChild(vehicleElement);
-           });
-       } catch (error) {
-           console.error('Erreur lors du chargement des véhicules:', error);
-           listeLocationClient.innerHTML = '<p class="text-red-500">Erreur lors du chargement des véhicules</p>';
-       }
-   }
-
-   function createLocationVehicleCardClient(id, vehicle) {
-       const card = document.createElement('div');
-       card.className = 'bg-white rounded-lg shadow-md overflow-hidden cursor-pointer';
-       card.onclick = () => showLocationVehicleDetail(id); // Redirige vers une page de détail (à créer)
-       card.innerHTML = `
-           <img src="${vehicle.imagePrincipale}" alt="${vehicle.marque} ${vehicle.modele}" class="w-full h-40 object-cover">
-           <div class="p-3">
-               <h3 class="font-semibold mb-1">${vehicle.marque} ${vehicle.modele} (${vehicle.annee})</h3>
-               <p class="text-blue-600 font-bold mb-1">${vehicle.prixLocation.toLocaleString()} FCFA/jour</p>
-               <p class="text-sm text-gray-600">${vehicle.carburant} • ${vehicle.transmission} • ${vehicle.capacite} places</p>
-           </div>
-       `;
-       return card;
-   }
-async function showProductDetail(productId) {
-    showPage('product-detail');
-    
-    try {
-        const docRef = window.firebase.doc(window.firebase.db, 'products', productId);
-        const docSnap = await window.firebase.getDoc(docRef);
-        
-        if (docSnap.exists()) {
-            const product = docSnap.data();
-            console.log('Product data:', product); // Debug: Log product data
-            
-            // Images carousel
-            const imagesContainer = document.getElementById('product-images');
-            if (imagesContainer) {
-                imagesContainer.innerHTML = '';
-                [product.imagePrincipale, ...(product.imagesDetails || [])].forEach(url => {
-                    if (url) {
-                        const img = document.createElement('img');
-                        img.src = url;
-                        img.className = 'w-full h-64 object-cover snap-center flex-shrink-0';
-                        imagesContainer.appendChild(img);
-                    }
-                });
-                
-                // Auto-scroll
-                let scrollAmount = 0;
-                const scrollInterval = setInterval(() => {
-                    if (imagesContainer && document.getElementById('product-detail').classList.contains('active')) {
-                        scrollAmount += imagesContainer.offsetWidth;
-                        if (scrollAmount >= imagesContainer.scrollWidth) {
-                            scrollAmount = 0;
-                        }
-                        imagesContainer.scrollTo({ left: scrollAmount, behavior: 'smooth' });
-                    } else {
-                        clearInterval(scrollInterval);
-                    }
-                }, 3000);
-            }
-            
-            // Product info
-            document.getElementById('product-name').textContent = product.nom || 'Nom indisponible';
-            document.getElementById('product-brand').textContent = product.marque || 'Marque indisponible';
-            document.getElementById('product-brand').classList.add('text-sm');
-            document.getElementById('product-price').textContent = product.prix ? `${product.prix.toLocaleString()} FCFA` : 'Prix indisponible';
-            document.getElementById('product-stock').textContent = product.stock !== undefined ? `Stock: ${product.stock} articles` : 'Stock indisponible';
-            document.getElementById('product-description').innerHTML = `
-                <p class="font-semibold mb-2">Caractéristiques:</p>
-                <p>${product.caracteristiques || 'Non spécifié'}</p>
-                <p class="font-semibold mt-4 mb-2">Détails:</p>
-                <p>${product.details || 'Non spécifié'}</p>
-            `;
-            
-            // Add to cart button
-            const addBtn = document.getElementById('add-to-cart-btn');
-            if (addBtn) {
-                addBtn.onclick = () => addToCart(productId, product.nom, product.prix, product.imagePrincipale);
-            }
-            
-            // Load related products
-            await loadRelatedProducts(productId);
-        } else {
-            console.error('Product not found for ID:', productId);
-            document.getElementById('product-name').textContent = 'Produit non trouvé';
-        }
-    } catch (error) {
-        console.error('Error loading product:', error);
-        document.getElementById('product-name').textContent = 'Erreur de chargement';
-    }
-}
-        // Charger produits aléatoires
-async function loadRelatedProducts(currentId) {
-    const relatedContainer = document.getElementById('related-products');
-    relatedContainer.innerHTML = '';
-    
-    try {
-        const querySnapshot = await window.firebase.getDocs(
-            window.firebase.collection(window.firebase.db, 'products')
-        );
-        
+        // Variables globales
+        let currentProduct = null;
+        let cart = JSON.parse(localStorage.getItem('cart')) || [];
         let products = [];
-        querySnapshot.forEach(doc => {
-            if (doc.id !== currentId) {
-                products.push({ id: doc.id, ...doc.data() });
+        let currentAdminTab = 'products';
+
+        // Chargement initial
+        document.addEventListener('DOMContentLoaded', function() {
+            updateCartCount();
+            loadProducts();
+            checkAdminAccess();
+            
+            // Écouter la saisie dans la recherche
+            document.getElementById('searchInput').addEventListener('keyup', function(event) {
+                if (event.key === 'Enter') {
+                    performSearch();
+                } else if (this.value === '1997') {
+                    showAdminModal();
+                }
+            });
+            
+            // Écouter la soumission du formulaire produit
+            document.getElementById('product-form').addEventListener('submit', function(e) {
+                e.preventDefault();
+                saveProduct();
+            });
+        });
+
+        // Fonctions de navigation
+        function showPage(pageId) {
+            document.querySelectorAll('.page').forEach(page => {
+                page.classList.remove('active-page');
+            });
+            document.getElementById(pageId).classList.add('active-page');
+            
+            if (pageId === 'cart') {
+                loadCart();
+            } else if (pageId === 'admin') {
+                loadAdminProducts();
+                loadOrders();
             }
+        }
+
+        function scrollToProducts() {
+            document.getElementById('products-section').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // Fonctions de recherche et filtrage
+ function performSearch() {
+    const searchTerm = document.getElementById('searchInput').value.toLowerCase().trim();
+    
+    if (searchTerm === '') return;
+    
+    // Recherche approximative avec pondération
+    const scoredProducts = products.map(product => {
+        let score = 0;
+        
+        // Recherche dans le nom
+        if (product.name.toLowerCase().includes(searchTerm)) score += 3;
+        
+        // Recherche dans la catégorie
+        if (product.category.toLowerCase().includes(searchTerm)) score += 2;
+        
+        // Recherche dans la description
+        if (product.description.toLowerCase().includes(searchTerm)) score += 1;
+        
+        // Recherche par mots
+        const searchWords = searchTerm.split(' ');
+        searchWords.forEach(word => {
+            if (product.name.toLowerCase().includes(word)) score += 2;
+            if (product.category.toLowerCase().includes(word)) score += 1.5;
+            if (product.description.toLowerCase().includes(word)) score += 0.5;
         });
         
-        // Shuffle et prendre 8
-        products = products.sort(() => 0.5 - Math.random()).slice(0, 8);
-        
-        products.forEach(product => {
-            const card = createCustomerProductCard(product.id, product);
-            relatedContainer.appendChild(card);
-        });
-    } catch (error) {
-        console.error('Erreur chargement produits liés:', error);
-    }
-}
-        // Ajoutez au CSS pour le carousel
-const style = document.createElement('style');
-style.textContent = `
-    #product-images {
-        scroll-snap-type: x mandatory;
-        -webkit-overflow-scrolling: touch;
-    }
-`;
-document.head.appendChild(style);
-
-// Exposer la fonction
-window.showProductDetail = showProductDetail;
-// Gestion du panier
-let cart = JSON.parse(localStorage.getItem('gmbn_cart')) || [];
-
-function addToCart(productId, productName, productPrice, productImage) {
-    const existingItem = cart.find(item => item.id === productId);
+        return { product, score };
+    });
     
-    if (existingItem) {
-        existingItem.quantity += 1;
-    } else {
-        cart.push({
-            id: productId,
-            name: productName,
-            price: productPrice,
-            image: productImage,
-            quantity: 1
-        });
-    }
+    // Filtrer et trier par score
+    const filteredProducts = scoredProducts
+        .filter(item => item.score > 0)
+        .sort((a, b) => b.score - a.score)
+        .map(item => item.product);
     
-    updateCartStorage();
-    updateCartCount();
-    showNotification(`${productName} ajouté au panier`);
+    // Afficher les résultats
+    displaySearchResults(filteredProducts, searchTerm);
+    showPage('search-results');
 }
 
-function updateCartCount() {
-    const cartCount = document.getElementById('cart-count');
-    if (cartCount) {
-        const totalItems = cart.reduce((total, item) => total + item.quantity, 0);
-        cartCount.textContent = totalItems;
-    }
-}
-
-        
-function updateCartDisplay() {
-    const cartItems = document.getElementById('cart-items');
-    const emptyCartMessage = document.getElementById('empty-cart-message');
-    const cartTotal = document.getElementById('cart-total');
+function displaySearchResults(products, searchTerm) {
+    const container = document.getElementById('search-results-container');
+    const title = document.querySelector('#search-results .section-title');
     
-    if (cart.length === 0) {
-        if (emptyCartMessage) emptyCartMessage.style.display = 'block';
-        if (cartItems) cartItems.innerHTML = '';
-        if (cartTotal) cartTotal.textContent = '0 FCFA';
+    title.textContent = `Résultats pour "${searchTerm}"`;
+    container.innerHTML = '';
+    
+    if (products.length === 0) {
+        container.innerHTML = '<p>Aucun produit trouvé pour votre recherche.</p>';
         return;
     }
     
-    if (emptyCartMessage) emptyCartMessage.style.display = 'none';
+    products.forEach(product => {
+        const productCard = createProductCard(product);
+        container.appendChild(productCard);
+    });
+}
+
+       function filterByCategory(category) {
+    const filteredProducts = products.filter(product => product.category === category);
+    displayCategoryProducts(filteredProducts, category);
+    showPage('category-page');
+}
+
+function displayCategoryProducts(products, category) {
+    const container = document.getElementById('category-products-container');
+    const title = document.getElementById('category-title');
     
-    let total = 0;
-    let itemsHTML = '';
+    title.textContent = `Catégorie: ${category}`;
+    container.innerHTML = '';
     
-    cart.forEach((item, index) => {
-        const itemTotal = item.price * item.quantity;
-        total += itemTotal;
-        
-        itemsHTML += `
-            <div class="cart-item">
-                <div class="flex items-center">
-                    <img src="${item.image}" alt="${item.name}" class="w-12 h-12 object-cover rounded mr-3">
-                    <div>
-                        <p class="font-semibold">${item.name}</p>
-                        <p class="text-blue-600">${item.price.toLocaleString()} FCFA</p>
+    if (products.length === 0) {
+        container.innerHTML = '<p>Aucun produit dans cette catégorie.</p>';
+        return;
+    }
+    
+    products.forEach(product => {
+        const productCard = createProductCard(product);
+        container.appendChild(productCard);
+    });
+}
+
+        // Fonctions de produits
+        function loadProducts() {
+            db.collection('products').get().then((querySnapshot) => {
+                products = [];
+                querySnapshot.forEach((doc) => {
+                    products.push({ id: doc.id, ...doc.data() });
+                });
+                displayProducts(products);
+                displayVehicles(products.filter(product => product.category === 'Véhicules'));
+            });
+        }
+
+        function displayProducts(productsToDisplay) {
+            const container = document.getElementById('products-container');
+            container.innerHTML = '';
+            
+            productsToDisplay.forEach(product => {
+                if (product.category !== 'Véhicules') {
+                    const productCard = createProductCard(product);
+                    container.appendChild(productCard);
+                }
+            });
+        }
+
+        function displayVehicles(vehicles) {
+            const container = document.getElementById('vehicles-container');
+            container.innerHTML = '';
+            
+            vehicles.forEach(vehicle => {
+                const vehicleCard = document.createElement('div');
+                vehicleCard.className = 'vehicle-card';
+                vehicleCard.innerHTML = `
+                    <div class="vehicle-image">
+                        <img src="${vehicle.image}" alt="${vehicle.name}">
+                    </div>
+                    <div class="vehicle-info">
+                        <h3 class="vehicle-title">${vehicle.name}</h3>
+                        <div class="vehicle-price">${parseInt(vehicle.price).toLocaleString()} FCFA</div>
+                        <div class="vehicle-details">
+                            <span><i class="fas fa-calendar-alt"></i> ${vehicle.year || 'N/A'}</span>
+                            <span><i class="fas fa-road"></i> ${vehicle.mileage || 'N/A'} km</span>
+                            <span><i class="fas fa-gas-pump"></i> ${vehicle.fuel || 'N/A'}</span>
+                        </div>
+                        <button class="add-to-cart" onclick="openProductModal('${vehicle.id}')">Voir détails</button>
+                    </div>
+                `;
+                container.appendChild(vehicleCard);
+            });
+        }
+
+        function createProductCard(product) {
+            const card = document.createElement('div');
+            card.className = 'product-card';
+            card.innerHTML = `
+                <div class="product-image">
+                    <img src="${product.image}" alt="${product.name}">
+                </div>
+                <div class="product-info">
+                    <h3 class="product-title">${product.name}</h3>
+                    <div class="product-price">${parseInt(product.price).toLocaleString()} FCFA</div>
+                    <div class="product-rating">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star-half-alt"></i>
+                    </div>
+                    <div class="product-actions">
+                        <button class="add-to-cart" onclick="addToCart('${product.id}')">Ajouter au panier</button>
                     </div>
                 </div>
-                <div class="quantity-controls">
-                    <button onclick="updateQuantity(${index}, ${item.quantity - 1})" class="bg-gray-200 rounded-full w-6 h-6">-</button>
-                    <span class="mx-2">${item.quantity}</span>
-                    <button onclick="updateQuantity(${index}, ${item.quantity + 1})" class="bg-gray-200 rounded-full w-6 h-6">+</button>
-                </div>
-            </div>
-        `;
-    });
-    
-    if (cartItems) cartItems.innerHTML = itemsHTML;
-    if (cartTotal) cartTotal.textContent = `${total.toLocaleString()} FCFA`;
-}
-document.getElementById('add-to-cart-btn')?.addEventListener('click', function() {
-    const button = document.getElementById('add-to-cart-btn');
-    button.classList.add('bg-green-600');
-    setTimeout(() => {
-        button.classList.remove('bg-green-600');
-    }, 1500);
-    // Récupérer les données du produit depuis la page de détails
-    const id = button.getAttribute('data-id'); // Ajoutez data-id dans le HTML si nécessaire
-    const product = {
-        nom: document.getElementById('vehicle-name').textContent,
-        prix: parseFloat(document.getElementById('vehicle-price').textContent.replace(' FCFA', '').replace(',', '')) || 0,
-        imagePrincipale: document.querySelector('#vehicle-images img')?.src || ''
-    };
-    addToCart(id, product);
-});
-        async function showLocationVehicleDetail(vehicleId) {
-       showPage('location-vehicle-detail');
-       
-       try {
-           const docRef = window.firebase.doc(window.firebase.db, 'vehicles_location', vehicleId);
-           const docSnap = await window.firebase.getDoc(docRef);
-           
-           if (docSnap.exists()) {
-               const vehicle = docSnap.data();
-               
-               // Images carousel
-               const imagesContainer = document.getElementById('location-vehicle-images');
-               if (imagesContainer) {
-                   imagesContainer.innerHTML = '';
-                   [vehicle.imagePrincipale, ...(vehicle.imagesDetails || [])].forEach(url => {
-                       if (url) {
-                           const img = document.createElement('img');
-                           img.src = url;
-                           img.className = 'w-full h-64 object-cover snap-center flex-shrink-0';
-                           imagesContainer.appendChild(img);
-                       }
-                   });
-                   let scrollAmount = 0;
-                   const scrollInterval = setInterval(() => {
-                       if (imagesContainer && document.getElementById('location-vehicle-detail').classList.contains('active')) {
-                           scrollAmount += imagesContainer.offsetWidth;
-                           if (scrollAmount >= imagesContainer.scrollWidth) {
-                               scrollAmount = 0;
-                           }
-                           imagesContainer.scrollTo({ left: scrollAmount, behavior: 'smooth' });
-                       } else {
-                           clearInterval(scrollInterval);
-                       }
-                   }, 3000);
-               }
-               
-               // Vehicle info
-               document.getElementById('location-vehicle-name').textContent = `${vehicle.marque} ${vehicle.modele} (${vehicle.annee})`;
-               document.getElementById('location-vehicle-price').textContent = `${vehicle.prixLocation.toLocaleString()} FCFA/jour`;
-               document.getElementById('location-vehicle-info').textContent = `${vehicle.carburant} • ${vehicle.transmission} • ${vehicle.capacite} places • Disponibilité: ${vehicle.disponibilite ? 'Disponible' : 'Non disponible'}`;
-               document.getElementById('location-vehicle-description').innerHTML = `
-                   <p class="font-semibold mb-2">Caractéristiques:</p>
-                   <p>${vehicle.caracteristiques || 'Non spécifié'}</p>
-                   <p class="font-semibold mt-4 mb-2">Détails:</p>
-                   <p>${vehicle.details || 'Non spécifié'}</p>
-               `;
-           } else {
-               document.getElementById('location-vehicle-name').textContent = 'Véhicule non trouvé';
-           }
-       } catch (error) {
-           console.error('Erreur chargement véhicule:', error);
-           document.getElementById('location-vehicle-name').textContent = 'Erreur de chargement';
-       }
-   }
-
-   window.showLocationVehicleDetail = showLocationVehicleDetail;
-        
-function updateQuantity(index, newQuantity) {
-    if (newQuantity < 1) {
-        cart.splice(index, 1);
-    } else {
-        cart[index].quantity = newQuantity;
-    }
-    
-    updateCartStorage();
-    updateCartCount();
-    updateCartDisplay();
-}
-
-function updateCartStorage() {
-    localStorage.setItem('gmbn_cart', JSON.stringify(cart));
-}
-
-// Commande et checkout
-function showCheckoutForm() {
-    if (cart.length === 0) {
-        alert('Votre panier est vide');
-        return;
-    }
-    
-    const checkoutTotal = document.getElementById('checkout-total');
-    if (checkoutTotal) {
-        const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-        const deliveryFee = total >= 10000 ? 0 : 500;
-        checkoutTotal.textContent = `${(total + deliveryFee).toLocaleString()} FCFA`;
-    }
-    
-    showPage('checkout');
-}
-
-async function handleCheckoutSubmit(e) {
-    e.preventDefault();
-    
-    const orderData = {
-        prenom: document.getElementById('checkout-prenom').value,
-        nom: document.getElementById('checkout-nom').value,
-        telephone: document.getElementById('checkout-phone').value,
-        adresse: document.getElementById('checkout-adresse').value,
-        produits: cart,
-        total: cart.reduce((sum, item) => sum + (item.price * item.quantity), 0),
-        fraisLivraison: cart.reduce((sum, item) => sum + (item.price * item.quantity), 0) >= 10000 ? 0 : 500,
-        statut: 'en attente',
-        date: new Date()
-    };
-    
-    try {
-        const docRef = await window.firebase.addDoc(
-            window.firebase.collection(window.firebase.db, 'orders'), 
-            orderData
-        );
-        
-        console.log('Commande passée avec ID: ', docRef.id);
-        
-        // Vider le panier
-        cart = [];
-        updateCartStorage();
-        updateCartCount();
-        
-        // Afficher la confirmation
-        showPage('confirmation');
-    } catch (error) {
-        console.error('Erreur lors de la commande: ', error);
-        alert('Erreur lors de la commande. Veuillez réessayer.');
-    }
-}
-function addToCart() {
-        const notification = document.getElementById('cart-notification');
-        if (notification) {
-            notification.classList.remove('hidden');
-            setTimeout(() => {
-                notification.classList.add('hidden');
-            }, 3000); // Masquer après 3 secondes
+            `;
+            card.addEventListener('click', () => openProductModal(product.id));
+            return card;
         }
-        // Ajoutez ici la logique pour ajouter au panier si nécessaire
-    }
-// Fonctions utilitaires
-function showNotification(message) {
-    // Créer une notification toast
-    const toast = document.createElement('div');
-    toast.className = 'fixed bottom-4 right-4 bg-green-500 text-white px-4 py-2 rounded-lg shadow-lg';
-    toast.textContent = message;
-    document.body.appendChild(toast);
-    
-    // Supprimer après 3 secondes
-    setTimeout(() => {
-        document.body.removeChild(toast);
-    }, 3000);
-}
 
-function loadInitialData() {
-    // Charger le compte du panier
-    updateCartCount();
-    
-    // Charger les données si on est sur une page qui en a besoin
-    if (document.getElementById('admin-vente')?.classList.contains('active')) {
-        loadVenteVehicles();
-    } else if (document.getElementById('admin-boutique')?.classList.contains('active')) {
-        loadBoutiqueProducts();
-    } else if (document.getElementById('boutique')?.classList.contains('active')) {
-        loadBoutiqueProductsForCustomers();
-    }
-}
-
-// Fonctions de gestion (suppression, modification)
-async function deleteVehicle(id, type) {
-    if (!confirm('Êtes-vous sûr de vouloir supprimer ce véhicule ?')) return;
-    
-    try {
-        await window.firebase.deleteDoc(
-            window.firebase.doc(window.firebase.db, `vehicles_${type}`, id)
-        );
-        alert('Véhicule supprimé avec succès');
-        if (type === 'vente') {
-            loadVenteVehicles();
-        } else {
-            loadLocationVehicles();
+        // Fonctions modales
+        function openProductModal(productId) {
+            currentProduct = products.find(p => p.id === productId);
+            if (!currentProduct) return;
+            
+            document.getElementById('modalTitle').textContent = currentProduct.name;
+            document.getElementById('modalPrice').textContent = `${parseInt(currentProduct.price).toLocaleString()} FCFA`;
+            document.getElementById('modalImg').src = currentProduct.image;
+            document.getElementById('modalDescription').textContent = currentProduct.description;
+            
+            // Gestion de la galerie d'images
+            const gallery = document.getElementById('imageGallery');
+            gallery.innerHTML = '';
+            
+            // Ajouter l'image principale à la galerie
+            addImageToGallery(currentProduct.image, gallery, true);
+            
+            // Ajouter les images supplémentaires si elles existent
+            if (currentProduct.images && currentProduct.images.length > 0) {
+                currentProduct.images.split(',').forEach(imgUrl => {
+                    if (imgUrl.trim()) {
+                        addImageToGallery(imgUrl.trim(), gallery, false);
+                    }
+                });
+            }
+            
+            document.getElementById('productModal').style.display = 'block';
+            document.body.style.overflow = 'hidden';
         }
-    } catch (error) {
-        console.error('Erreur lors de la suppression: ', error);
-        alert('Erreur lors de la suppression du véhicule');
-    }
-}
 
-async function deleteProduct(id) {
-    if (!confirm('Êtes-vous sûr de vouloir supprimer ce produit ?')) return;
-    
-    try {
-        await window.firebase.deleteDoc(
-            window.firebase.doc(window.firebase.db, 'products', id)
-        );
-        alert('Produit supprimé avec succès');
-        loadBoutiqueProducts();
-    } catch (error) {
-        console.error('Erreur lors de la suppression: ', error);
-        alert('Erreur lors de la suppression du produit');
-    }
-}
-
-// Exposer les fonctions globales
-window.showPage = showPage;
-window.addToCart = addToCart;
-window.updateQuantity = updateQuantity;
-window.showCheckoutForm = showCheckoutForm;
-window.deleteVehicle = deleteVehicle;
-window.deleteProduct = deleteProduct;
-        
-        async function loadServicesImages() {
-    const services = [
-        'tolerie', 'mecanique', 'peinture', 'froid', 'vidange',
-        'entretien', 'remorquage', 'diagnostic', 'location', 'vente'
-    ];
-
-    for (const service of services) {
-        const docRef = window.firebase.doc(window.firebase.db, 'services_images', service);
-        const docSnap = await window.firebase.getDoc(docRef);
-        const imageUrl = docSnap.exists() ? docSnap.data().imageUrl : `http://static.photos/automotive/640x360/${services.indexOf(service) + 1}`;
-        const input = document.getElementById(`service-image-${service}`);
-        const preview = document.getElementById(`preview-${service}`);
-        if (input && preview) {
-            input.value = imageUrl;
-            preview.src = imageUrl;
+        function addImageToGallery(imageUrl, galleryElement, isActive) {
+            const img = document.createElement('img');
+            img.src = imageUrl;
+            if (isActive) img.classList.add('active');
+            img.addEventListener('click', function() {
+                document.getElementById('modalImg').src = this.src;
+                document.querySelectorAll('#imageGallery img').forEach(img => img.classList.remove('active'));
+                this.classList.add('active');
+            });
+            galleryElement.appendChild(img);
         }
-    }
-}
 
-async function updateServiceImage(serviceId) {
-    const imageUrl = document.getElementById(`service-image-${serviceId}`).value;
-    if (!imageUrl) {
-        alert('Veuillez entrer une URL valide');
-        return;
-    }
-
-    try {
-        await window.firebase.setDoc(
-            window.firebase.doc(window.firebase.db, 'services_images', serviceId),
-            { imageUrl }
-        );
-        document.getElementById(`preview-${serviceId}`).src = imageUrl;
-        alert('Image du service mise à jour avec succès');
-        updateServicePageImages();
-    } catch (error) {
-        console.error('Erreur lors de la mise à jour de l\'image:', error);
-        alert('Erreur lors de la mise à jour de l\'image');
-    }
-}
-
-async function updateServicePageImages() {
-    const servicePages = document.querySelectorAll('.page[id^="service-"] .service-card');
-    for (const page of servicePages) {
-        const serviceId = page.parentElement.id.replace('service-', '');
-        const docRef = window.firebase.doc(window.firebase.db, 'services_images', serviceId);
-        const docSnap = await window.firebase.getDoc(docRef);
-        if (docSnap.exists()) {
-            page.style.backgroundImage = `url('${docSnap.data().imageUrl}')`;
+        function closeProductModal() {
+            document.getElementById('productModal').style.display = 'none';
+            document.body.style.overflow = 'auto';
         }
-    }
-}
 
-// Charger les images au chargement de la page admin-autres
-document.addEventListener('DOMContentLoaded', () => {
-    if (document.getElementById('admin-autres')?.classList.contains('active')) {
-        loadServicesImages();
-    }
-    updateServicePageImages();
-});
+        function openImageModal(imageUrl) {
+            document.getElementById('fullscreenImage').src = imageUrl;
+            document.getElementById('imageModal').style.display = 'flex';
+        }
 
-// Mettre à jour showPage pour charger les images des services
-const originalShowPage = window.showPage;
-window.showPage = function(pageId) {
-    originalShowPage(pageId);
-    if (pageId === 'admin-autres') {
-        loadServicesImages();
-    } else if (pageId.startsWith('service-')) {
-        updateServicePageImages();
-    }
-};
+        function closeImageModal() {
+            document.getElementById('imageModal').style.display = 'none';
+        }
+
+        function increaseQuantity() {
+            const quantityInput = document.getElementById('quantityInput');
+            quantityInput.value = parseInt(quantityInput.value) + 1;
+        }
+
+        function decreaseQuantity() {
+            const quantityInput = document.getElementById('quantityInput');
+            if (parseInt(quantityInput.value) > 1) {
+                quantityInput.value = parseInt(quantityInput.value) - 1;
+            }
+        }
+
+        // Fonctions panier
+        function addToCart(productId) {
+            const product = products.find(p => p.id === productId);
+            if (!product) return;
+            
+            const existingItem = cart.find(item => item.id === productId);
+            
+            if (existingItem) {
+                existingItem.quantity += 1;
+            } else {
+                cart.push({
+                    id: product.id,
+                    name: product.name,
+                    price: product.price,
+                    image: product.image,
+                    quantity: 1
+                });
+            }
+            
+            updateCartStorage();
+            alert('Produit ajouté au panier!');
+        }
+
+        function addToCartFromModal() {
+            if (!currentProduct) return;
+            
+            const quantity = parseInt(document.getElementById('quantityInput').value);
+            const existingItem = cart.find(item => item.id === currentProduct.id);
+            
+            if (existingItem) {
+                existingItem.quantity += quantity;
+            } else {
+                cart.push({
+                    id: currentProduct.id,
+                    name: currentProduct.name,
+                    price: currentProduct.price,
+                    image: currentProduct.image,
+                    quantity: quantity
+                });
+            }
+            
+            updateCartStorage();
+            closeProductModal();
+            alert('Produit ajouté au panier!');
+        }
+
+        function buyNow() {
+            addToCartFromModal();
+            showPage('cart');
+        }
+
+        function updateCartStorage() {
+            localStorage.setItem('cart', JSON.stringify(cart));
+            updateCartCount();
+        }
+
+        function updateCartCount() {
+            const totalItems = cart.reduce((total, item) => total + item.quantity, 0);
+            document.getElementById('cartCount').textContent = totalItems;
+        }
+
+        function loadCart() {
+            const container = document.getElementById('cart-items-container');
+            container.innerHTML = '';
+            
+            if (cart.length === 0) {
+                container.innerHTML = '<p>Votre panier est vide.</p>';
+                document.getElementById('cart-total').textContent = 'Total: 0 FCFA';
+                return;
+            }
+            
+            let total = 0;
+            
+            cart.forEach((item, index) => {
+                const itemTotal = item.price * item.quantity;
+                total += itemTotal;
+                
+                const cartItem = document.createElement('div');
+                cartItem.className = 'cart-item';
+                cartItem.innerHTML = `
+                    <div class="cart-item-info">
+                        <img src="${item.image}" alt="${item.name}">
+                        <div>
+                            <h3>${item.name}</h3>
+                            <p>${parseInt(item.price).toLocaleString()} FCFA x ${item.quantity}</p>
+                        </div>
+                    </div>
+                    <div>
+                        <button class="btn-edit" onclick="changeQuantity(${index}, ${item.quantity - 1})">-</button>
+                        <span>${item.quantity}</span>
+                        <button class="btn-edit" onclick="changeQuantity(${index}, ${item.quantity + 1})">+</button>
+                        <button class="btn-delete" onclick="removeFromCart(${index})"><i class="fas fa-trash"></i></button>
+                    </div>
+                `;
+                container.appendChild(cartItem);
+            });
+            
+            document.getElementById('cart-total').textContent = `Total: ${parseInt(total).toLocaleString()} FCFA`;
+        }
+
+        function changeQuantity(index, newQuantity) {
+            if (newQuantity < 1) {
+                removeFromCart(index);
+                return;
+            }
+            
+            cart[index].quantity = newQuantity;
+            updateCartStorage();
+            loadCart();
+        }
+
+        function removeFromCart(index) {
+            cart.splice(index, 1);
+            updateCartStorage();
+            loadCart();
+        }
+
+        // Fonctions de commande
+        function showOrderModal() {
+            if (cart.length === 0) {
+                alert('Votre panier est vide!');
+                return;
+            }
+            
+            document.getElementById('orderModal').style.display = 'block';
+        }
+
+        function closeOrderModal() {
+            document.getElementById('orderModal').style.display = 'none';
+        }
+
+        function placeOrder() {
+            const name = document.getElementById('customer-name').value;
+            const phone = document.getElementById('customer-phone').value;
+            const email = document.getElementById('customer-email').value;
+            const address = document.getElementById('customer-address').value;
+            
+            if (!name || !phone || !email || !address) {
+                alert('Veuillez remplir tous les champs!');
+                return;
+            }
+            
+            const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            
+            const order = {
+                customer: { name, phone, email, address },
+                items: [...cart],
+                total: total,
+                status: 'pending',
+                date: new Date().toISOString()
+            };
+            
+            db.collection('orders').add(order)
+                .then(() => {
+                    alert('Votre commande a bien été passée! Votre colis sera livré en moins de 24h les jours ouvrables.');
+                    cart = [];
+                    updateCartStorage();
+                    closeOrderModal();
+                    showPage('home');
+                })
+                .catch(error => {
+                    console.error('Erreur lors de l\'enregistrement de la commande: ', error);
+                    alert('Une erreur s\'est produite. Veuillez réessayer.');
+                });
+        }
+
+        // Fonctions d'administration
+        function showAdminModal() {
+            document.getElementById('adminModal').style.display = 'block';
+        }
+
+        function closeAdminModal() {
+            document.getElementById('adminModal').style.display = 'none';
+            document.getElementById('admin-code').value = '';
+        }
+
+        function checkAdminCode() {
+            const code = document.getElementById('admin-code').value;
+            if (code === 'ADMIN123') {
+                localStorage.setItem('adminAccess', 'granted');
+                closeAdminModal();
+                showPage('admin');
+            } else {
+                alert('Code incorrect!');
+            }
+        }
+
+        function checkAdminAccess() {
+            if (localStorage.getItem('adminAccess') === 'granted') {
+                showPage('admin');
+            }
+        }
+
+        function logoutAdmin() {
+            localStorage.removeItem('adminAccess');
+            showPage('home');
+        }
+
+        function showAdminTab(tabName) {
+            currentAdminTab = tabName;
+            
+            // Mettre à jour les onglets
+            document.querySelectorAll('.admin-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            // Afficher le contenu correspondant
+            document.querySelectorAll('.admin-tab-content').forEach(content => {
+                content.style.display = 'none';
+            });
+            
+            if (tabName === 'products') {
+                document.getElementById('admin-products').style.display = 'block';
+                loadAdminProducts();
+            } else if (tabName === 'orders') {
+                document.getElementById('admin-orders').style.display = 'block';
+                loadOrders();
+            } else if (tabName === 'completed-orders') {
+                document.getElementById('admin-completed-orders').style.display = 'block';
+                loadOrders('completed');
+            } else if (tabName === 'rejected-orders') {
+                document.getElementById('admin-rejected-orders').style.display = 'block';
+                loadOrders('rejected');
+            }
+        }
+
+        function previewImage(input, previewId) {
+            const url = input.value;
+            if (url) {
+                document.getElementById(previewId).src = url;
+            }
+        }
+
+        function saveProduct() {
+            const productId = document.getElementById('product-id').value;
+            const name = document.getElementById('product-name').value;
+            const price = document.getElementById('product-price').value;
+            const category = document.getElementById('product-category').value;
+            const description = document.getElementById('product-description').value;
+            const image = document.getElementById('product-image').value;
+            const images = document.getElementById('product-images').value;
+            
+            const productData = {
+                name,
+                price: parseInt(price),
+                category,
+                description,
+                image,
+                images
+            };
+            
+            if (productId) {
+                // Mise à jour du produit existant
+                db.collection('products').doc(productId).update(productData)
+                    .then(() => {
+                        alert('Produit mis à jour avec succès!');
+                        resetProductForm();
+                        loadAdminProducts();
+                  loadProducts();
+                    })
+                    .catch(error => {
+                        console.error('Erreur lors de la mise à jour: ', error);
+                        alert('Une erreur s\'est produite lors de la mise à jour.');
+                    });
+            } else {
+                // Ajout d'un nouveau produit
+                db.collection('products').add(productData)
+                    .then(() => {
+                        alert('Produit ajouté avec succès!');
+                        resetProductForm();
+                        loadAdminProducts();
+                    })
+                    .catch(error => {
+                        console.error('Erreur lors de l\'ajout: ', error);
+                        alert('Une erreur s\'est produite lors de l\'ajout.');
+                    });
+            }
+        }
+
+        function resetProductForm() {
+            document.getElementById('product-id').value = '';
+            document.getElementById('product-name').value = '';
+            document.getElementById('product-price').value = '';
+            document.getElementById('product-category').value = '';
+            document.getElementById('product-description').value = '';
+            document.getElementById('product-image').value = '';
+            document.getElementById('product-images').value = '';
+            document.getElementById('main-preview').src = '';
+            document.getElementById('gallery-preview').src = '';
+            document.getElementById('product-submit').textContent = 'Ajouter le produit';
+        }
+
+        function loadAdminProducts() {
+            db.collection('products').get().then((querySnapshot) => {
+                const container = document.getElementById('admin-products-list');
+                container.innerHTML = '';
+                
+                querySnapshot.forEach((doc) => {
+                    const product = { id: doc.id, ...doc.data() };
+                    const productItem = document.createElement('div');
+                    productItem.className = 'product-item';
+                    productItem.innerHTML = `
+                        <div>
+                            <img src="${product.image}" alt="${product.name}">
+                            <span>${product.name} - ${parseInt(product.price).toLocaleString()} FCFA</span>
+                        </div>
+                        <div class="product-actions">
+                            <button class="btn-edit" onclick="editProduct('${product.id}')">Modifier</button>
+                            <button class="btn-delete" onclick="deleteProduct('${product.id}')">Supprimer</button>
+                        </div>
+                    `;
+                    container.appendChild(productItem);
+                });
+            });
+        }
+
+        function editProduct(productId) {
+            db.collection('products').doc(productId).get().then((doc) => {
+                if (doc.exists) {
+                    const product = doc.data();
+                    document.getElementById('product-id').value = productId;
+                    document.getElementById('product-name').value = product.name;
+                    document.getElementById('product-price').value = product.price;
+                    document.getElementById('product-category').value = product.category;
+                    document.getElementById('product-description').value = product.description;
+                    document.getElementById('product-image').value = product.image;
+                    document.getElementById('product-images').value = product.images || '';
+                    document.getElementById('main-preview').src = product.image;
+                    document.getElementById('gallery-preview').src = product.images ? product.images.split(',')[0] : '';
+                    document.getElementById('product-submit').textContent = 'Mettre à jour';
+                }
+            });
+        }
+
+        function deleteProduct(productId) {
+            if (confirm('Êtes-vous sûr de vouloir supprimer ce produit?')) {
+                db.collection('products').doc(productId).delete()
+                    .then(() => {
+                        alert('Produit supprimé avec succès!');
+                        loadAdminProducts();
+                    })
+                    .catch(error => {
+                        console.error('Erreur lors de la suppression: ', error);
+                        alert('Une erreur s\'est produite lors de la suppression.');
+                    });
+            }
+        }
+
+        function loadOrders(status = 'pending') {
+            let containerId;
+            if (status === 'pending') {
+                containerId = 'pending-orders-list';
+            } else if (status === 'completed') {
+                containerId = 'completed-orders-list';
+            } else if (status === 'rejected') {
+                containerId = 'rejected-orders-list';
+            }
+            
+            const container = document.getElementById(containerId);
+            container.innerHTML = '';
+            
+            db.collection('orders').where('status', '==', status).get().then((querySnapshot) => {
+                if (querySnapshot.empty) {
+                    container.innerHTML = '<p>Aucune commande</p>';
+                    return;
+                }
+                
+                querySnapshot.forEach((doc) => {
+                    const order = { id: doc.id, ...doc.data() };
+                    const orderItem = document.createElement('div');
+                    orderItem.className = 'order-item';
+                    
+                    let actionsHTML = '';
+                    if (status === 'pending') {
+                        actionsHTML = `
+                            <button class="btn-edit" onclick="updateOrderStatus('${order.id}', 'completed')">Effectuer</button>
+                            <button class="btn-delete" onclick="updateOrderStatus('${order.id}', 'rejected')">Rejeter</button>
+                        `;
+                    } else {
+                        actionsHTML = `
+                            <button class="btn-delete" onclick="deleteOrder('${order.id}')">Supprimer</button>
+                        `;
+                    }
+                    
+                    orderItem.innerHTML = `
+                        <div class="order-header">
+                            <div>
+                                <strong>Commande #${order.id.substring(0, 8)}</strong>
+                                <div>${new Date(order.date).toLocaleDateString()}</div>
+                            </div>
+                            <div>
+                                <strong>${parseInt(order.total).toLocaleString()} FCFA</strong>
+                            </div>
+                        </div>
+                        <div class="order-details">
+                            <div><strong>Client:</strong> ${order.customer.name} (${order.customer.phone})</div>
+                            <div><strong>Adresse:</strong> ${order.customer.address}</div>
+                            <div><strong>Articles:</strong></div>
+                            ${order.items.map(item => `
+                                <div class="order-product">
+                                    <div>${item.quantity}x ${item.name}</div>
+                                    <div>${parseInt(item.price * item.quantity).toLocaleString()} FCFA</div>
+                                </div>
+                            `).join('')}
+                        </div>
+                        <div class="product-actions">
+                            ${actionsHTML}
+                        </div>
+                    `;
+                    container.appendChild(orderItem);
+                });
+            });
+        }
+
+        function updateOrderStatus(orderId, status) {
+            db.collection('orders').doc(orderId).update({ status: status })
+                .then(() => {
+                    alert('Statut de la commande mis à jour!');
+                    loadOrders('pending');
+                    if (status === 'completed') {
+                        loadOrders('completed');
+                    } else if (status === 'rejected') {
+                        loadOrders('rejected');
+                    }
+                })
+                .catch(error => {
+                    console.error('Erreur lors de la mise à jour: ', error);
+                    alert('Une erreur s\'est produite lors de la mise à jour.');
+                });
+        }
+
+        function deleteOrder(orderId) {
+            if (confirm('Êtes-vous sûr de vouloir supprimer cette commande?')) {
+                db.collection('orders').doc(orderId).delete()
+                    .then(() => {
+                        alert('Commande supprimée avec succès!');
+                        if (currentAdminTab === 'completed-orders') {
+                            loadOrders('completed');
+                        } else if (currentAdminTab === 'rejected-orders') {
+                            loadOrders('rejected');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Erreur lors de la suppression: ', error);
+                        alert('Une erreur s\'est produite lors de la suppression.');
+                    });
+            }
+        }
+
+        function deleteAllOrders(status) {
+            if (confirm('Êtes-vous sûr de vouloir supprimer toutes les commandes?')) {
+                db.collection('orders').where('status', '==', status).get().then((querySnapshot) => {
+                    const batch = db.batch();
+                    querySnapshot.forEach((doc) => {
+                        batch.delete(doc.ref);
+                    });
+                    return batch.commit();
+                })
+                .then(() => {
+                    alert('Toutes les commandes ont été supprimées!');
+                    if (status === 'completed') {
+                        loadOrders('completed');
+                    } else if (status === 'rejected') {
+                        loadOrders('rejected');
+                    }
+                })
+                .catch(error => {
+                    console.error('Erreur lors de la suppression: ', error);
+                    alert('Une erreur s\'est produite lors de la suppression.');
+                });
+            }
+        }
+
+        // Fermer les modals en cliquant à l'extérieur
+        window.onclick = function(event) {
+            const productModal = document.getElementById('productModal');
+            if (event.target === productModal) {
+                closeProductModal();
+            }
+            
+            const imageModal = document.getElementById('imageModal');
+            if (event.target === imageModal) {
+                closeImageModal();
+            }
+            
+            const orderModal = document.getElementById('orderModal');
+            if (event.target === orderModal) {
+                closeOrderModal();
+            }
+            
+            const adminModal = document.getElementById('adminModal');
+            if (event.target === adminModal) {
+                closeAdminModal();
+            }
+        };
     </script>
-    <script>
-     async function loadCommandes() {
-  const listeCommandes = document.getElementById('liste-commandes');
-  const listeCommandesLivrees = document.getElementById('liste-commandes-livrees');
-  if (!listeCommandes || !listeCommandesLivrees) return;
-
-  try {
-    const querySnapshot = await window.firebase.getDocs(
-      window.firebase.collection(window.firebase.db, 'orders')
-    );
-
-    listeCommandes.innerHTML = '';
-    listeCommandesLivrees.innerHTML = '';
-
-    querySnapshot.forEach((doc) => {
-      const order = doc.data();
-      const orderElement = createOrderCard(doc.id, order);
-      if (order.statut === 'livré') {
-        listeCommandesLivrees.appendChild(orderElement);
-      } else {
-        listeCommandes.appendChild(orderElement);
-      }
-    });
-  } catch (error) {
-    console.error('Erreur lors du chargement des commandes: ', error);
-    listeCommandes.innerHTML = '<p class="text-red-500">Erreur lors du chargement des commandes</p>';
-    listeCommandesLivrees.innerHTML = '<p class="text-red-500">Erreur lors du chargement des commandes</p>';
-  }
-}
-
-function createOrderCard(id, order) {
-  const card = document.createElement('div');
-  card.className = 'border rounded-lg p-4';
-  card.innerHTML = `
-    <div class="flex justify-between items-start mb-2">
-      <h4 class="font-semibold">${order.prenom} ${order.nom}</h4>
-      <span class="font-bold text-blue-600">${(order.total + order.fraisLivraison).toLocaleString()} FCFA</span>
-    </div>
-    <div class="text-sm text-gray-600 mb-3">
-      <p>Téléphone: ${order.telephone}</p>
-      <p>Adresse: ${order.adresse}</p>
-      <p>Statut: ${order.statut}</p>
-      <p>Date: ${new Date(order.date.seconds * 1000).toLocaleDateString('fr-FR')}</p>
-      <p>Produits: ${order.produits.map(p => `${p.name} (x${p.quantity})`).join(', ')}</p>
-    </div>
-    <div class="flex justify-end space-x-2">
-      <button onclick="toggleOrderStatus('${id}', '${order.statut}')" class="bg-yellow-500 text-white px-3 py-1 rounded text-sm">
-        ${order.statut === 'livré' ? 'Marquer comme en attente' : 'Marquer comme livré'}
-      </button>
-      <button onclick="deleteOrder('${id}')" class="bg-red-500 text-white px-3 py-1 rounded text-sm">
-        Supprimer
-      </button>
-    </div>
-  `;
-  return card;
-}
-
-async function toggleOrderStatus(id, currentStatus) {
-  const newStatus = currentStatus === 'livré' ? 'en attente' : 'livré';
-  try {
-    await window.firebase.updateDoc(
-      window.firebase.doc(window.firebase.db, 'orders', id),
-      { statut: newStatus }
-    );
-    alert(`Commande marquée comme ${newStatus}`);
-    loadCommandes();
-  } catch (error) {
-    console.error('Erreur lors de la mise à jour du statut: ', error);
-    alert('Erreur lors de la mise à jour du statut');
-  }
-}
-
-// Exposer la fonction globalement
-window.toggleOrderStatus = toggleOrderStatus;
-
-async function deleteOrder(id) {
-  if (!confirm('Êtes-vous sûr de vouloir supprimer cette commande ?')) return;
-
-  try {
-    await window.firebase.deleteDoc(
-      window.firebase.doc(window.firebase.db, 'orders', id)
-    );
-    alert('Commande supprimée avec succès');
-    loadCommandes();
-  } catch (error) {
-    console.error('Erreur lors de la suppression: ', error);
-    alert('Erreur lors de la suppression de la commande');
-  }
-}
-
-// Mettre à jour showPage pour inclure le chargement des commandes
-function showPage(pageId) {
-       document.querySelectorAll('.page').forEach(page => {
-           page.classList.remove('active');
-       });
-       const targetPage = document.getElementById(pageId);
-       if (targetPage) {
-           targetPage.classList.add('active');
-           if (pageId === 'admin-vente') {
-               loadVenteVehicles();
-           } else if (pageId === 'admin-location') {
-               loadLocationVehicles();
-           } else if (pageId === 'admin-boutique') {
-               loadBoutiqueProducts();
-           } else if (pageId === 'boutique') {
-               loadBoutiqueProductsForCustomers();
-           } else if (pageId === 'panier') {
-               updateCartDisplay();
-           } else if (pageId === 'admin-commandes') {
-               loadCommandes();
-           } else if (pageId === 'service-vente') {
-               loadVenteVehiclesClient();
-           } else if (pageId === 'service-location') {
-               loadLocationVehiclesClient();
-           }
-       }
-   }
-
-// Exposer la fonction globalement
-window.deleteOrder = deleteOrder;
-      
-      
-    </script>
-
 </body>
 </html>
