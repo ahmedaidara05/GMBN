@@ -8,6 +8,31 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+  <!-- SweetAlert2 - Remplace les alertes natives par des jolies notifications -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.js"></script>
+
+<script>
+// Cette petite fonction redirigera toutes les alertes vers SweetAlert2
+const originalAlert = window.alert;
+window.alert = function(message) {
+    Swal.fire({
+        title: 'Notification',
+        text: message,
+        icon: 'info',
+        confirmButtonText: 'OK',
+        confirmButtonColor: '#f68b1e',
+        showClass: {
+            popup: '',  // Désactive l'animation d'apparition
+            backdrop: '' // Désactive l'animation du fond
+        },
+        hideClass: {
+            popup: '',  // Désactive l'animation de disparition
+            backdrop: '' // Désactive l'animation du fond
+        }
+    });
+};
+</script>
     <style>
         /* Reset et styles de base */
         * {
@@ -142,7 +167,7 @@
         
         /* Bannière */
         .banner {
-            background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url('https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80');
+            background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url('https://i.postimg.cc/V5P0Dmqk/5913292883186796964-1.jpg');
             background-size: cover;
             background-position: center;
             height: 300px;
@@ -856,6 +881,287 @@
                 grid-template-columns: 1fr;
             }
         }
+      .search-results-page, .category-page {
+    padding: 20px;
+}
+.admin-search {
+    position: relative;
+    margin-bottom: 20px;
+    max-width: 300px;
+}
+
+.admin-search input {
+    width: 100%;
+    padding: 10px 15px;
+    padding-right: 40px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 16px;
+}
+
+.admin-search .fa-search {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #888;
+}
+.no-products {
+    text-align: center;
+    padding: 40px;
+    font-size: 18px;
+    color: #666;
+}
+      /* Style pour la confirmation de commande */
+#order-confirmation {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 2000;
+}
+
+.confirmation-modal {
+    background: white;
+    padding: 30px;
+    border-radius: 10px;
+    text-align: center;
+    max-width: 500px;
+    width: 90%;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+}
+
+.confirmation-modal h2 {
+    color: #f68b1e;
+    margin-bottom: 20px;
+}
+
+.confirmation-modal p {
+    font-size: 18px;
+    margin-bottom: 20px;
+    line-height: 1.5;
+}
+      /* Style pour la confirmation de commande */
+#order-confirmation {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 2000;
+}
+
+.confirmation-modal {
+    background: white;
+    padding: 40px;
+    border-radius: 15px;
+    text-align: center;
+    max-width: 500px;
+    width: 90%;
+    box-shadow: 0 5px 25px rgba(0,0,0,0.3);
+}
+ 
+.confirmation-icon {
+    color: #4CAF50;
+    font-size: 80px;
+    margin-bottom: 20px;
+}
+
+.confirmation-title {
+    color: #f68b1e;
+    margin-bottom: 15px;
+    font-size: 24px;
+}
+
+.confirmation-number {
+    font-size: 18px;
+    margin-bottom: 10px;
+    color: #333;
+}
+
+.confirmation-message {
+    font-size: 16px;
+    margin-bottom: 25px;
+    color: #666;
+}
+      /* Page détail produit */
+.product-detail-page {
+    padding: 20px 0;
+}
+
+.product-detail-header {
+    margin-bottom: 30px;
+    display: flex;
+    align-items: center;
+}
+
+.back-button {
+    background: none;
+    border: none;
+    color: #f68b1e;
+    font-size: 16px;
+    cursor: pointer;
+    margin-right: 20px;
+    display: flex;
+    align-items: center;
+}
+
+.back-button i {
+    margin-right: 5px;
+}
+
+.product-detail-body {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+    margin-bottom: 50px;
+}
+
+.product-detail-images {
+    position: relative;
+}
+
+.main-image img {
+    width: 100%;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.image-gallery {
+    display: flex;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+.image-gallery img {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 4px;
+    cursor: pointer;
+    opacity: 0.7;
+    transition: opacity 0.3s;
+}
+
+.image-gallery img:hover {
+    opacity: 1;
+}
+
+.product-detail-info {
+    padding: 20px;
+}
+
+.product-detail-info .product-price {
+    font-size: 28px;
+    color: #f68b1e;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.product-detail-info .product-description {
+    font-size: 16px;
+    line-height: 1.6;
+    margin: 20px 0;
+}
+
+.product-features {
+    margin-top: 30px;
+}
+
+.product-features p {
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+}
+
+.product-features i {
+    margin-right: 10px;
+    color: #f68b1e;
+}
+
+.related-products {
+    margin-top: 50px;
+    padding-top: 30px;
+    border-top: 1px solid #eee;
+}
+
+.related-products h2 {
+    margin-bottom: 20px;
+    font-size: 24px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .product-detail-body {
+        grid-template-columns: 1fr;
+    }
+    
+    .product-detail-info {
+        padding: 0;
+    }
+}
+      /* Styles pour les notifications */
+.notification-item {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    margin-bottom: 10px;
+    gap: 15px;
+}
+
+.notification-form {
+    margin-bottom: 30px;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+}
+
+.notification-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.9);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 10000;
+}
+
+.notification-content {
+    position: relative;
+    max-width: 90%;
+    max-height: 90%;
+}
+
+.close-notification {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: white;
+    border: none;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    font-size: 24px;
+    font-weight: bold;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
     </style>
 </head>
 <body>
@@ -864,11 +1170,11 @@
         <div class="container">
             <div class="header-top">
                 <div class="logo">
-                    <a href="#" onclick="showPage('home')">AutoMarket</a>
+                    <a href="#" onclick="showPage('home')">Boutique GMBN</a>
                 </div>
                 <div class="search-container">
                     <div class="search-bar">
-                        <input type="text" id="searchInput" placeholder="Rechercher des produits, véhicules...">
+                        <input type="text" id="searchInput" placeholder="Rechercher sur GMBN.">
                         <button onclick="performSearch()"><i class="fas fa-search"></i></button>
                     </div>
                     <button class="cart-btn" onclick="showPage('cart')">
@@ -888,17 +1194,16 @@
             <!-- Bannière -->
             <div class="banner">
                 <div class="banner-content">
-                    <h1>Votre marché automobile en ligne</h1>
+                    <h1></h1>
                     <p>Découvrez nos produits et véhicules à prix imbattables</p>
-                    <button class="btn" onclick="scrollToProducts()">Découvrir maintenant</button>
                 </div>
             </div>
 
             <!-- Catégories -->
             <section class="categories">
-                <h2 class="section-title">Catégories populaires</h2>
+                <h2 class="section-title">Catégories</h2>
                 <div class="category-grid">
-                   <div class="category-item" onclick="filterByCategory('Pièces moteur')">
+                   <div class="category-item" onclick="filterByCategory('Pièces')">
     <i class="fas fa-car"></i>
     <p>Pièces moteur</p>
 </div>
@@ -927,7 +1232,7 @@
 
             <!-- Produits -->
             <section class="products" id="products-section">
-                <h2 class="section-title">Produits populaires</h2>
+                <h2 class="section-title">Produits</h2>
                 <div class="product-grid" id="products-container">
                     <!-- Les produits seront chargés dynamiquement -->
                 </div>
@@ -941,12 +1246,66 @@
                 </div>
             </section>
         </div>
+<!-- Page de résultats -->
+<div id="search-results" class="page">
+    <div class="search-results-page">
+       <ul>
+                   <li onclick="showPage('home')">
+  <i class="fas fa-arrow-left"></i>
+</li>
 
+                   
+                </ul>
+        <h2 class="section-title">Résultats de recherche</h2>
+        <div id="search-results-container" class="product-grid">
+            <!-- Les résultats de recherche seront chargés ici -->
+        </div>
+    </div>
+</div>
+
+      
+      <!-- Page de détail produit -->
+<div id="product-detail" class="page">
+    <div class="product-detail-page">
+        <div class="container">
+            <!-- Le contenu sera chargé dynamiquement par JavaScript -->
+            <div id="product-detail-content"></div>
+            
+            <!-- Section produits similaires -->
+            <div class="related-products">
+                <h2>Autres produits </h2>
+                <div class="product-grid" id="related-products-container">
+                    <!-- Produits similaires chargés dynamiquement -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+      
+<!-- Page de catégorie -->
+<div id="category-page" class="page">
+    <div class="category-page">
+        <ul>
+                    <li onclick="showPage('home')">
+  <i class="fas fa-arrow-left"></i>
+</li>
+
+                   
+                </ul>
+        <h2 class="section-title" id="category-title">Catégorie</h2>
+        <div id="category-products-container" class="product-grid">
+            <!-- Les produits de la catégorie seront chargés ici -->
+        </div>
+    </div>
+</div>
         <!-- Page Panier -->
         <div id="cart" class="page">
             <div class="cart-page">
                <ul>
-                    <li onclick="showPage('home')">Retour</li>
+                    <li onclick="showPage('home')">
+  <i class="fas fa-arrow-left"></i>
+</li>
+
                    
                 </ul>
                 <h2 class="section-title">Votre Panier</h2>
@@ -975,8 +1334,12 @@
                     <div class="admin-tab" onclick="showAdminTab('orders')">Commandes en attente</div>
                     <div class="admin-tab" onclick="showAdminTab('completed-orders')">Commandes effectuées</div>
                     <div class="admin-tab" onclick="showAdminTab('rejected-orders')">Commandes rejetées</div>
+                  <div class="admin-tab" onclick="showAdminTab('notifications')">Publicité</div>
                 </div>
-                
+                <div class="admin-search">
+    <input type="text" id="admin-search-input" placeholder="Rechercher..." onkeyup="adminSearch()">
+    <i class="fas fa-search"></i>
+</div>
                 <div class="admin-content">
                     <!-- Gestion des produits -->
                     <div id="admin-products" class="admin-tab-content">
@@ -995,7 +1358,7 @@
     <label for="product-category">Catégorie</label>
     <select id="product-category" required>
         <option value="">Sélectionnez une catégorie</option>
-        <option value="Pièces moteur">Pièces moteur</option>
+        <option value="Pièces moteur">Pièces </option>
         <option value="Outillage">Outillage</option>
         <option value="Lubrifiants">Lubrifiants</option>
         <option value="Accessoires">Accessoires</option>
@@ -1056,6 +1419,26 @@
                             <!-- Les commandes rejetées seront chargées dynamiquement -->
                         </div>
                     </div>
+                  <div id="admin-notifications" class="admin-tab-content" style="display: none;">
+    <h3>Gérer les notifications promotionnelles</h3>
+    
+    <div class="notification-form">
+        <div class="form-group">
+            <label for="notification-image">URL de l'image (Postimages)</label>
+            <input type="text" id="notification-image" placeholder="https://postimg.cc/...">
+            <button class="btn" onclick="previewNotificationImage()">Prévisualiser</button>
+            <img id="notification-preview" class="image-preview" src="" alt="Aperçu">
+        </div>
+        <button class="btn" onclick="addNotification()">Ajouter la notification</button>
+    </div>
+    
+    <div class="notification-list">
+        <h3>Notifications actuelles</h3>
+        <div id="notifications-container">
+            <!-- Les notifications seront chargées ici -->
+        </div>
+    </div>
+</div>
                 </div>
             </div>
         </div>
@@ -1073,52 +1456,7 @@
     </div>
 
     <!-- Footer -->
-    <footer>
-        <div class="container">
-            <div class="footer-content">
-                <div class="footer-column">
-                    <h3>AutoMarket</h3>
-                    <p>Le meilleur marché en ligne pour tous vos besoins automobiles.</p>
-                    <div class="social-icons">
-                        <a href="#"><i class="fab fa-facebook"></i></a>
-                        <a href="#"><i class="fab fa-twitter"></i></a>
-                        <a href="#"><i class="fab fa-instagram"></i></a>
-                        <a href="#"><i class="fab fa-youtube"></i></a>
-                    </div>
-                </div>
-                <div class="footer-column">
-                    <h3>Informations</h3>
-                    <ul>
-                        <li><a href="#">À propos de nous</a></li>
-                        <li><a href="#">Contact</a></li>
-                        <li><a href="#">Conditions générales</a></li>
-                        <li><a href="#">Politique de confidentialité</a></li>
-                    </ul>
-                </div>
-                <div class="footer-column">
-                    <h3>Service client</h3>
-                    <ul>
-                        <li><a href="#">FAQ</a></li>
-                        <li><a href="#">Livraison</a></li>
-                        <li><a href="#">Retours et remboursements</a></li>
-                        <li><a href="#">Guide des tailles</a></li>
-                    </ul>
-                </div>
-                <div class="footer-column">
-                    <h3>Contact</h3>
-                    <ul>
-                        <li><i class="fas fa-map-marker-alt"></i> 123 Rue de l'Automobile, Paris</li>
-                        <li><i class="fas fa-phone"></i> +33 1 23 45 67 89</li>
-                        <li><i class="fas fa-envelope"></i> contact@automarket.fr</li>
-                    </ul>
-                </div>
-            </div>
-            <div class="footer-bottom">
-                <p>&copy; 2023 AutoMarket - Tous droits réservés</p>
-            </div>
-        </div>
-    </footer>
-
+   
     <!-- Modal de produit -->
     <div id="productModal" class="product-modal">
         <div class="modal-content">
@@ -1146,8 +1484,7 @@
                             <button onclick="increaseQuantity()">+</button>
                         </div>
                         <button class="add-to-cart" onclick="addToCartFromModal()">Ajouter au panier</button>
-                        <button class="buy-now" onclick="buyNow()">Acheter maintenant</button>
-                    </div>
+                  </div>
                     
                     <div style="margin-top: 20px;">
                         <p><i class="fas fa-truck"></i> Livraison gratuite</p>
@@ -1240,6 +1577,7 @@
             updateCartCount();
             loadProducts();
             checkAdminAccess();
+          checkNotifications();
             
             // Écouter la saisie dans la recherche
             document.getElementById('searchInput').addEventListener('keyup', function(event) {
@@ -1277,24 +1615,87 @@
         }
 
         // Fonctions de recherche et filtrage
-        function performSearch() {
-            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
-            showPage('home');
-            
-            const filteredProducts = products.filter(product => 
-                product.name.toLowerCase().includes(searchTerm) || 
-                product.description.toLowerCase().includes(searchTerm) ||
-                product.category.toLowerCase().includes(searchTerm)
-            );
-            
-            displayProducts(filteredProducts);
-        }
+ function performSearch() {
+    const searchTerm = document.getElementById('searchInput').value.toLowerCase().trim();
+    
+    if (searchTerm === '') return;
+    
+    // Recherche approximative avec pondération
+    const scoredProducts = products.map(product => {
+        let score = 0;
+        
+        // Recherche dans le nom
+        if (product.name.toLowerCase().includes(searchTerm)) score += 3;
+        
+        // Recherche dans la catégorie
+        if (product.category.toLowerCase().includes(searchTerm)) score += 2;
+        
+        // Recherche dans la description
+        if (product.description.toLowerCase().includes(searchTerm)) score += 1;
+        
+        // Recherche par mots
+        const searchWords = searchTerm.split(' ');
+        searchWords.forEach(word => {
+            if (product.name.toLowerCase().includes(word)) score += 2;
+            if (product.category.toLowerCase().includes(word)) score += 1.5;
+            if (product.description.toLowerCase().includes(word)) score += 0.5;
+        });
+        
+        return { product, score };
+    });
+    
+    // Filtrer et trier par score
+    const filteredProducts = scoredProducts
+        .filter(item => item.score > 0)
+        .sort((a, b) => b.score - a.score)
+        .map(item => item.product);
+    
+    // Afficher les résultats
+    displaySearchResults(filteredProducts, searchTerm);
+    showPage('search-results');
+}
 
-        function filterByCategory(category) {
-            showPage('home');
-            const filteredProducts = products.filter(product => product.category === category);
-            displayProducts(filteredProducts);
-        }
+function displaySearchResults(products, searchTerm) {
+    const container = document.getElementById('search-results-container');
+    const title = document.querySelector('#search-results .section-title');
+    
+    title.textContent = `Résultats pour "${searchTerm}"`;
+    container.innerHTML = '';
+    
+    if (products.length === 0) {
+        container.innerHTML = '<p>Aucun produit trouvé pour votre recherche.</p>';
+        return;
+    }
+    
+    products.forEach(product => {
+        const productCard = createProductCard(product);
+        container.appendChild(productCard);
+    });
+}
+
+       function filterByCategory(category) {
+    const filteredProducts = products.filter(product => product.category === category);
+    displayCategoryProducts(filteredProducts, category);
+    showPage('category-page');
+}
+
+function displayCategoryProducts(products, category) {
+    const container = document.getElementById('category-products-container');
+    const title = document.getElementById('category-title');
+    
+    title.textContent = `Catégorie: ${category}`;
+    container.innerHTML = '';
+    
+    if (products.length === 0) {
+        container.innerHTML = '<p>Aucun produit dans cette catégorie.</p>';
+        return;
+    }
+    
+    products.forEach(product => {
+        const productCard = createProductCard(product);
+        container.appendChild(productCard);
+    });
+}
 
         // Fonctions de produits
         function loadProducts() {
@@ -1345,63 +1746,149 @@
                 container.appendChild(vehicleCard);
             });
         }
+function generateOrderNumber() {
+    // Génère un nombre aléatoire entre 700000 et 799999
+    return Math.floor(400000 + Math.random() * 500000);
+}
 
-        function createProductCard(product) {
-            const card = document.createElement('div');
-            card.className = 'product-card';
-            card.innerHTML = `
-                <div class="product-image">
-                    <img src="${product.image}" alt="${product.name}">
-                </div>
-                <div class="product-info">
-                    <h3 class="product-title">${product.name}</h3>
-                    <div class="product-price">${parseInt(product.price).toLocaleString()} FCFA</div>
-                    <div class="product-rating">
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star-half-alt"></i>
-                    </div>
-                    <div class="product-actions">
-                        <button class="add-to-cart" onclick="addToCart('${product.id}')">Ajouter au panier</button>
-                        <i class="far fa-heart"></i>
-                    </div>
-                </div>
-            `;
-            card.addEventListener('click', () => openProductModal(product.id));
-            return card;
-        }
+function generateUniqueOrderNumber(existingNumbers) {
+    let newNumber;
+    do {
+        newNumber = generateOrderNumber();
+    } while (existingNumbers.includes(newNumber));
+    return newNumber;
+} 
+       function createProductCard(product) {
+    const card = document.createElement('div');
+    card.className = 'product-card';
+    card.innerHTML = `
+        <div class="product-image">
+            <img src="${product.image}" alt="${product.name}">
+        </div>
+        <div class="product-info">
+            <h3 class="product-title">${product.name}</h3>
+            <div class="product-price">${parseInt(product.price).toLocaleString()} FCFA</div>
+            <div class="product-rating">
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star-half-alt"></i>
+            </div>
+            <div class="product-actions">
+                <button class="add-to-cart" onclick="addToCart('${product.id}'); event.stopPropagation();">Ajouter au panier</button>
+            </div>
+        </div>
+    `;
+    
+    // Ouvrir la page de détail au clic sur le produit
+    card.addEventListener('click', () => openProductDetailPage(product.id));
+    
+    return card;
+}
 
         // Fonctions modales
-        function openProductModal(productId) {
-            currentProduct = products.find(p => p.id === productId);
-            if (!currentProduct) return;
+       function openProductDetailPage(productId) {
+    currentProduct = products.find(p => p.id === productId);
+    if (!currentProduct) return;
+    
+    // Afficher la page de détail
+    showPage('product-detail');
+    
+    // Charger les détails du produit
+    displayProductDetails(currentProduct);
+    
+    // Charger les produits similaires
+    displayRelatedProducts(currentProduct);
+}
+
+function displayProductDetails(product) {
+    const container = document.getElementById('product-detail-content');
+    
+    container.innerHTML = `
+        <div class="product-detail-header">
+            <button class="back-button" onclick="showPage('home')">
+                <i class="fas fa-arrow-left"></i> Retour
+            </button>
+            <h1>${product.name}</h1>
+        </div>
+        
+        <div class="product-detail-body">
+            <div class="product-detail-images">
+                <div class="main-image">
+                    <img src="${product.image}" alt="${product.name}" onclick="openImageModal(this.src)">
+                </div>
+                ${product.images ? `
+                <div class="image-gallery">
+                    ${product.images.split(',').map(imgUrl => `
+                        <img src="${imgUrl.trim()}" alt="${product.name}" onclick="openImageModal(this.src)">
+                    `).join('')}
+                </div>
+                ` : ''}
+            </div>
             
-            document.getElementById('modalTitle').textContent = currentProduct.name;
-            document.getElementById('modalPrice').textContent = `${parseInt(currentProduct.price).toLocaleString()} FCFA`;
-            document.getElementById('modalImg').src = currentProduct.image;
-            document.getElementById('modalDescription').textContent = currentProduct.description;
-            
-            // Gestion de la galerie d'images
-            const gallery = document.getElementById('imageGallery');
-            gallery.innerHTML = '';
-            
-            // Ajouter l'image principale à la galerie
-            addImageToGallery(currentProduct.image, gallery, true);
-            
-            // Ajouter les images supplémentaires si elles existent
-            if (currentProduct.images && currentProduct.images.length > 0) {
-                currentProduct.images.split(',').forEach(imgUrl => {
-                    if (imgUrl.trim()) {
-                        addImageToGallery(imgUrl.trim(), gallery, false);
-                    }
-                });
-            }
-            
-            document.getElementById('productModal').style.display = 'block';
-            document.body.style.overflow = 'hidden';
-        }
+            <div class="product-detail-info">
+                <div class="product-price">${parseInt(product.price).toLocaleString()} FCFA</div>
+                <div class="product-rating">
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star-half-alt"></i>
+                </div>
+                
+                <p class="product-description">${product.description}</p>
+                
+                <div class="product-actions">
+                    <div class="quantity">
+                        <button onclick="decreaseQuantity()">-</button>
+                        <input type="number" id="detail-quantity" value="1" min="1">
+                        <button onclick="increaseQuantity()">+</button>
+                    </div>
+                    <button class="add-to-cart" onclick="addToCartFromDetailPage()">Ajouter au panier</button>
+                </div>
+                
+                <div class="product-features">
+                    <p><i class="fas fa-truck"></i> Livraison gratuite</p>
+                    <p><i class="fas fa-undo"></i> Retours sous 30 jours</p>
+                    <p><i class="fas fa-shield-alt"></i> Garantie 2 ans</p>
+                </div>
+            </div>
+        </div>
+    `;
+}
+      function increaseDetailQuantity() {
+    const quantityInput = document.getElementById('detail-quantity');
+    quantityInput.value = parseInt(quantityInput.value) + 1;
+}
+
+function decreaseDetailQuantity() {
+    const quantityInput = document.getElementById('detail-quantity');
+    if (parseInt(quantityInput.value) > 1) {
+        quantityInput.value = parseInt(quantityInput.value) - 1;
+    }
+}
+      function displayRelatedProducts(currentProduct) {
+    const container = document.getElementById('related-products-container');
+    
+    // Filtrer les produits de même catégorie (exclure le produit actuel)
+    const relatedProducts = products
+        .filter(p => p.id !== currentProduct.id && p.category === currentProduct.category)
+        .slice(0, 4); // Maximum 4 produits
+    
+    container.innerHTML = '';
+    
+    if (relatedProducts.length === 0) {
+        container.innerHTML = '<p>Aucun produit similaire trouvé.</p>';
+        return;
+    }
+    
+    relatedProducts.forEach(product => {
+        const productCard = createProductCard(product);
+        container.appendChild(productCard);
+    });
+}
+      
 
         function addImageToGallery(imageUrl, galleryElement, isActive) {
             const img = document.createElement('img');
@@ -1440,7 +1927,39 @@
                 quantityInput.value = parseInt(quantityInput.value) - 1;
             }
         }
+function addToCartFromDetailPage() {
+    if (!currentProduct) return;
+    
+    const quantity = parseInt(document.getElementById('detail-quantity').value);
+    addToCartWithQuantity(currentProduct.id, quantity);
+    showNotification('Produit ajouté au panier!', 'success');
+}
 
+function buyNowFromDetailPage() {
+    addToCartFromDetailPage();
+    showPage('cart');
+}
+
+function addToCartWithQuantity(productId, quantity) {
+    const product = products.find(p => p.id === productId);
+    if (!product) return;
+    
+    const existingItem = cart.find(item => item.id === productId);
+    
+    if (existingItem) {
+        existingItem.quantity += quantity;
+    } else {
+        cart.push({
+            id: product.id,
+            name: product.name,
+            price: product.price,
+            image: product.image,
+            quantity: quantity
+        });
+    }
+    
+    updateCartStorage();
+}
         // Fonctions panier
         function addToCart(productId) {
             const product = products.find(p => p.id === productId);
@@ -1487,10 +2006,10 @@
             alert('Produit ajouté au panier!');
         }
 
-        function buyNow() {
-            addToCartFromModal();
-            showPage('cart');
-        }
+       function buyNow() {
+    addToCartFromModal();
+    showPage('cart');
+}
 
         function updateCartStorage() {
             localStorage.setItem('cart', JSON.stringify(cart));
@@ -1514,7 +2033,7 @@
             
             let total = 0;
             
-            cart.forEach((item, index) => {
+            cart.forEach((Fitem, index) => {
                 const itemTotal = item.price * item.quantity;
                 total += itemTotal;
                 
@@ -1528,10 +2047,15 @@
                             <p>${parseInt(item.price).toLocaleString()} FCFA x ${item.quantity}</p>
                         </div>
                     </div>
+                    <div class="quantity">
+    <button onclick="decreaseDetailQuantity()">-</button>
+    <input type="number" id="detail-quantity" value="1" min="1">
+    <button onclick="increaseDetailQuantity()">+</button>
+</div>
                     <div>
-                        <button class="btn-edit" onclick="changeQuantity(${index}, ${item.quantity - 1})">-</button>
-                        <span>${item.quantity}</span>
-                        <button class="btn-edit" onclick="changeQuantity(${index}, ${item.quantity + 1})">+</button>
+    <button onclick="decreaseDetailQuantity()">-</button>
+    <input type="number" id="detail-quantity" value="1" min="1">
+    <button onclick="increaseDetailQuantity()">+</button>
                         <button class="btn-delete" onclick="removeFromCart(${index})"><i class="fas fa-trash"></i></button>
                     </div>
                 `;
@@ -1557,7 +2081,186 @@
             updateCartStorage();
             loadCart();
         }
+      
+      // Fonctions pour les notifications
+function previewNotificationImage() {
+    const url = document.getElementById('notification-image').value;
+    if (url) {
+        document.getElementById('notification-preview').src = url;
+    }
+}
 
+function addNotification() {
+    const imageUrl = document.getElementById('notification-image').value;
+    
+    if (!imageUrl) {
+        alert('Veuillez entrer une URL d\'image');
+        return;
+    }
+    
+    // Ajouter à Firebase
+    db.collection('notifications').add({
+        imageUrl: imageUrl,
+        createdAt: new Date().toISOString(),
+        active: true
+    })
+    .then(() => {
+        alert('Notification ajoutée avec succès!');
+        document.getElementById('notification-image').value = '';
+        document.getElementById('notification-preview').src = '';
+        loadNotifications();
+    })
+    .catch(error => {
+        console.error('Erreur:', error);
+        alert('Une erreur s\'est produite');
+    });
+}
+
+      function checkNotifications() {
+    // Vérifier les notifications non vues
+    const viewedNotifications = JSON.parse(localStorage.getItem('viewedNotifications') || '[]');
+    
+    db.collection('notifications').where('active', '==', true).get()
+    .then(querySnapshot => {
+        const notifications = [];
+        querySnapshot.forEach(doc => {
+            notifications.push({ id: doc.id, ...doc.data() });
+        });
+        
+        // Filtrer les notifications non vues
+        const unviewedNotifications = notifications.filter(notif => 
+            !viewedNotifications.includes(notif.id)
+        );
+        
+        // Afficher la première notification non vue
+        if (unviewedNotifications.length > 0) {
+            showNotificationModal(unviewedNotifications[0]);
+        }
+    });
+}
+
+function showNotificationModal(notification) {
+    const modal = document.createElement('div');
+    modal.className = 'notification-modal';
+    modal.style.cssText = `
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0,0,0,0.8);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 2000;
+    `;
+    
+    modal.innerHTML = `
+        <div class="notification-content" style="position: relative;">
+            <img src="${notification.imageUrl}" alt="Promotion" style="max-width: 90vw; max-height: 80vh;">
+            <button class="close-notification" onclick="closeNotification('${notification.id}')" 
+                    style="position: absolute; top: 10px; right: 10px; background: #fff; border: none; border-radius: 50%; width: 30px; height: 30px; font-weight: bold; cursor: pointer;">
+                ×
+            </button>
+        </div>
+    `;
+    
+    document.body.appendChild(modal);
+}
+
+function closeNotification(notificationId) {
+    // Marquer comme vue
+    const viewedNotifications = JSON.parse(localStorage.getItem('viewedNotifications') || '[]');
+    if (!viewedNotifications.includes(notificationId)) {
+        viewedNotifications.push(notificationId);
+        localStorage.setItem('viewedNotifications', JSON.stringify(viewedNotifications));
+    }
+    
+    // Fermer la modal
+    const modal = document.querySelector('.notification-modal');
+    if (modal) {
+        modal.remove();
+    }
+    
+    // Vérifier s'il y a d'autres notifications
+    checkNotifications();
+}
+      
+function loadNotifications() {
+    db.collection('notifications').where('active', '==', true).get()
+    .then(querySnapshot => {
+        const container = document.getElementById('notifications-container');
+        container.innerHTML = '';
+        
+        if (querySnapshot.empty) {
+            container.innerHTML = '<p>Aucune notification active</p>';
+            return;
+        }
+        
+        querySnapshot.forEach(doc => {
+            const notification = { id: doc.id, ...doc.data() };
+            const notificationItem = document.createElement('div');
+            notificationItem.className = 'notification-item';
+            notificationItem.innerHTML = `
+                <img src="${notification.imageUrl}" alt="Notification" style="width: 100px; height: 60px; object-fit: cover;">
+                <button class="btn-delete" onclick="deleteNotification('${notification.id}')">Supprimer</button>
+            `;
+            container.appendChild(notificationItem);
+        });
+    });
+}
+
+function deleteNotification(notificationId) {
+    if (confirm('Supprimer cette notification?')) {
+        db.collection('notifications').doc(notificationId).delete()
+        .then(() => {
+            alert('Notification supprimée');
+            loadNotifications();
+        })
+        .catch(error => {
+            console.error('Erreur:', error);
+            alert('Erreur lors de la suppression');
+        });
+    }
+}
+      
+function adminSearch() {
+    const searchTerm = document.getElementById('admin-search-input').value.toLowerCase();
+    
+    if (currentAdminTab === 'products') {
+        // Recherche dans les produits
+        filterAdminProducts(searchTerm);
+    } else {
+        // Recherche dans les commandes
+        filterAdminOrders(searchTerm);
+    }
+}
+
+function filterAdminProducts(searchTerm) {
+    const productItems = document.querySelectorAll('#admin-products-list .product-item');
+    
+    productItems.forEach(item => {
+        const productText = item.textContent.toLowerCase();
+        if (productText.includes(searchTerm)) {
+            item.style.display = 'flex';
+        } else {
+            item.style.display = 'none';
+        }
+    });
+}
+
+function filterAdminOrders(searchTerm) {
+    const orderItems = document.querySelectorAll('.order-item');
+    
+    orderItems.forEach(item => {
+        const orderText = item.textContent.toLowerCase();
+        if (orderText.includes(searchTerm)) {
+            item.style.display = 'block';
+        } else {
+            item.style.display = 'none';
+        }
+    });
+} 
         // Fonctions de commande
         function showOrderModal() {
             if (cart.length === 0) {
@@ -1572,41 +2275,110 @@
             document.getElementById('orderModal').style.display = 'none';
         }
 
-        function placeOrder() {
-            const name = document.getElementById('customer-name').value;
-            const phone = document.getElementById('customer-phone').value;
-            const email = document.getElementById('customer-email').value;
-            const address = document.getElementById('customer-address').value;
+     function placeOrder() {
+    const name = document.getElementById('customer-name').value;
+    const phone = document.getElementById('customer-phone').value;
+    const email = document.getElementById('customer-email').value;
+    const address = document.getElementById('customer-address').value;
+    
+    // Validation modifiée - seulement téléphone et adresse requis
+    if (!phone || !address) {
+        alert('Le numéro de téléphone et l\'adresse sont obligatoires!');
+        return;
+    }
+    
+    const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+    
+   // Récupérer les numéros de commande existants
+    const existingOrderNumbers = []; // Vous devrez récupérer ceux de la base
+    
+    const orderNumber = generateUniqueOrderNumber(existingOrderNumbers);
+    
+    const order = {
+        orderNumber: orderNumber, // Ajouter le numéro de commande
+        customer: { name, phone, email, address },
+        items: [...cart],
+        total: total,
+        status: 'pending',
+        date: new Date().toISOString()
+    };
+       
+    db.collection('orders').add(order)
+        .then(() => {
+            // Fermer le modal de commande 
+            closeOrderModal();
             
-            if (!name || !phone || !email || !address) {
-                alert('Veuillez remplir tous les champs!');
-                return;
-            }
+            // Afficher une confirmation centrée
+           // Dans placeOrder(), après l'ajout réussi en base de données:
+showOrderConfirmation(orderNumber);
             
-            const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-            
-            const order = {
-                customer: { name, phone, email, address },
-                items: [...cart],
-                total: total,
-                status: 'pending',
-                date: new Date().toISOString()
-            };
-            
-            db.collection('orders').add(order)
-                .then(() => {
-                    alert('Votre commande a bien été passée! Votre colis sera livré en moins de 24h les jours ouvrables.');
-                    cart = [];
-                    updateCartStorage();
-                    closeOrderModal();
-                    showPage('home');
-                })
-                .catch(error => {
-                    console.error('Erreur lors de l\'enregistrement de la commande: ', error);
-                    alert('Une erreur s\'est produite. Veuillez réessayer.');
-                });
-        }
-
+            // Vider le panier
+            cart = [];
+            updateCartStorage();
+        })
+        .catch(error => {
+            console.error('Erreur lors de l\'enregistrement de la commande: ', error);
+            alert('Une erreur s\'est produite. Veuillez réessayer.');
+        });
+}
+      
+function showOrderConfirmation(orderNumber) {
+    // Créer un overlay et modal de confirmation
+    const overlay = document.createElement('div');
+    overlay.style.cssText = `
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0,0,0,0.8);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 2000;
+    `;
+    
+    const modal = document.createElement('div');
+    modal.style.cssText = `
+        background: white;
+        padding: 40px;
+        border-radius: 15px;
+        text-align: center;
+        max-width: 500px;
+        width: 90%;
+        box-shadow: 0 5px 25px rgba(0,0,0,0.3);
+    `;
+    
+    modal.innerHTML = `
+        <div style="color: #4CAF50; font-size: 80px; margin-bottom: 20px;">
+            <i class="fas fa-check-circle"></i>
+        </div>
+        <h2 style="color: #f68b1e; margin-bottom: 15px; font-size: 24px;">Commande Confirmée!</h2>
+        <p style="font-size: 18px; margin-bottom: 10px; color: #333;">
+            Votre numéro de commande: <strong>${orderNumber}</strong>
+        </p>
+        <p style="font-size: 16px; margin-bottom: 25px; color: #666;">
+            Votre colis sera livré en moins de 24h les jours ouvrables.
+        </p>
+        <button class="btn" onclick="closeOrderConfirmation()" 
+                style="padding: 12px 25px; font-size: 16px;">
+            Fermer
+        </button>
+    `;
+    
+    overlay.appendChild(modal);
+    overlay.id = 'order-confirmation';
+    document.body.appendChild(overlay);
+}
+      
+function closeOrderConfirmation() {
+    const confirmation = document.getElementById('order-confirmation');
+    if (confirmation) {
+        confirmation.remove();
+    }
+    showPage('home');
+}
+      
         // Fonctions d'administration
         function showAdminModal() {
             document.getElementById('adminModal').style.display = 'block';
@@ -1665,7 +2437,10 @@
             } else if (tabName === 'rejected-orders') {
                 document.getElementById('admin-rejected-orders').style.display = 'block';
                 loadOrders('rejected');
-            }
+            } else if (tabName === 'notifications') {
+        document.getElementById('admin-notifications').style.display = 'block';
+        loadNotifications(); // ← AJOUTEZ CETTE LIGNE
+    }
         }
 
         function previewImage(input, previewId) {
@@ -1804,57 +2579,65 @@
             container.innerHTML = '';
             
             db.collection('orders').where('status', '==', status).get().then((querySnapshot) => {
-                if (querySnapshot.empty) {
-                    container.innerHTML = '<p>Aucune commande</p>';
-                    return;
-                }
-                
-                querySnapshot.forEach((doc) => {
-                    const order = { id: doc.id, ...doc.data() };
-                    const orderItem = document.createElement('div');
-                    orderItem.className = 'order-item';
-                    
-                    let actionsHTML = '';
-                    if (status === 'pending') {
-                        actionsHTML = `
-                            <button class="btn-edit" onclick="updateOrderStatus('${order.id}', 'completed')">Effectuer</button>
-                            <button class="btn-delete" onclick="updateOrderStatus('${order.id}', 'rejected')">Rejeter</button>
-                        `;
-                    } else {
-                        actionsHTML = `
-                            <button class="btn-delete" onclick="deleteOrder('${order.id}')">Supprimer</button>
-                        `;
-                    }
-                    
-                    orderItem.innerHTML = `
-                        <div class="order-header">
-                            <div>
-                                <strong>Commande #${order.id.substring(0, 8)}</strong>
-                                <div>${new Date(order.date).toLocaleDateString()}</div>
-                            </div>
-                            <div>
-                                <strong>${parseInt(order.total).toLocaleString()} FCFA</strong>
-                            </div>
-                        </div>
-                        <div class="order-details">
-                            <div><strong>Client:</strong> ${order.customer.name} (${order.customer.phone})</div>
-                            <div><strong>Adresse:</strong> ${order.customer.address}</div>
-                            <div><strong>Articles:</strong></div>
-                            ${order.items.map(item => `
-                                <div class="order-product">
-                                    <div>${item.quantity}x ${item.name}</div>
-                                    <div>${parseInt(item.price * item.quantity).toLocaleString()} FCFA</div>
-                                </div>
-                            `).join('')}
-                        </div>
-                        <div class="product-actions">
-                            ${actionsHTML}
-                        </div>
-                    `;
-                    container.appendChild(orderItem);
-                });
-            });
+        if (querySnapshot.empty) {
+            container.innerHTML = '<p>Aucune commande</p>';
+            return;
         }
+        
+        querySnapshot.forEach((doc) => {
+            const order = { id: doc.id, ...doc.data() };
+            const orderItem = document.createElement('div');
+            orderItem.className = 'order-item';
+          
+           // Formater la date et l'heure 
+            const orderDate = new Date(order.date);
+            const formattedDate = orderDate.toLocaleDateString();
+            const formattedTime = orderDate.toLocaleTimeString();
+            
+            // Utiliser orderNumber au lieu de l'ID Firestore
+            const displayId = order.orderNumber ? `Commande #${order.orderNumber}` : `Commande #${order.id.substring(0, 8)}`;
+            
+            let actionsHTML = '';
+            if (status === 'pending') {
+                actionsHTML = `
+                    <button class="btn-edit" onclick="updateOrderStatus('${order.id}', 'completed')">Effectuer</button>
+                    <button class="btn-delete" onclick="updateOrderStatus('${order.id}', 'rejected')">Rejeter</button>
+                `;
+            } else {
+                actionsHTML = `
+                    <button class="btn-delete" onclick="deleteOrder('${order.id}')">Supprimer</button>
+                `;
+            }
+            
+            orderItem.innerHTML = `
+                <div class="order-header">
+                    <div>
+                        <strong>${displayId}</strong>
+                        <div>${formattedDate} à ${formattedTime}</div> <!-- Ajout de l'heure --> 
+                    </div>
+                    <div>
+                        <strong>${parseInt(order.total).toLocaleString()} FCFA</strong>
+                    </div>
+                </div>
+                <div class="order-details">
+                    <div><strong>Client:</strong> ${order.customer.name || ''} (${order.customer.phone})</div>
+                    <div><strong>Adresse:</strong> ${order.customer.address}</div>
+                    <div><strong>Articles:</strong></div>
+                    ${order.items.map(item => `
+                        <div class="order-product">
+                            <div>${item.quantity}x ${item.name}</div>
+                            <div>${parseInt(item.price * item.quantity).toLocaleString()} FCFA</div>
+                        </div>
+                    `).join('')}
+                </div>
+                <div class="product-actions">
+                    ${actionsHTML}
+                </div>
+            `;
+            container.appendChild(orderItem);
+        });
+    });
+}
 
         function updateOrderStatus(orderId, status) {
             db.collection('orders').doc(orderId).update({ status: status })
