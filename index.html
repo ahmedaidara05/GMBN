@@ -1,0 +1,2392 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GMBN - Garage Médina Baye Niass</title>
+    <meta name="theme-color" content="#1e40af">
+    <link rel="manifest" href="/manifest.json">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
+    <script src="https://unpkg.com/feather-icons"></script>
+    
+    <!-- Intégration Firebase -->
+   <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
+    import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-analytics.js";
+    import { getFirestore, collection, addDoc, getDocs, updateDoc, deleteDoc, doc, getDoc, onSnapshot, query, where, orderBy } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
+    
+    const firebaseConfig = {
+        apiKey: "AIzaSyCX1Q0i-L33RNZIVsJ8V1iRsDY6CJm1Lmc",
+        authDomain: "gmbn-9ba54.firebaseapp.com",
+        projectId: "gmbn-9ba54",
+        storageBucket: "gmbn-9ba54.firebasestorage.app",
+        messagingSenderId: "968684169673",
+        appId: "1:968684169673:web:d6b2796b396f8e62eda018",
+        measurementId: "G-MQXSQQQHBC"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const analytics = getAnalytics(app);
+    const db = getFirestore(app);
+    
+    window.firebase = {
+        db,
+        collection,
+        addDoc,
+        getDocs,
+        getDoc, // Ensure getDoc is included
+        updateDoc,
+        deleteDoc,
+        doc,
+        onSnapshot,
+        query,
+        where,
+        orderBy
+    };
+</script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+        body {
+            font-family: 'Poppins', sans-serif;
+            padding-bottom: 80px;
+            background-color: #f3f4f6;
+        }
+        .service-card {
+            background-size: cover;
+            background-position: center;
+            position: relative;
+            overflow: hidden;
+        }
+        .service-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1;
+        }
+        .service-card-content {
+            position: relative;
+            z-index: 2;
+        }
+        .nav-item.active {
+            color: #1e40af;
+        }
+        .nav-item.active svg {
+            stroke: #1e40af;
+        }
+        .page {
+            display: none;
+        }
+        .page.active {
+            display: block;
+        }
+        .accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+        }
+        .dark-mode {
+            background-color: #1f2937;
+            color: #f3f4f6;
+        }
+      header button:hover {
+    transform: translateY(-1px);
+    transition: transform 0.2s ease;
+}
+     #produits-container {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* Deux colonnes de taille égale */
+    gap: 16px; /* Espacement entre les cartes */
+    padding: 7px;
+} 
+      #cart-notification {
+    transition: opacity 0.3s ease-in-out;
+}
+#cart-notification:not(.hidden) {
+    opacity: 1;
+}
+#cart-notification.hidden {
+    opacity: 0;
+}
+      
+      .add-to-cart-btn {
+    transition: background-color 0.3s ease; /* Transition fluide pour la couleur */
+}
+ .gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+}
+.gallery-grid img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 8px;
+}     
+      #boutique-iframe {
+    border: none;
+    width: 100%;
+    display: block;
+    background: transparent;
+}
+      /* Style pour le header fixe */
+header {
+    position: relative;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+}
+
+/* Ajustement du main pour le header fixe */
+
+
+/* Style pour la page boutique */
+#boutique {
+    height: 100%;
+    padding: 0;
+    margin: 0;
+}
+
+/* Iframe en plein écran */
+#boutique-iframe {
+    position: fixed;
+    top: 72px; /* Sous le header */
+    left: 0;
+    width: 100%;
+    height: calc(100vh - 140px); /* 100vh - header - nav */
+    border: none;
+    z-index: 900;
+}
+    </style>
+</head>
+<body class="relative">
+    <!-- Header -->
+   <header class="bg-blue-800 text-white p-4 shadow-md">
+    <div class="container mx-auto flex justify-between items-center">
+        <div class="flex items-center space-x-2">
+            <img src="https://i.postimg.cc/vBxynkc6/Design-sans-titre-2.png" alt="Logo GMBN" class="w-10 h-10 rounded-full">
+            <h1 class="text-xl font-bold">GMBN</h1>
+        </div>
+        <div class="flex items-center space-x-4">
+            <button onclick="showPage('contact')" class="text-white hover:text-blue-200 px-2 py-1 rounded-lg flex items-center transition-colors">
+                <i data-feather="phone" class="mr-1 w-4 h-4"></i>
+                <span class="text-sm"></span>
+            </button>
+            <button id="darkModeToggle" class="p-2 rounded-full hover:bg-blue-700">
+                <i data-feather="moon"></i>
+            </button>
+        </div>
+    </div>
+</header>
+
+    <!-- Main Content -->
+    <main class="container mx-auto p-4">
+        <!-- Home Page -->
+        <div id="home" class="page active">
+           <div class="flex justify-center">
+                    <img src="https://i.postimg.cc/BbHPw3Wb/5915606491874838712.jpg" alt="Notre équipe" class="rounded-lg w-full max-w-md">
+                </div>
+            <div class="text-center mb-8" data-aos="fade-up">
+                <p class="text-gray-600">Votre expert en mécanique automobile depuis 1997</p>
+            </div>
+
+           
+            <h3 class="text-xl font-semibold mb-4 mt-8">Nos Services</h3>
+            <div class="grid grid-cols-2 gap-4">
+                <div class="service-card rounded-lg shadow-md p-4 text-white" 
+                     style="background-image: url('https://i.postimg.cc/XvNQ0GqF/5915544683000482204.jpg')"
+                     onclick="navigateToService('tolerie')"
+                     data-aos="fade-up">
+                    <div class="service-card-content">
+                        <h4 class="font-bold">Tôlerie</h4>
+                    </div>
+                </div>
+                <div class="service-card rounded-lg shadow-md p-4 text-white" 
+                     style="background-image: url('https://i.postimg.cc/FsstDRgf/5915544683000482231.jpg')"
+                     onclick="navigateToService('mecanique')"
+                     data-aos="fade-up">
+                    <div class="service-card-content">
+                        <h4 class="font-bold">Mécanique</h4>
+                    </div>
+                </div>
+                <div class="service-card rounded-lg shadow-md p-4 text-white" 
+                     style="background-image: url('https://i.postimg.cc/pTT8sKTG/5915544683000482192.jpg')"
+                     onclick="navigateToService('peinture')"
+                     data-aos="fade-up">
+                    <div class="service-card-content">
+                        <h4 class="font-bold">Peinture</h4>
+                    </div>
+                </div>
+                <div class="service-card rounded-lg shadow-md p-4 text-white" 
+                     style="background-image: url('https://i.postimg.cc/8cc2kXCR/climatisation-liquide-remplissage.jpg')"
+                     onclick="navigateToService('froid')"
+                     data-aos="fade-up">
+                    <div class="service-card-content">
+                        <h4 class="font-bold">Froid</h4>
+                    </div>
+                </div>
+                <div class="service-card rounded-lg shadow-md p-4 text-white" 
+                     style="background-image: url('https://i.postimg.cc/jdN86YBW/5915544683000482201.jpg')"
+                     onclick="navigateToService('vidange')"
+                     data-aos="fade-up">
+                    <div class="service-card-content">
+                        <h4 class="font-bold">Vidange</h4>
+                    </div>
+                </div>
+                <div class="service-card rounded-lg shadow-md p-4 text-white" 
+                     style="background-image: url('https://i.postimg.cc/X72RhbQs/5915544683000482232.jpg')"
+                     onclick="navigateToService('entretien')"
+                     data-aos="fade-up">
+                    <div class="service-card-content">
+                        <h4 class="font-bold">Entretien général</h4>
+                    </div>
+                </div>
+                
+                <!-- Nouveaux services ajoutés -->
+                <div class="service-card rounded-lg shadow-md p-4 text-white" 
+                     style="background-image: url('https://i.postimg.cc/G25DV9Tc/5915544683000482185.jpg')"
+                     onclick="navigateToService('remorquage')"
+                     data-aos="fade-up">
+                    <div class="service-card-content">
+                        <h4 class="font-bold">Remorquage</h4>
+                    </div>
+                </div>
+                <div class="service-card rounded-lg shadow-md p-4 text-white" 
+                     style="background-image: url('https://i.postimg.cc/rw1PT2J6/5915544683000482239.jpg')"
+                     onclick="navigateToService('diagnostic')"
+                     data-aos="fade-up">
+                    <div class="service-card-content">
+                        <h4 class="font-bold">Diagnostic</h4>
+                    </div>
+                </div>
+                <div class="service-card rounded-lg shadow-md p-4 text-white" 
+                     style="background-image: url('https://i.postimg.cc/SR07nH6G/5913292883186796971.jpg')"
+                     onclick="navigateToService('location')"
+                     data-aos="fade-up">
+                    <div class="service-card-content">
+                        <h4 class="font-bold">Location</h4>
+                    </div>
+                </div>
+                <div class="service-card rounded-lg shadow-md p-4 text-white" 
+                     style="background-image: url('https://i.postimg.cc/JnXjCKfH/5913292883186796965.jpg')"
+                     onclick="navigateToService('vente')"
+                     data-aos="fade-up">
+                    <div class="service-card-content">
+                        <h4 class="font-bold">Véhicule en vente</h4>
+                    </div>
+                </div>
+            </div>
+
+           <div class="bg-white rounded-lg shadow-md p-6 mb-6" data-aos="fade-up">
+                <h3 class="text-xl font-semibold mb-4">À propos de nous</h3>
+                <p class="text-gray-700 mb-4">
+                   Garage Medina Baye est une entreprise spécialisée dans le domaine de l’automobile Cette structure familiale dynamique qui a fêté ses 20 ans en 2017, jouit d'une excellente réputation dans tout le territoire national. Trois générations et une équipe bien organisée sont à votre service et son fondateur, El hadji Ibrahima <span onclick="showAdminModal()" style="cursor: pointer; color: black; text-decoration: none;">Niasse</span>
+ dit <span onclick="showAdminModal()" style="cursor: pointer; color: black; text-decoration: none;">Baye</span>
+ peut témoigner d'une expérience de plus de 30 ans dans le domaine. Active dans le domaine de l’automobile vous pouvez être sûr d'un service performant, rapide et efficace. Son équipement, ultra sophistiqué, sans cesse renouvelé, à la pointe de la dernière technologie lui a permis de réaliser des missions toujours plus performantes dans des délais toujours plus stricts. Toutes ces expériences l'ont amenée à aborder avec succès et compétences les entreprises et à décrocher des marchés au niveau des plus grandes structures du pays. Profitez d’un équipement à la fine pointe de la technologie
+                </p>
+                <div class="flex justify-center">
+                    <img src="https://i.postimg.cc/C1nsLwq1/5913292883186796973.jpg" alt="Notre équipe" class="rounded-lg w-full max-w-md">
+                  
+                </div>
+             <p class="text-white cursor-pointer" onclick="showPage('gallery')"> galerie  </p>
+<div class="flex justify-center">
+    <button class="bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors" onclick="showPage('gallery')">GALLERIE</button>
+</div>
+            </div>
+
+          
+            <div class="mt-8">
+                <h3 class="text-xl font-semibold mb-4">Nos Partenaires</h3>
+                <div class="grid grid-cols-3 gap-4">
+                    <img src="https://i.postimg.cc/QtZXY30F/Image-1.png" alt="Partenaire 2" class="rounded-lg">
+                </div>
+            </div>
+        </div>
+
+        <!-- Services Page -->
+        <div id="services" class="page">
+            <h2 class="text-2xl font-bold mb-6">Tous nos services</h2>
+            <div class="grid grid-cols-1 gap-4">
+                <div class="bg-white rounded-lg shadow-md p-4" onclick="navigateToService('tolerie')">
+                    <h3 class="font-semibold">Tôlerie</h3>
+                    <p class="text-gray-600 text-sm">Réparation de carrosserie et tôlerie</p>
+                </div>
+                <div class="bg-white rounded-lg shadow-md p-4" onclick="navigateToService('mecanique')">
+                    <h3 class="font-semibold">Mécanique</h3>
+                    <p class="text-gray-600 text-sm">Réparation mécanique générale</p>
+                </div>
+                <div class="bg-white rounded-lg shadow-md p-4" onclick="navigateToService('peinture')">
+                    <h3 class="font-semibold">Peinture</h3>
+                    <p class="text-gray-600 text-sm">Peinture automobile professionnelle</p>
+                </div>
+                <div class="bg-white rounded-lg shadow-md p-4" onclick="navigateToService('froid')">
+                    <h3 class="font-semibold">Froid</h3>
+                    <p class="text-gray-600 text-sm">Climatisation et système de refroidissement</p>
+                </div>
+                <div class="bg-white rounded-lg shadow-md p-4" onclick="navigateToService('vidange')">
+                    <h3 class="font-semibold">Vidange</h3>
+                    <p class="text-gray-600 text-sm">Vidange et changement d'huile</p>
+                </div>
+                <div class="bg-white rounded-lg shadow-md p-4" onclick="navigateToService('entretien')">
+                    <h3 class="font-semibold">Entretien général</h3>
+                    <p class="text-gray-600 text-sm">Entretien complet de votre véhicule</p>
+                </div>
+                
+                <!-- Nouveaux services ajoutés -->
+                <div class="bg-white rounded-lg shadow-md p-4" onclick="navigateToService('remorquage')">
+                    <h3 class="font-semibold">Remorquage</h3>
+                    <p class="text-gray-600 text-sm">Service de remorquage 24h/24</p>
+                </div>
+                <div class="bg-white rounded-lg shadow-md p-4" onclick="navigateToService('diagnostic')">
+                    <h3 class="font-semibold">Diagnostic</h3>
+                    <p class="text-gray-600 text-sm">Diagnostic électronique complet</p>
+                </div>
+                <div class="bg-white rounded-lg shadow-md p-4" onclick="navigateToService('location')">
+                    <h3 class="font-semibold">Location</h3>
+                    <p class="text-gray-600 text-sm">Location de véhicules</p>
+                </div>
+                <div class="bg-white rounded-lg shadow-md p-4" onclick="navigateToService('vente')">
+                    <h3 class="font-semibold">Vente</h3>
+                    <p class="text-gray-600 text-sm">Vente de véhicules d'occasion</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Devis Page -->
+        <div id="devis" class="page">
+            <h2 class="text-2xl font-bold mb-6">Demander un devis</h2>
+            <div class="bg-white rounded-lg shadow-md p-6">
+                <div class="mb-4">
+                    <label class="block text-gray-700 mb-2">Service</label>
+                    <select id="serviceSelect" class="w-full p-2 border rounded">
+                        <option value="">Sélectionnez un service</option>
+                        <option value="tolerie">Tôlerie</option>
+                        <option value="mecanique">Mécanique</option>
+                        <option value="peinture">Peinture</option>
+                        <option value="froid">Froid</option>
+                        <option value="vidange">Vidange</option>
+                        <option value="entretien">Entretien général</option>
+                        <option value="remorquage">Remorquage</option>
+                        <option value="diagnostic">Diagnostic</option>
+                        <option value="location">Location</option>
+                        <option value="vente">Vente</option>
+                        <option value="autres">Autres</option>
+                    </select>
+                </div>
+                <div id="priceEstimate" class="bg-blue-50 p-4 rounded-lg mb-4 hidden">
+                    <h3 class="font-semibold mb-2">Estimation indicative</h3>
+                    <p id="estimateText"></p>
+                </div>
+                <button onclick="showContactOptions()" class="w-full bg-blue-600 text-white py-2 rounded-lg">
+                    Contacter le gérant
+                </button>
+            </div>
+        </div>
+
+        <!-- Rendez-vous Page -->
+        <div id="rendezvous" class="page">
+            <h2 class="text-2xl font-bold mb-6">Prendre rendez-vous</h2>
+            <div class="bg-white rounded-lg shadow-md p-6">
+                <div class="mb-4">
+                    <label class="block text-gray-700 mb-2">Nom complet</label>
+                    <input type="text" id="fullName" class="w-full p-2 border rounded">
+                </div>
+                <div class="mb-4">
+                    <label class="block text-gray-700 mb-2">Numéro de téléphone</label>
+                    <input type="tel" id="phoneNumber" class="w-full p-2 border rounded">
+                </div>
+                <div class="mb-4">
+                    <label class="block text-gray-700 mb-2">Email</label>
+                    <input type="email" id="email" class="w-full p-2 border rounded">
+                </div>
+                <div class="mb-4">
+                    <label class="block text-gray-700 mb-2">Service</label>
+                    <select id="appointmentService" class="w-full p-2 border rounded">
+                        <option value="">Sélectionnez un service</option>
+                        <option value="tolerie">Tôlerie</option>
+                        <option value="mecanique">Mécanique</option>
+                        <option value="peinture">Peinture</option>
+                        <option value="froid">Froid</option>
+                        <option value="vidange">Vidange</option>
+                        <option value="entretien">Entretien général</option>
+                        <option value="remorquage">Remorquage</option>
+                        <option value="diagnostic">Diagnostic</option>
+                        <option value="location">Location</option>
+                        <option value="vente">Vente</option>
+                    </select>
+                </div>
+                <div class="mb-4">
+                    <label class="block text-gray-700 mb-2">Date</label>
+                    <input type="date" id="appointmentDate" class="w-full p-2 border rounded">
+                </div>
+                <div class="mb-4">
+                    <label class="block text-gray-700 mb-2">Heure</label>
+                    <input type="time" id="appointmentTime" class="w-full p-2 border rounded">
+                </div>
+                <button onclick="bookAppointment()" class="w-full bg-blue-600 text-white py-2 rounded-lg">
+                    Confirmer le rendez-vous
+                </button>
+            </div>
+        </div>
+
+        <!-- Contact Page -->
+        <div id="contact" class="page">
+            <h2 class="text-2xl font-bold mb-6">Contactez-nous</h2>
+            <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+                <div class="flex items-center mb-4">
+                    <i data-feather="phone" class="mr-2"></i>
+                    <div>
+                        <p class="font-semibold">Téléphone</p>
+                        <p>33 825 32 42 / 77 470 47 42</p>
+                    </div>
+                </div>
+                <div class="flex items-center mb-4">
+                    <i data-feather="mail" class="mr-2"></i>
+                    <div>
+                        <p class="font-semibold">Email</p>
+                        <p>contact@garage-gmbn.com</p>
+                    </div>
+                </div>
+                <div class="flex items-center mb-4">
+                    <i data-feather="map-pin" class="mr-2"></i>
+                    <div>
+                        <p class="font-semibold">Adresse</p>
+                        <p>Garage GMBN - Dakar, Sénégal</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-4 mb-6">
+                <button onclick="window.location.href='tel:+221774704742'" class="bg-green-600 text-white py-2 rounded-lg flex items-center justify-center">
+                    <i data-feather="phone" class="mr-2"></i> Appeler
+                </button>
+                <button onclick="window.location.href='https://wa.me/221774704742'" class="bg-blue-600 text-white py-2 rounded-lg flex items-center justify-center">
+                    <i data-feather="message-square" class="mr-2"></i> WhatsApp
+                </button>
+            </div>
+
+            <div class="bg-white rounded-lg shadow-md p-4">
+                <h3 class="font-semibold mb-2">Nos horaires</h3>
+                <p class="mb-1">Lundi - Vendredi: 8h - 18h</p>
+                <p class="mb-1">Samedi: 8h - 13h</p>
+                <p>Dimanche: Fermé</p>
+            </div>
+        </div>
+
+        <!-- Service Detail Pages -->
+        <div id="service-tolerie" class="page">
+            <div class="flex items-center mb-4">
+                <button onclick="goBack()" class="mr-2">
+                    <i data-feather="arrow-left"></i>
+                </button>
+                <h2 class="text-xl font-bold">Tôlerie</h2>
+            </div>
+            <div class="service-card rounded-lg shadow-md mb-6 h-48" style="background-image: url('https://i.postimg.cc/fLpKX8Kj/5915544683000482219.jpg')"></div>
+                      <div class="service-card rounded-lg shadow-md mb-6 h-48" style="background-image: url('https://i.postimg.cc/XvNQ0GqF/5915544683000482204.jpg')"></div>
+            <div class="service-card rounded-lg shadow-md mb-6 h-48" style="background-image: url('https://i.postimg.cc/tR8SV4vQ/5915544683000482202.jpg')"></div>
+<div class="service-card rounded-lg shadow-md mb-6 h-48" style="background-image: url('https://i.postimg.cc/rpgxGf8R/5915544683000482190.jpg')"></div>
+            <div class="bg-white rounded-lg shadow-md p-6">
+                <p class="mb-4">Nos experts en tôlerie vous offrent des réparations de qualité pour redonner à votre véhicule son aspect d'origine après un accident ou des dommages.</p>
+                <button onclick="showContactOptions()" class="w-full bg-blue-600 text-white py-2 rounded-lg">
+                    Demander un devis
+                </button>
+            </div>
+        </div>
+
+        <div id="service-mecanique" class="page">
+            <div class="flex items-center mb-4">
+                <button onclick="goBack()" class="mr-2">
+                    <i data-feather="arrow-left"></i>
+                </button>
+                <h2 class="text-xl font-bold">Mécanique</h2>
+            </div>
+            <div class="service-card rounded-lg shadow-md mb-6 h-48" style="background-image: url('https://i.postimg.cc/jdN86YBW/5915544683000482201.jpg')"></div>
+                      <div class="service-card rounded-lg shadow-md mb-6 h-48" style="background-image: url('https://i.postimg.cc/XYbsQD0s/5915544683000482209.jpg')"></div>
+            <div class="service-card rounded-lg shadow-md mb-6 h-48" style="background-image: url('https://i.postimg.cc/fRfBFjzD/5915544683000482210.jpg')"></div>
+<div class="service-card rounded-lg shadow-md mb-6 h-48" style="background-image: url('https://i.postimg.cc/mrdVZL1n/5915544683000482212.jpg')"></div>
+            <div class="bg-white rounded-lg shadow-md p-6">
+                <p class="mb-4">Notre équipe de mécaniciens qualifiés prend en charge toutes les réparations mécaniques de votre véhicule, du simple entretien aux réparations complexes.</p>
+                <button onclick="showContactOptions()" class="w-full bg-blue-600 text-white py-2 rounded-lg">
+                    Demander un devis
+                </button>
+            </div>
+        </div>
+
+        <div id="service-peinture" class="page">
+            <div class="flex items-center mb-4">
+                <button onclick="goBack()" class="mr-2">
+                    <i data-feather="arrow-left"></i>
+                </button>
+                <h2 class="text-xl font-bold">Peinture</h2>
+            </div>
+            <div class="service-card rounded-lg shadow-md mb-6 h-48" style="background-image: url('https://i.postimg.cc/pTT8sKTG/5915544683000482192.jpg')"></div>
+            <div class="bg-white rounded-lg shadow-md p-6">
+                <p class="mb-4">Nous proposons des services de peinture automobile professionnelle avec des finitions de haute qualité et une large gamme de couleurs disponibles.</p>
+                <button onclick="showContactOptions()" class="w-full bg-blue-600 text-white py-2 rounded-lg">
+                    Demander un devis
+                </button>
+            </div>
+        </div>
+
+        <div id="service-froid" class="page">
+            <div class="flex items-center mb-4">
+                <button onclick="goBack()" class="mr-2">
+                    <i data-feather="arrow-left"></i>
+                </button>
+                <h2 class="text-xl font-bold">Froid</h2>
+            </div>
+            <div class="service-card rounded-lg shadow-md mb-6 h-48" style="background-image: url('https://i.postimg.cc/8cc2kXCR/climatisation-liquide-remplissage.jpg')"></div>
+            <div class="bg-white rounded-lg shadow-md p-6">
+                <p class="mb-4">Nos techniciens spécialisés interviennent sur tous les systèmes de climatisation et de refroidissement de votre véhicule pour un confort optimal.</p>
+                <button onclick="showContactOptions()" class="w-full bg-blue-600 text-white py-2 rounded-lg">
+                    Demander un devis
+                </button>
+            </div>
+        </div>
+
+        <div id="service-vidange" class="page">
+            <div class="flex items-center mb-4">
+                <button onclick="goBack()" class="mr-2">
+                    <i data-feather="arrow-left"></i>
+                </button>
+                <h2 class="text-xl font-bold">Vidange</h2>
+            </div>
+            <div class="service-card rounded-lg shadow-md mb-6 h-48" style="background-image: url('https://i.postimg.cc/X72RhbQs/5915544683000482232.jpg')"></div>
+            <div class="bg-white rounded-lg shadow-md p-6">
+                <p class="mb-4">Nous effectuons des vidanges complètes avec des huiles de qualité pour assurer la longévité de votre moteur.</p>
+                <button onclick="showContactOptions()" class="w-full bg-blue-600 text-white py-2 rounded-lg">
+                    Demander un devis
+                </button>
+            </div>
+        </div>
+
+        <div id="service-entretien" class="page">
+            <div class="flex items-center mb-4">
+                <button onclick="goBack()" class="mr-2">
+                    <i data-feather="arrow-left"></i>
+                </button>
+                <h2 class="text-xl font-bold">Entretien général</h2>
+            </div>
+            <div class="service-card rounded-lg shadow-md mb-6 h-48" style="background-image: url('https://i.postimg.cc/X72RhbQs/5915544683000482232.jpg')"></div>
+                      <div class="service-card rounded-lg shadow-md mb-6 h-48" style="background-image: url('https://i.postimg.cc/FsstDRgf/5915544683000482231.jpg')"></div>
+            <div class="service-card rounded-lg shadow-md mb-6 h-48" style="background-image: url('https://i.postimg.cc/C1nsLwq1/5913292883186796973.jpg')"></div>
+<div class="service-card rounded-lg shadow-md mb-6 h-48" style="background-image: url('https://i.postimg.cc/VvzyysxV/5915544683000482233.jpg')"></div>
+            <div class="bg-white rounded-lg shadow-md p-6">
+                <p class="mb-4">Un entretien régulier est essentiel pour la sécurité et la longévité de votre véhicule. Nous proposons des forfaits d'entretien adaptés à votre voiture.</p>
+                <button onclick="showContactOptions()" class="w-full bg-blue-600 text-white py-2 rounded-lg">
+                    Demander un devis
+                </button>
+            </div>
+        </div>
+
+        <!-- Nouveaux services détaillés -->
+        <div id="service-remorquage" class="page">
+            <div class="flex items-center mb-4">
+                <button onclick="goBack()" class="mr-2">
+                    <i data-feather="arrow-left"></i>
+                </button>
+                <h2 class="text-xl font-bold">Remorquage</h2>
+            </div>
+            <div class="service-card rounded-lg shadow-md mb-6 h-48" style="background-image: url('https://i.postimg.cc/G25DV9Tc/5915544683000482185.jpg')"></div>
+                      <div class="service-card rounded-lg shadow-md mb-6 h-48" style="background-image: url('https://i.postimg.cc/z3mgDMk6/5915544683000482194.jpg')"></div>
+            <div class="service-card rounded-lg shadow-md mb-6 h-48" style="background-image: url('https://i.postimg.cc/8PNMxRts/5913292883186796962.jpg')"></div>
+<div class="service-card rounded-lg shadow-md mb-6 h-48" style="background-image: url('https://i.postimg.cc/L5gPpRjj/5915544683000482184.jpg')"></div>
+            <div class="bg-white rounded-lg shadow-md p-6">
+                <p class="mb-4">Service de remorquage disponible 24h/24 et 7j/7 pour toutes pannes et accidents. Intervention rapide dans tout Dakar et ses environs.</p>
+                <button onclick="showContactOptions()" class="w-full bg-blue-600 text-white py-2 rounded-lg">
+                    Contacter pour remorquage
+                </button>
+            </div>
+        </div>
+
+        <div id="service-diagnostic" class="page">
+            <div class="flex items-center mb-4">
+                <button onclick="goBack()" class="mr-2">
+                    <i data-feather="arrow-left"></i>
+                </button>
+                <h2 class="text-xl font-bold">Diagnostic</h2>
+            </div>
+            <div class="service-card rounded-lg shadow-md mb-6 h-48" style="background-image: url('https://i.postimg.cc/rw1PT2J6/5915544683000482239.jpg')"></div>
+            <div class="bg-white rounded-lg shadow-md p-6">
+                <p class="mb-4">Diagnostic électronique complet avec outils professionnels pour identifier toutes les pannes de votre véhicule. Rapport détaillé fourni.</p>
+                <button onclick="showContactOptions()" class="w-full bg-blue-600 text-white py-2 rounded-lg">
+                    Demander un diagnostic
+                </button>
+            </div>
+        </div>
+
+       <div id="service-location" class="page">
+       <div class="flex items-center mb-4">
+           <button onclick="goBack()" class="mr-2">
+               <i data-feather="arrow-left"></i>
+           </button>
+           <h2 class="text-xl font-bold">Location</h2>
+       </div>
+       <div class="service-card rounded-lg shadow-md mb-6 h-48" style="background-image: url('https://i.postimg.cc/SR07nH6G/5913292883186796971.jpg')"></div>
+       <div class="bg-white rounded-lg shadow-md p-6">
+           <h3 class="text-lg font-semibold mb-4">Véhicules en location</h3>
+           <div id="liste-location-client" class="space-y-4">
+               <!-- Les véhicules seront chargés ici dynamiquement -->
+           </div>
+           <button onclick="showContactOptions()" class="w-full bg-blue-600 text-white py-2 rounded-lg mt-4">
+               Contacter pour réserver
+           </button>
+       </div>
+   </div>
+
+       <div id="service-vente" class="page">
+    <div class="flex items-center mb-4">
+        <button onclick="goBack()" class="mr-2">
+            <i data-feather="arrow-left"></i>
+        </button>
+        <h2 class="text-xl font-bold">Vente</h2>
+    </div>
+    <div class="service-card rounded-lg shadow-md mb-6 h-48" style="background-image: url('https://i.postimg.cc/JnXjCKfH/5913292883186796965.jpg')"></div>
+    <div class="bg-white rounded-lg shadow-md p-6">
+        <h3 class="text-lg font-semibold mb-4">Véhicules en vente</h3>
+        <div id="liste-vente-client" class="space-y-4">
+            <!-- Les véhicules seront chargés ici dynamiquement -->
+        </div>
+        <button onclick="showContactOptions()" class="w-full bg-blue-600 text-white py-2 rounded-lg mt-4">
+            Contacter pour plus d'infos
+        </button>
+    </div>
+</div>
+      <div id="location-vehicle-detail" class="page">
+    <div class="flex items-center mb-4">
+        <button onclick="showPage('service-location')" class="mr-2">
+            <i data-feather="arrow-left"></i>
+        </button>
+        <h2 class="text-xl font-bold">Détails du véhicule</h2>
+    </div>
+    <div id="location-vehicle-images" class="overflow-x-auto flex snap-x snap-mandatory mb-6 whitespace-nowrap">
+        <!-- Images chargées dynamiquement ici -->
+    </div>
+    <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+        <h3 id="location-vehicle-name" class="text-xl font-bold mb-1"></h3>
+        <p id="location-vehicle-price" class="text-blue-600 font-bold text-lg mb-2"></p>
+        <p id="location-vehicle-info" class="text-gray-600 mb-4"></p>
+        <p class="text-sm text-gray-500 mb-4">Contactez-nous pour réserver ou pour plus d'informations</p>
+        <button onclick="showContactOptions()" class="w-full bg-blue-600 text-white py-2 rounded-lg mb-4">
+            Contacter
+        </button>
+        <div id="location-vehicle-description" class="text-gray-700"></div>
+    </div>
+</div>
+              <!-- bOUTIQUE ahmed said aidara -->
+
+<!-- Boutique Page -->
+<!-- Boutique Page -->
+<div id="boutique" class="page">
+    <!-- Iframe pour la boutique - sans en-tête redondant -->
+    <iframe 
+        src="boutique.html" 
+        id="boutique-iframe"
+        class="w-full h-full">
+    </iframe>
+</div>
+        <!-- Contact Options Modal -->
+        <div id="contactModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50">
+            <div class="bg-white rounded-lg p-6 w-full max-w-sm mx-4">
+                <h3 class="text-xl font-bold mb-4">Comment souhaitez-vous nous contacter ?</h3>
+                <button onclick="window.location.href='https://wa.me/221774704742'" class="w-full bg-green-500 text-white py-2 rounded-lg mb-2 flex items-center justify-center">
+                    <i data-feather="message-square" class="mr-2"></i> WhatsApp
+                </button>
+                <button onclick="window.location.href='sms:+221774704742'" class="w-full bg-blue-500 text-white py-2 rounded-lg mb-2 flex items-center justify-center">
+                    <i data-feather="smartphone" class="mr-2"></i> SMS
+                </button>
+                <button onclick="window.location.href='tel:+221774704742'" class="w-full bg-red-500 text-white py-2 rounded-lg mb-2 flex items-center justify-center">
+                    <i data-feather="phone" class="mr-2"></i> Appel
+                </button>
+                <button onclick="hideContactOptions()" class="w-full bg-gray-200 py-2 rounded-lg mt-4">
+                    Annuler
+                </button>
+            </div>
+        </div>
+      
+      <div id="vehicle-detail" class="page">
+    <div class="flex items-center mb-4">
+        <button onclick="showPage('service-vente')" class="mr-2">
+            <i data-feather="arrow-left"></i>
+        </button>
+        <h2 class="text-xl font-bold">Détails du véhicule</h2>
+    </div>
+    <div id="vehicle-images" class="overflow-x-auto flex snap-x snap-mandatory mb-6 whitespace-nowrap">
+        <!-- Images chargées dynamiquement ici -->
+    </div>
+    <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+        <h3 id="vehicle-name" class="text-xl font-bold mb-1"></h3>
+        <p id="vehicle-price" class="text-blue-600 font-bold text-lg mb-2"></p>
+        <p id="vehicle-info" class="text-gray-600 mb-4"></p>
+        <p class="text-sm text-gray-500 mb-4">Contactez-nous pour plus d'informations ou pour un essai</p>
+        <button onclick="showContactOptions()" class="w-full bg-blue-600 text-white py-2 rounded-lg mb-4">
+            Contacter
+        </button>
+        <div id="vehicle-description" class="text-gray-700"></div>
+    </div>
+        <!-- Ajoutez ce conteneur pour la notification -->
+  <div id="cart-notification" class="fixed bottom-4 right-4 hidden bg-green-600 text-white px-4 py-2 rounded-lg shadow-lg">
+        Article ajouté au panier avec succès
+    </div> 
+</div>
+      
+<!-- Admin Page principale -->
+<div id="admin" class="page">
+    <h2 class="text-2xl font-bold mb-6">Espace Admin</h2>
+    <div class="grid grid-cols-2 gap-4">
+        <button onclick="showPage('admin-vente')" class="bg-blue-600 text-white py-4 rounded-lg">VEHICULE EN VENTE</button>
+        <button onclick="showPage('admin-location')" class="bg-blue-600 text-white py-4 rounded-lg">LOCATION</button>
+    </div>
+</div>
+ <!-- Page admin-commandes modifiée -->
+  <div id="admin-commandes" class="page">
+    <div class="flex items-center mb-4">
+      <button onclick="showPage('admin')" class="mr-2"><i data-feather="arrow-left"></i></button>
+      <h2 class="text-xl font-bold">Commandes Admin</h2>
+    </div>
+    <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+      <h3 class="text-lg font-semibold mb-4">Commandes en attente</h3>
+      <div id="liste-commandes" class="space-y-4">
+        <!-- Les commandes en attente seront chargées ici dynamiquement -->
+      </div>
+    </div>
+    <div class="bg-white rounded-lg shadow-md p-6">
+      <h3 class="text-lg font-semibold mb-4">Commandes livrées</h3>
+      <div id="liste-commandes-livrees" class="space-y-4">
+        <!-- Les commandes livrées seront chargées ici dynamiquement -->
+      </div>
+    </div>
+  </div>
+<!-- Admin Vente -->
+<div id="admin-vente" class="page">
+    <div class="flex items-center mb-4">
+        <button onclick="showPage('admin')" class="mr-2"><i data-feather="arrow-left"></i></button>
+        <h2 class="text-xl font-bold">Vente Admin</h2>
+    </div>
+    
+    <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+        <h3 class="text-lg font-semibold mb-4">Ajouter un véhicule en vente</h3>
+        <form id="venteForm" class="space-y-4">
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-gray-700 mb-2">Marque</label>
+                    <input type="text" id="vente-marque" class="w-full p-2 border rounded" required>
+                </div>
+                <div>
+                    <label class="block text-gray-700 mb-2">Modèle</label>
+                    <input type="text" id="vente-modele" class="w-full p-2 border rounded" required>
+                </div>
+            </div>
+            
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-gray-700 mb-2">Année</label>
+                    <input type="number" id="vente-annee" class="w-full p-2 border rounded">
+                </div>
+                <div>
+                    <label class="block text-gray-700 mb-2">Kilométrage</label>
+                    <input type="number" id="vente-km" class="w-full p-2 border rounded">
+                </div>
+            </div>
+            
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-gray-700 mb-2">État</label>
+                    <select id="vente-etat" class="w-full p-2 border rounded">
+                        <option value="Neuf">Neuf</option>
+                        <option value="Occasion">Occasion</option>
+                        <option value="Bon état">Bon état</option>
+                        <option value="À réparer">À réparer</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-gray-700 mb-2">Transmission</label>
+                    <select id="vente-transmission" class="w-full p-2 border rounded">
+                        <option value="Manuelle">Manuelle</option>
+                        <option value="Automatique">Automatique</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-gray-700 mb-2">Carburant</label>
+                    <select id="vente-carburant" class="w-full p-2 border rounded">
+                        <option value="Essence">Essence</option>
+                        <option value="Diesel">Diesel</option>
+                        <option value="Hybride">Hybride</option>
+                        <option value="Électrique">Électrique</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-gray-700 mb-2">Prix (FCFA)</label>
+                    <input type="number" id="vente-prix" class="w-full p-2 border rounded" required>
+                </div>
+            </div>
+            
+            <div>
+                <label class="block text-gray-700 mb-2">Caractéristiques</label>
+                <textarea id="vente-caracteristiques" class="w-full p-2 border rounded" rows="3"></textarea>
+            </div>
+            
+            <div>
+                <label class="block text-gray-700 mb-2">Détails</label>
+                <textarea id="vente-details" class="w-full p-2 border rounded" rows="3"></textarea>
+            </div>
+            
+            <div>
+                <label class="block text-gray-700 mb-2">Image principale (URL PostImage)</label>
+                <input type="url" id="vente-image-principale" class="w-full p-2 border rounded" required>
+            </div>
+            
+            <div>
+                <label class="block text-gray-700 mb-2">Images de détails (URLs PostImage, séparées par des virgules)</label>
+                <textarea id="vente-images-details" class="w-full p-2 border rounded" rows="2"></textarea>
+            </div>
+            
+            <div class="flex justify-end space-x-2">
+                <button type="button" onclick="document.getElementById('admin-vente').querySelector('form').reset()" class="bg-gray-200 text-gray-800 py-2 px-4 rounded">Annuler</button>
+                <button type="submit" class="bg-blue-600 text-white py-2 px-4 rounded">Ajouter</button>
+            </div>
+        </form>
+    </div>
+    
+    <div class="bg-white rounded-lg shadow-md p-6">
+        <h3 class="text-lg font-semibold mb-4">Véhicules en vente</h3>
+        <div id="liste-vente" class="space-y-4">
+            <!-- Les véhicules seront chargés ici dynamiquement -->
+        </div>
+    </div>
+</div>
+
+<!-- Admin Location (structure similaire à Vente) -->
+<div id="admin-location" class="page">
+    <div class="flex items-center mb-4">
+        <button onclick="showPage('admin')" class="mr-2"><i data-feather="arrow-left"></i></button>
+        <h2 class="text-xl font-bold">Location Admin</h2>
+    </div>
+    <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+        <h3 class="text-lg font-semibold mb-4">Ajouter un véhicule</h3>
+        <form id="add-location-vehicle-form">
+            <input type="text" id="location-marque" placeholder="Marque" class="w-full p-2 mb-3 border rounded">
+            <input type="text" id="location-modele" placeholder="Modèle" class="w-full p-2 mb-3 border rounded">
+            <input type="number" id="location-annee" placeholder="Année" class="w-full p-2 mb-3 border rounded">
+            <input type="number" id="location-prixLocation" placeholder="Prix location (FCFA/jour)" class="w-full p-2 mb-3 border rounded">
+            <input type="text" id="location-carburant" placeholder="Carburant" class="w-full p-2 mb-3 border rounded">
+            <input type="text" id="location-transmission" placeholder="Transmission" class="w-full p-2 mb-3 border rounded">
+            <input type="number" id="location-capacite" placeholder="Capacité (places)" class="w-full p-2 mb-3 border rounded">
+            <select id="location-disponibilite" class="w-full p-2 mb-3 border rounded">
+                <option value="true">Disponible</option>
+                <option value="false">Non disponible</option>
+            </select>
+            <input type="text" id="location-imagePrincipale" placeholder="URL image principale" class="w-full p-2 mb-3 border rounded">
+            <input type="text" id="location-imagesDetails" placeholder="URLs images détails (séparées par des virgules)" class="w-full p-2 mb-3 border rounded">
+            <textarea id="location-caracteristiques" placeholder="Caractéristiques" class="w-full p-2 mb-3 border rounded"></textarea>
+            <textarea id="location-details" placeholder="Détails" class="w-full p-2 mb-3 border rounded"></textarea>
+            <button type="submit" class="w-full bg-blue-600 text-white py-2 rounded-lg">Ajouter</button>
+        </form>
+    </div>
+    <div class="bg-white rounded-lg shadow-md p-6">
+        <h3 class="text-lg font-semibold mb-4">Véhicules en location</h3>
+        <div id="liste-location" class="space-y-4">
+            <!-- Liste des véhicules -->
+        </div>
+    </div>
+</div>
+
+<!-- Admin Boutique -->
+<div id="admin-boutique" class="page">
+    <div class="flex items-center mb-4">
+        <button onclick="showPage('admin')" class="mr-2"><i data-feather="arrow-left"></i></button>
+        <h2 class="text-xl font-bold">Boutique Admin</h2>
+    </div>
+    
+    <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+        <h3 class="text-lg font-semibold mb-4">Ajouter un produit</h3>
+        <form id="boutiqueForm" class="space-y-4">
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-gray-700 mb-2">Nom du produit</label>
+                    <input type="text" id="produit-nom" class="w-full p-2 border rounded">
+                </div>
+                <div>
+                    <label class="block text-gray-700 mb-2">Prix (FCFA)</label>
+                    <input type="number" id="produit-prix" class="w-full p-2 border rounded">
+                </div>
+            </div>
+            
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-gray-700 mb-2">Marque</label>
+                    <input type="text" id="produit-marque" class="w-full p-2 border rounded">
+                </div>
+                <div>
+                    <label class="block text-gray-700 mb-2">Modèle</label>
+                    <input type="text" id="produit-modele" class="w-full p-2 border rounded">
+                </div>
+            </div>
+            
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-gray-700 mb-2">État</label>
+                    <select id="produit-etat" class="w-full p-2 border rounded">
+                        <option value="Neuf">Neuf</option>
+                        <option value="Occasion">Occasion</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-gray-700 mb-2">Stock disponible</label>
+                    <input type="number" id="produit-stock" class="w-full p-2 border rounded">
+                </div>
+            </div>
+            
+            <div>
+                <label class="block text-gray-700 mb-2">Caractéristiques</label>
+                <textarea id="produit-caracteristiques" class="w-full p-2 border rounded" rows="3"></textarea>
+            </div>
+            
+            <div>
+                <label class="block text-gray-700 mb-2">Détails</label>
+                <textarea id="produit-details" class="w-full p-2 border rounded" rows="3"></textarea>
+            </div>
+            
+            <div>
+                <label class="block text-gray-700 mb-2">Image principale (URL PostImage)</label>
+                <input type="url" id="produit-image-principale" class="w-full p-2 border rounded">
+            </div>
+            
+            <div>
+                <label class="block text-gray-700 mb-2">Images de détails (URLs PostImage, séparées par des virgules)</label>
+                <textarea id="produit-images-details" class="w-full p-2 border rounded" rows="2"></textarea>
+            </div>
+            
+            <div class="flex justify-end space-x-2">
+                <button type="button" onclick="document.getElementById('boutiqueForm').reset()" class="bg-gray-200 text-gray-800 py-2 px-4 rounded">Annuler</button>
+                <button type="submit" class="bg-blue-600 text-white py-2 px-4 rounded">Ajouter</button>
+            </div>
+        </form>
+    </div>
+    
+    <div class="bg-white rounded-lg shadow-md p-6">
+        <h3 class="text-lg font-semibold mb-4">Produits en boutique</h3>
+        <div id="liste-boutique" class="space-y-4">
+            <!-- Les produits seront chargés ici dynamiquement -->
+        </div>
+    </div>
+</div>
+
+
+        <!-- Appointment Confirmation Modal -->
+        <div id="appointmentModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50">
+            <div class="bg-white rounded-lg p-6 w-full max-w-sm mx-4">
+                <div class="text-center mb-4">
+                    <i data-feather="check-circle" class="text-green-500 w-12 h-12 mx-auto"></i>
+                </div>
+                <h3 class="text-xl font-bold mb-2 text-center">Rendez-vous confirmé !</h3>
+                <p id="appointmentDetails" class="text-center mb-4"></p>
+                <button onclick="hideAppointmentModal()" class="w-full bg-blue-600 text-white py-2 rounded-lg">
+                    Fermer
+                </button>
+            </div>
+        </div>
+      <div id="adminModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50">
+    <div class="bg-white rounded-lg p-6 w-full max-w-sm mx-4">
+        <h3 class="text-xl font-bold mb-4 text-center">ESPACE ADMIN</h3>
+        <input type="password" id="adminCode" class="w-full p-2 border rounded mb-4" placeholder="Entrez le code">
+        <div class="flex justify-between">
+            <button onclick="checkAdminCode()" class="bg-blue-600 text-white py-2 px-4 rounded">Entré</button>
+            <button onclick="hideAdminModal()" class="bg-gray-200 py-2 px-4 rounded">Annuler</button>
+        </div>
+    </div>
+</div>
+      <div id="gallery" class="page">
+    <div class="flex items-center mb-4">
+        <button onclick="showPage('home')" class="mr-2"><i data-feather="arrow-left"></i></button>
+        <h2 class="text-2xl font-bold">Galerie</h2>
+    </div>
+    <div class="gallery-grid" data-aos="fade-up">
+        <img src="https://i.postimg.cc/PJmbYKKn/5913292883186796972.jpg" alt="Image 1">
+        <img src="https://i.postimg.cc/KvshsMNK/5915544683000482214.jpg" alt="Image 2">
+        <img src="https://i.postimg.cc/wx0C7mnW/5915544683000482229.jpg" alt="Image 3">
+        <img src="https://i.postimg.cc/WbvwTLbN/5913292883186796969.jpg" alt="Image 4">
+    </div>
+</div>
+      
+    </main>
+
+    <!-- Bottom Navigation -->
+    <nav class="fixed bottom-0 left-0 right-0 bg-white shadow-lg flex justify-around items-center h-16 z-40">
+        <button onclick="showPage('home')" class="nav-item active flex flex-col items-center p-2">
+            <i data-feather="home"></i>
+            <span class="text-xs mt-1">Accueil</span>
+        </button>
+        <button onclick="showPage('services')" class="nav-item flex flex-col items-center p-2">
+            <i data-feather="settings"></i>
+            <span class="text-xs mt-1">Services</span>
+        </button>
+       
+        <button onclick="showPage('rendezvous')" class="nav-item flex flex-col items-center p-2">
+            <i data-feather="calendar"></i>
+            <span class="text-xs mt-1">RDV</span>
+        </button>
+      <button onclick="showPage('boutique')" class="nav-item flex flex-col items-center p-2">
+    <i data-feather="shopping-cart"></i>
+    <span class="text-xs mt-1">Boutique</span>
+</button>
+    </nav>
+
+    <script>
+        // Initialize AOS animations
+        AOS.init({
+            duration: 800,
+            easing: 'ease-in-out',
+            once: true
+        });
+
+        // Initialize feather icons
+        feather.replace();
+
+        // Navigation functions
+        function showPage(pageId) {
+            // Hide all pages
+            document.querySelectorAll('.page').forEach(page => {
+                page.classList.remove('active');
+            });
+
+            // Show selected page
+            document.getElementById(pageId).classList.add('active');
+
+            // Update active nav item
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            event.currentTarget.classList.add('active');
+        }
+
+        function navigateToService(serviceId) {
+            showPage('service-' + serviceId);
+            
+            // Update nav to show home as active (since we're not on a main page)
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            document.querySelector('.nav-item[onclick="showPage(\'home\')"]').classList.add('active');
+        }
+
+        function goBack() {
+            showPage('home');
+        }
+
+        // Contact options modal
+        function showContactOptions() {
+            document.getElementById('contactModal').classList.remove('hidden');
+        }
+
+        function hideContactOptions() {
+            document.getElementById('contactModal').classList.add('hidden');
+        }
+
+        // Appointment booking
+        function bookAppointment() {
+            const fullName = document.getElementById('fullName').value;
+            const phoneNumber = document.getElementById('phoneNumber').value;
+            const email = document.getElementById('email').value;
+            const service = document.getElementById('appointmentService').value;
+            const date = document.getElementById('appointmentDate').value;
+            const time = document.getElementById('appointmentTime').value;
+
+            if (!fullName || !phoneNumber || !service || !date || !time) {
+                alert('Veuillez remplir tous les champs obligatoires');
+                return;
+            }
+
+            // Save to localStorage
+            const appointment = {
+                fullName,
+                phoneNumber,
+                email,
+                service,
+                date,
+                time,
+                timestamp: new Date().toISOString()
+            };
+
+            let appointments = JSON.parse(localStorage.getItem('appointments')) || [];
+            appointments.push(appointment);
+            localStorage.setItem('appointments', JSON.stringify(appointments));
+
+            // Show confirmation
+            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            const formattedDate = new Date(date).toLocaleDateString('fr-FR', options);
+            
+            document.getElementById('appointmentDetails').textContent = 
+                `Votre rendez-vous pour ${service} est confirmé pour le ${formattedDate} à ${time}.`;
+            
+            document.getElementById('appointmentModal').classList.remove('hidden');
+
+            // Clear form
+            document.getElementById('fullName').value = '';
+            document.getElementById('phoneNumber').value = '';
+            document.getElementById('email').value = '';
+            document.getElementById('appointmentService').value = '';
+            document.getElementById('appointmentDate').value = '';
+            document.getElementById('appointmentTime').value = '';
+
+            // Schedule notification
+            scheduleNotification(appointment);
+        }
+
+        function hideAppointmentModal() {
+            document.getElementById('appointmentModal').classList.add('hidden');
+            showPage('home');
+        }
+function showAdminModal() {
+    document.getElementById('adminModal').classList.remove('hidden');
+}
+
+function hideAdminModal() {
+    document.getElementById('adminModal').classList.add('hidden');
+    document.getElementById('adminCode').value = '';
+}
+
+function checkAdminCode() {
+    const code = document.getElementById('adminCode').value;
+    if (code === 'ADMIN123') {
+        hideAdminModal();
+        showPage('admin');
+    } else {
+        alert('Code incorrect');
+    }
+}
+        function scheduleNotification(appointment) {
+            if ('Notification' in window) {
+                Notification.requestPermission().then(permission => {
+                    if (permission === 'granted') {
+                        // Calculate notification time (1 hour before appointment)
+                        const appointmentTime = new Date(`${appointment.date}T${appointment.time}`);
+                        const notificationTime = new Date(appointmentTime.getTime() - 3600000);
+                        
+                        const now = new Date();
+                        const delay = notificationTime - now;
+                        
+                        if (delay > 0) {
+                            setTimeout(() => {
+                                new Notification('Rappel de rendez-vous', {
+                                    body: `Vous avez un rendez-vous pour ${appointment.service} dans 1 heure.`,
+                                    icon: 'http://static.photos/automotive/200x200/1'
+                                });
+                            }, delay);
+                        }
+                    }
+                });
+            }
+        }
+
+        // Price estimate
+        document.getElementById('serviceSelect').addEventListener('change', function() {
+            const service = this.value;
+            const estimateDiv = document.getElementById('priceEstimate');
+            const estimateText = document.getElementById('estimateText');
+            
+            if (!service) {
+                estimateDiv.classList.add('hidden');
+                return;
+            }
+            
+            let estimate = '';
+            switch(service) {
+                case 'vidange':
+                    estimate = 'À partir de 25 000 FCFA';
+                    break;
+                case 'entretien':
+                    estimate = 'À partir de 50 000 FCFA (selon le véhicule)';
+                    break;
+                case 'diagnostic':
+                    estimate = 'À partir de 15 000 FCFA';
+                    break;
+                case 'remorquage':
+                    estimate = 'À partir de 30 000 FCFA (selon la distance)';
+                    break;
+                default:
+                    estimate = 'Veuillez demander un devis personnalisé';
+                    break;
+            }
+            
+            estimateText.textContent = estimate;
+            estimateDiv.classList.remove('hidden');
+        });
+
+        // Dark mode toggle
+        document.getElementById('darkModeToggle').addEventListener('click', function() {
+            document.body.classList.toggle('dark-mode');
+            const icon = this.querySelector('i');
+            if (document.body.classList.contains('dark-mode')) {
+                feather.replace();
+                icon.setAttribute('data-feather', 'sun');
+            } else {
+                feather.replace();
+                icon.setAttribute('data-feather', 'moon');
+            }
+            feather.replace();
+        });
+
+        // Service Worker Registration for PWA
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js').then(registration => {
+                    console.log('ServiceWorker registration successful');
+                }).catch(err => {
+                    console.log('ServiceWorker registration failed: ', err);
+                });
+            });
+        }
+    </script>
+      <script>
+        // Initialisation des composants
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialiser AOS (Animate On Scroll)
+    if (typeof AOS !== 'undefined') {
+        AOS.init({
+            duration: 800,
+            easing: 'ease-in-out',
+            once: true
+        });
+    }
+    
+    // Initialiser Feather Icons
+    if (typeof feather !== 'undefined') {
+        feather.replace();
+    }
+    
+    // Initialiser les gestionnaires d'événements
+    initEventHandlers();
+    
+    // Charger les données initiales
+    loadInitialData();
+});
+
+// Gestionnaires d'événements
+function initEventHandlers() {
+    // Gestionnaires pour les formulaires admin
+    document.getElementById('venteForm')?.addEventListener('submit', handleVenteSubmit);
+    document.getElementById('locationForm')?.addEventListener('submit', handleLocationSubmit);
+    document.getElementById('boutiqueForm')?.addEventListener('submit', handleBoutiqueSubmit);
+    
+    // Gestionnaire pour le formulaire de commande
+    document.getElementById('checkout-form')?.addEventListener('submit', handleCheckoutSubmit);
+    
+    // Navigation et autres interactions
+    document.querySelectorAll('.nav-item').forEach(item => {
+        item.addEventListener('click', function() {
+            const targetPage = this.getAttribute('data-target');
+            if (targetPage) showPage(targetPage);
+        });
+    });
+}
+
+// Fonctions de navigation
+function showPage(pageId) {
+    // Cacher toutes les pages
+    document.querySelectorAll('.page').forEach(page => {
+        page.classList.remove('active');
+    });
+    
+    // Afficher la page demandée
+    const targetPage = document.getElementById(pageId);
+    if (targetPage) {
+        targetPage.classList.add('active');
+        
+        // Charger les données spécifiques à la page si nécessaire
+        if (pageId === 'admin-vente') {
+            loadVenteVehicles();
+        } else if (pageId === 'admin-location') {
+            loadLocationVehicles();
+        } else if (pageId === 'admin-boutique') {
+            loadBoutiqueProducts();
+        } else if (pageId === 'boutique') {
+            loadBoutiqueProductsForCustomers();
+        } else if (pageId === 'panier') {
+            updateCartDisplay();
+        }
+    }
+}
+
+// Fonctions pour Firebase - Vente
+async function handleVenteSubmit(e) {
+    e.preventDefault();
+    
+    const vehicleData = {
+        marque: document.getElementById('vente-marque').value,
+        modele: document.getElementById('vente-modele').value,
+        annee: parseInt(document.getElementById('vente-annee').value),
+        kilometrage: parseInt(document.getElementById('vente-km').value),
+        etat: document.getElementById('vente-etat').value,
+        transmission: document.getElementById('vente-transmission').value,
+        carburant: document.getElementById('vente-carburant').value,
+        prix: parseInt(document.getElementById('vente-prix').value),
+        caracteristiques: document.getElementById('vente-caracteristiques').value,
+        details: document.getElementById('vente-details').value,
+        imagePrincipale: document.getElementById('vente-image-principale').value,
+        imagesDetails: document.getElementById('vente-images-details').value.split(',').map(url => url.trim()),
+        dateAjout: new Date()
+    };
+    
+    try {
+        const docRef = await window.firebase.addDoc(
+            window.firebase.collection(window.firebase.db, 'vehicles_vente'), 
+            vehicleData
+        );
+        console.log('Véhicule ajouté avec ID: ', docRef.id);
+        alert('Véhicule ajouté avec succès!');
+        e.target.reset();
+        loadVenteVehicles();
+    } catch (error) {
+        console.error('Erreur lors de l\'ajout du véhicule: ', error);
+        alert('Erreur lors de l\'ajout du véhicule');
+    }
+}
+
+async function loadVenteVehicles() {
+    const listeVente = document.getElementById('liste-vente');
+    if (!listeVente) return;
+    
+    try {
+        const querySnapshot = await window.firebase.getDocs(
+            window.firebase.collection(window.firebase.db, 'vehicles_vente')
+        );
+        
+        listeVente.innerHTML = '';
+        
+        querySnapshot.forEach((doc) => {
+            const vehicle = doc.data();
+            const vehicleElement = createVehicleCard(doc.id, vehicle, 'vente');
+            listeVente.appendChild(vehicleElement);
+        });
+    } catch (error) {
+        console.error('Erreur lors du chargement des véhicules: ', error);
+        listeVente.innerHTML = '<p class="text-red-500">Erreur lors du chargement des véhicules</p>';
+    }
+}
+
+function createVehicleCard(id, vehicle, type) {
+    const card = document.createElement('div');
+    card.className = 'border rounded-lg p-4';
+    card.innerHTML = `
+        <div class="flex justify-between items-start mb-2">
+            <h4 class="font-semibold">${vehicle.marque} ${vehicle.modele} (${vehicle.annee})</h4>
+            <span class="font-bold text-blue-600">${vehicle.prix.toLocaleString()} FCFA</span>
+        </div>
+        <div class="mb-2">
+            <img src="${vehicle.imagePrincipale}" alt="${vehicle.marque} ${vehicle.modele}" class="w-full h-48 object-cover rounded">
+        </div>
+        <div class="text-sm text-gray-600 mb-3">
+            <p>${vehicle.kilometrage.toLocaleString()} km • ${vehicle.carburant} • ${vehicle.transmission}</p>
+            <p>État: ${vehicle.etat}</p>
+        </div>
+        <div class="flex justify-end space-x-2">
+           
+            </button>
+            <button onclick="deleteVehicle('${id}', '${type}')" class="bg-red-500 text-white px-3 py-1 rounded text-sm">
+                Supprimer
+            </button>
+        </div>
+    `;
+    return card;
+}
+
+// Fonctions pour Firebase - Location (similaires à Vente)
+async function handleLocationSubmit(e) {
+    e.preventDefault();
+    // Implémentation similaire à handleVenteSubmit mais pour la collection 'vehicles_location'
+}
+
+async function loadLocationVehicles() {
+    const listeLocation = document.getElementById('liste-location');
+    if (!listeLocation) return;
+    
+    try {
+        const querySnapshot = await window.firebase.getDocs(
+            window.firebase.collection(window.firebase.db, 'vehicles_location')
+        );
+        
+        listeLocation.innerHTML = '';
+        
+        querySnapshot.forEach((doc) => {
+            const vehicle = doc.data();
+            const vehicleElement = createLocationVehicleCard(doc.id, vehicle);
+            listeLocation.appendChild(vehicleElement);
+        });
+    } catch (error) {
+        console.error('Erreur lors du chargement des véhicules: ', error);
+        listeLocation.innerHTML = '<p class="text-red-500">Erreur lors du chargement des véhicules</p>';
+    }
+}
+
+function createLocationVehicleCard(id, vehicle) {
+    const card = document.createElement('div');
+    card.className = 'border rounded-lg p-4';
+    const prixAffichage = vehicle.prixLocation && !isNaN(vehicle.prixLocation) && vehicle.prixLocation > 0 
+        ? `${vehicle.prixLocation.toLocaleString()} FCFA/jour` 
+        : '-- FCFA';
+    
+    card.innerHTML = `
+        <div class="flex justify-between items-start mb-2">
+            <h4 class="font-semibold">${vehicle.marque} ${vehicle.modele} (${vehicle.annee || 'N/A'})</h4>
+            <span class="font-bold text-blue-600">${prixAffichage}</span>
+        </div>
+        <div class="mb-2">
+            <img src="${vehicle.imagePrincipale || 'https://via.placeholder.com/150'}" alt="${vehicle.marque} ${vehicle.modele}" class="w-full h-48 object-cover rounded">
+        </div>
+        <div class="text-sm text-gray-600 mb-3">
+            <p>${vehicle.carburant || 'N/A'} • ${vehicle.transmission || 'N/A'} • ${vehicle.capacite || 0} places</p>
+            
+        </div>
+        <div class="flex justify-end space-x-2">
+           
+            <button onclick="deleteVehicle('${id}', 'location')" class="bg-red-500 text-white px-3 py-1 rounded text-sm">
+                Supprimer
+            </button>
+        </div>
+    `;
+    return card;
+}
+
+// Fonctions pour Firebase - Boutique
+async function handleBoutiqueSubmit(e) {
+    e.preventDefault();
+    
+    const productData = {
+        nom: document.getElementById('produit-nom').value,
+        prix: parseInt(document.getElementById('produit-prix').value),
+        marque: document.getElementById('produit-marque').value,
+        modele: document.getElementById('produit-modele').value,
+        etat: document.getElementById('produit-etat').value,
+        stock: parseInt(document.getElementById('produit-stock').value),
+        caracteristiques: document.getElementById('produit-caracteristiques').value,
+        details: document.getElementById('produit-details').value,
+        imagePrincipale: document.getElementById('produit-image-principale').value,
+        imagesDetails: document.getElementById('produit-images-details').value.split(',').map(url => url.trim()),
+        dateAjout: new Date()
+    };
+    
+    try {
+        const docRef = await window.firebase.addDoc(
+            window.firebase.collection(window.firebase.db, 'products'), 
+            productData
+        );
+        console.log('Produit ajouté avec ID: ', docRef.id);
+        alert('Produit ajouté avec succès!');
+        e.target.reset();
+        loadBoutiqueProducts();
+    } catch (error) {
+        console.error('Erreur lors de l\'ajout du produit: ', error);
+        alert('Erreur lors de l\'ajout du produit');
+    }
+}
+async function addLocationVehicle(event) {
+    event.preventDefault();
+    const form = document.getElementById('add-location-vehicle-form');
+    if (!form) {
+        console.error('Formulaire introuvable');
+        return;
+    }
+
+    const vehicle = {
+        marque: document.getElementById('location-marque').value,
+        modele: document.getElementById('location-modele').value,
+        annee: parseInt(document.getElementById('location-annee').value),
+        prixLocation: parseInt(document.getElementById('location-prixLocation').value),
+        carburant: document.getElementById('location-carburant').value,
+        transmission: document.getElementById('location-transmission').value,
+        capacite: parseInt(document.getElementById('location-capacite').value),
+        disponibilite: document.getElementById('location-disponibilite').value === 'true',
+        imagePrincipale: document.getElementById('location-imagePrincipale').value,
+        imagesDetails: document.getElementById('location-imagesDetails').value.split(',').map(url => url.trim()).filter(url => url),
+        caracteristiques: document.getElementById('location-caracteristiques').value,
+        details: document.getElementById('location-details').value,
+    };
+
+    console.log('Données du véhicule:', vehicle); // Debug
+
+    try {
+        await window.firebase.addDoc(
+            window.firebase.collection(window.firebase.db, 'vehicles_location'),
+            vehicle
+        );
+        alert('Véhicule ajouté avec succès');
+        form.reset();
+        loadLocationVehicles();
+    } catch (error) {
+        console.error('Erreur lors de l\'ajout du véhicule:', error);
+        alert('Erreur lors de l\'ajout du véhicule');
+    }
+}
+
+// Attacher l'événement de soumission
+document.getElementById('add-location-vehicle-form')?.addEventListener('submit', addLocationVehicle);
+        
+async function loadBoutiqueProducts() {
+    const listeBoutique = document.getElementById('liste-boutique');
+    if (!listeBoutique) return;
+    
+    try {
+        const querySnapshot = await window.firebase.getDocs(
+            window.firebase.collection(window.firebase.db, 'products')
+        );
+        console.log('Produits récupérés:', querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })));
+        // ... reste du code
+    } catch (error) {
+        console.error('Erreur:', error);
+    }
+}
+
+async function loadBoutiqueProductsForCustomers() {
+    const produitsContainer = document.getElementById('produits-container');
+    if (!produitsContainer) return;
+    
+    try {
+        const querySnapshot = await window.firebase.getDocs(
+            window.firebase.collection(window.firebase.db, 'products')
+        );
+        
+        produitsContainer.innerHTML = '';
+        
+        querySnapshot.forEach((doc) => {
+            const product = doc.data();
+            const productElement = createCustomerProductCard(doc.id, product);
+            produitsContainer.appendChild(productElement);
+        });
+    } catch (error) {
+        console.error('Erreur lors du chargement des produits: ', error);
+        produitsContainer.innerHTML = '<p class="text-red-500">Erreur lors du chargement des produits</p>';
+    }
+}
+async function loadVenteVehiclesClient() {
+    const listeVenteClient = document.getElementById('liste-vente-client');
+    if (!listeVenteClient) return;
+
+    try {
+        const querySnapshot = await window.firebase.getDocs(
+            window.firebase.collection(window.firebase.db, 'vehicles_vente')
+        );
+
+        listeVenteClient.innerHTML = '';
+
+        querySnapshot.forEach((doc) => {
+            const vehicle = doc.data();
+            const vehicleElement = createVehicleCardClient(doc.id, vehicle);
+            listeVenteClient.appendChild(vehicleElement);
+        });
+    } catch (error) {
+        console.error('Erreur lors du chargement des véhicules:', error);
+        listeVenteClient.innerHTML = '<p class="text-red-500">Erreur lors du chargement des véhicules</p>';
+    }
+}
+
+function createVehicleCardClient(id, vehicle) {
+    const card = document.createElement('div');
+    card.className = 'bg-white rounded-lg shadow-md overflow-hidden cursor-pointer';
+    card.onclick = () => showVehicleDetail(id); // Redirige vers une page de détail (à créer)
+    card.innerHTML = `
+        <img src="${vehicle.imagePrincipale}" alt="${vehicle.marque} ${vehicle.modele}" class="w-full h-40 object-cover">
+        <div class="p-3">
+            <h3 class="font-semibold mb-1">${vehicle.marque} ${vehicle.modele} (${vehicle.annee})</h3>
+            <p class="text-blue-600 font-bold mb-1">${vehicle.prix.toLocaleString()} FCFA</p>
+            <p class="text-sm text-gray-600">${vehicle.kilometrage.toLocaleString()} km • ${vehicle.carburant} • ${vehicle.transmission}</p>
+            <p class="text-sm text-gray-600">État: ${vehicle.etat}</p>
+        </div>
+    `;
+    return card;
+}
+function createProductCard(id, product) {
+    const card = document.createElement('div');
+    card.className = 'border rounded-lg p-4';
+    card.innerHTML = `
+        <div class="flex justify-between items-start mb-2">
+            <h4 class="font-semibold">${product.nom}</h4>
+            <span class="font-bold text-blue-600">${product.prix.toLocaleString()} FCFA</span>
+        </div>
+        <div class="mb-2">
+            <img src="${product.imagePrincipale}" alt="${product.nom}" class="w-full h-48 object-cover rounded">
+        </div>
+        <div class="text-sm text-gray-600 mb-3">
+            <p>${product.marque} ${product.modele}</p>
+            <p>État: ${product.etat} • Stock: ${product.stock}</p>
+        </div>
+        <div class="flex justify-end space-x-2">
+            <button onclick="editProduct('${id}')" class="bg-yellow-500 text-white px-3 py-1 rounded text-sm">
+                Modifier
+            </button>
+            <button onclick="deleteProduct('${id}')" class="bg-red-500 text-white px-3 py-1 rounded text-sm">
+                Supprimer
+            </button>
+        </div>
+    `;
+    return card;
+}
+
+function createCustomerProductCard(id, product) {
+    const card = document.createElement('div');
+    card.className = 'bg-white rounded-lg shadow-md overflow-hidden cursor-pointer';
+    card.innerHTML = `
+        <img src="${product.imagePrincipale}" alt="${product.nom}" class="w-full h-40 object-cover">
+        <div class="p-3">
+            <h3 class="font-semibold mb-1">${product.nom}</h3>
+            <p class="text-blue-600 font-bold mb-2">${product.prix ? product.prix.toLocaleString() + ' FCFA' : '-- FCFA'}</p>
+            <button class="add-to-cart-btn w-full bg-blue-600 text-white py-2 rounded-lg transition-colors duration-300" data-id="${id}">
+                Ajouter au panier
+            </button>
+        </div>
+    `;
+    card.querySelector('.add-to-cart-btn').addEventListener('click', function(e) {
+        e.stopPropagation(); // Empêche l'ouverture des détails
+        const button = e.target;
+        button.classList.add('bg-green-600');
+        setTimeout(() => {
+            button.classList.remove('bg-green-600');
+        }, 1500);
+        // Ajouter au panier
+        addToCart(id, product);
+    });
+    card.addEventListener('click', (e) => {
+        if (!e.target.classList.contains('add-to-cart-btn')) {
+            showProductDetail(id);
+        }
+    });
+    return card;
+}
+        function addToCart(id, product) {
+    // Récupérer le panier depuis localStorage ou initialiser un tableau vide
+    let cart = JSON.parse(localStorage.getItem('cart')) || [];
+    
+    // Créer l'objet produit à ajouter
+    const cartItem = {
+        id: id,
+        nom: product.nom,
+        prix: product.prix || 0,
+        imagePrincipale: product.imagePrincipale,
+        quantite: 1
+    };
+    
+    // Vérifier si le produit existe déjà dans le panier
+    const existingItem = cart.find(item => item.id === id);
+    if (existingItem) {
+        existingItem.quantite += 1; // Augmenter la quantité
+    } else {
+        cart.push(cartItem); // Ajouter le nouveau produit
+    }
+    
+    // Sauvegarder le panier dans localStorage
+    localStorage.setItem('cart', JSON.stringify(cart));
+    
+    // Afficher la notification
+    const notification = document.getElementById('cart-notification');
+    if (notification) {
+        notification.classList.remove('hidden');
+        setTimeout(() => {
+            notification.classList.add('hidden');
+        }, 3000); // Masquer après 3 secondes
+    }
+}
+        
+        async function showVehicleDetail(vehicleId) {
+    showPage('vehicle-detail');
+    
+    try {
+        const docRef = window.firebase.doc(window.firebase.db, 'vehicles_vente', vehicleId);
+        const docSnap = await window.firebase.getDoc(docRef);
+        
+        if (docSnap.exists()) {
+            const vehicle = docSnap.data();
+            
+            // Images carousel
+            const imagesContainer = document.getElementById('vehicle-images');
+            if (imagesContainer) {
+                imagesContainer.innerHTML = '';
+                [vehicle.imagePrincipale, ...(vehicle.imagesDetails || [])].forEach(url => {
+                    if (url) {
+                        const img = document.createElement('img');
+                        img.src = url;
+                        img.className = 'w-full h-64 object-cover snap-center flex-shrink-0';
+                        imagesContainer.appendChild(img);
+                    }
+                });
+                let scrollAmount = 0;
+                const scrollInterval = setInterval(() => {
+                    if (imagesContainer && document.getElementById('vehicle-detail').classList.contains('active')) {
+                        scrollAmount += imagesContainer.offsetWidth;
+                        if (scrollAmount >= imagesContainer.scrollWidth) {
+                            scrollAmount = 0;
+                        }
+                        imagesContainer.scrollTo({ left: scrollAmount, behavior: 'smooth' });
+                    } else {
+                        clearInterval(scrollInterval);
+                    }
+                }, 3000);
+            }
+            
+            // Vehicle info
+            document.getElementById('vehicle-name').textContent = `${vehicle.marque} ${vehicle.modele} (${vehicle.annee})`;
+            document.getElementById('vehicle-price').textContent = `${vehicle.prix.toLocaleString()} FCFA`;
+            document.getElementById('vehicle-info').textContent = `${vehicle.kilometrage.toLocaleString()} km • ${vehicle.carburant} • ${vehicle.transmission} • État: ${vehicle.etat}`;
+            document.getElementById('vehicle-description').innerHTML = `
+                <p class="font-semibold mb-2">Caractéristiques:</p>
+                <p>${vehicle.caracteristiques || 'Non spécifié'}</p>
+                <p class="font-semibold mt-4 mb-2">Détails:</p>
+                <p>${vehicle.details || 'Non spécifié'}</p>
+            `;
+        } else {
+            document.getElementById('vehicle-name').textContent = 'Véhicule non trouvé';
+        }
+    } catch (error) {
+        console.error('Erreur chargement véhicule:', error);
+        document.getElementById('vehicle-name').textContent = 'Erreur de chargement';
+    }
+}
+
+window.showVehicleDetail = showVehicleDetail;
+        
+        async function loadLocationVehiclesClient() {
+       const listeLocationClient = document.getElementById('liste-location-client');
+       if (!listeLocationClient) return;
+
+       try {
+           const querySnapshot = await window.firebase.getDocs(
+               window.firebase.collection(window.firebase.db, 'vehicles_location')
+           );
+
+           listeLocationClient.innerHTML = '';
+
+           querySnapshot.forEach((doc) => {
+               const vehicle = doc.data();
+               const vehicleElement = createLocationVehicleCardClient(doc.id, vehicle);
+               listeLocationClient.appendChild(vehicleElement);
+           });
+       } catch (error) {
+           console.error('Erreur lors du chargement des véhicules:', error);
+           listeLocationClient.innerHTML = '<p class="text-red-500">Erreur lors du chargement des véhicules</p>';
+       }
+   }
+
+   function createLocationVehicleCardClient(id, vehicle) {
+       const card = document.createElement('div');
+       card.className = 'bg-white rounded-lg shadow-md overflow-hidden cursor-pointer';
+       card.onclick = () => showLocationVehicleDetail(id); // Redirige vers une page de détail (à créer)
+       card.innerHTML = `
+           <img src="${vehicle.imagePrincipale}" alt="${vehicle.marque} ${vehicle.modele}" class="w-full h-40 object-cover">
+           <div class="p-3">
+               <h3 class="font-semibold mb-1">${vehicle.marque} ${vehicle.modele} (${vehicle.annee})</h3>
+               <p class="text-blue-600 font-bold mb-1">${vehicle.prixLocation.toLocaleString()} FCFA/jour</p>
+               <p class="text-sm text-gray-600">${vehicle.carburant} • ${vehicle.transmission} • ${vehicle.capacite} places</p>
+           </div>
+       `;
+       return card;
+   }
+async function showProductDetail(productId) {
+    showPage('product-detail');
+    
+    try {
+        const docRef = window.firebase.doc(window.firebase.db, 'products', productId);
+        const docSnap = await window.firebase.getDoc(docRef);
+        
+        if (docSnap.exists()) {
+            const product = docSnap.data();
+            console.log('Product data:', product); // Debug: Log product data
+            
+            // Images carousel
+            const imagesContainer = document.getElementById('product-images');
+            if (imagesContainer) {
+                imagesContainer.innerHTML = '';
+                [product.imagePrincipale, ...(product.imagesDetails || [])].forEach(url => {
+                    if (url) {
+                        const img = document.createElement('img');
+                        img.src = url;
+                        img.className = 'w-full h-64 object-cover snap-center flex-shrink-0';
+                        imagesContainer.appendChild(img);
+                    }
+                });
+                
+                // Auto-scroll
+                let scrollAmount = 0;
+                const scrollInterval = setInterval(() => {
+                    if (imagesContainer && document.getElementById('product-detail').classList.contains('active')) {
+                        scrollAmount += imagesContainer.offsetWidth;
+                        if (scrollAmount >= imagesContainer.scrollWidth) {
+                            scrollAmount = 0;
+                        }
+                        imagesContainer.scrollTo({ left: scrollAmount, behavior: 'smooth' });
+                    } else {
+                        clearInterval(scrollInterval);
+                    }
+                }, 3000);
+            }
+            
+            // Product info
+            document.getElementById('product-name').textContent = product.nom || 'Nom indisponible';
+            document.getElementById('product-brand').textContent = product.marque || 'Marque indisponible';
+            document.getElementById('product-brand').classList.add('text-sm');
+            document.getElementById('product-price').textContent = product.prix ? `${product.prix.toLocaleString()} FCFA` : 'Prix indisponible';
+            document.getElementById('product-stock').textContent = product.stock !== undefined ? `Stock: ${product.stock} articles` : 'Stock indisponible';
+            document.getElementById('product-description').innerHTML = `
+                <p class="font-semibold mb-2">Caractéristiques:</p>
+                <p>${product.caracteristiques || 'Non spécifié'}</p>
+                <p class="font-semibold mt-4 mb-2">Détails:</p>
+                <p>${product.details || 'Non spécifié'}</p>
+            `;
+            
+            // Add to cart button
+            const addBtn = document.getElementById('add-to-cart-btn');
+            if (addBtn) {
+                addBtn.onclick = () => addToCart(productId, product.nom, product.prix, product.imagePrincipale);
+            }
+            
+            // Load related products
+            await loadRelatedProducts(productId);
+        } else {
+            console.error('Product not found for ID:', productId);
+            document.getElementById('product-name').textContent = 'Produit non trouvé';
+        }
+    } catch (error) {
+        console.error('Error loading product:', error);
+        document.getElementById('product-name').textContent = 'Erreur de chargement';
+    }
+}
+        // Charger produits aléatoires
+async function loadRelatedProducts(currentId) {
+    const relatedContainer = document.getElementById('related-products');
+    relatedContainer.innerHTML = '';
+    
+    try {
+        const querySnapshot = await window.firebase.getDocs(
+            window.firebase.collection(window.firebase.db, 'products')
+        );
+        
+        let products = [];
+        querySnapshot.forEach(doc => {
+            if (doc.id !== currentId) {
+                products.push({ id: doc.id, ...doc.data() });
+            }
+        });
+        
+        // Shuffle et prendre 8
+        products = products.sort(() => 0.5 - Math.random()).slice(0, 8);
+        
+        products.forEach(product => {
+            const card = createCustomerProductCard(product.id, product);
+            relatedContainer.appendChild(card);
+        });
+    } catch (error) {
+        console.error('Erreur chargement produits liés:', error);
+    }
+}
+        // Ajoutez au CSS pour le carousel
+const style = document.createElement('style');
+style.textContent = `
+    #product-images {
+        scroll-snap-type: x mandatory;
+        -webkit-overflow-scrolling: touch;
+    }
+`;
+document.head.appendChild(style);
+
+// Exposer la fonction
+window.showProductDetail = showProductDetail;
+// Gestion du panier
+let cart = JSON.parse(localStorage.getItem('gmbn_cart')) || [];
+
+function addToCart(productId, productName, productPrice, productImage) {
+    const existingItem = cart.find(item => item.id === productId);
+    
+    if (existingItem) {
+        existingItem.quantity += 1;
+    } else {
+        cart.push({
+            id: productId,
+            name: productName,
+            price: productPrice,
+            image: productImage,
+            quantity: 1
+        });
+    }
+    
+    updateCartStorage();
+    updateCartCount();
+    showNotification(`${productName} ajouté au panier`);
+}
+
+function updateCartCount() {
+    const cartCount = document.getElementById('cart-count');
+    if (cartCount) {
+        const totalItems = cart.reduce((total, item) => total + item.quantity, 0);
+        cartCount.textContent = totalItems;
+    }
+}
+
+        
+function updateCartDisplay() {
+    const cartItems = document.getElementById('cart-items');
+    const emptyCartMessage = document.getElementById('empty-cart-message');
+    const cartTotal = document.getElementById('cart-total');
+    
+    if (cart.length === 0) {
+        if (emptyCartMessage) emptyCartMessage.style.display = 'block';
+        if (cartItems) cartItems.innerHTML = '';
+        if (cartTotal) cartTotal.textContent = '0 FCFA';
+        return;
+    }
+    
+    if (emptyCartMessage) emptyCartMessage.style.display = 'none';
+    
+    let total = 0;
+    let itemsHTML = '';
+    
+    cart.forEach((item, index) => {
+        const itemTotal = item.price * item.quantity;
+        total += itemTotal;
+        
+        itemsHTML += `
+            <div class="cart-item">
+                <div class="flex items-center">
+                    <img src="${item.image}" alt="${item.name}" class="w-12 h-12 object-cover rounded mr-3">
+                    <div>
+                        <p class="font-semibold">${item.name}</p>
+                        <p class="text-blue-600">${item.price.toLocaleString()} FCFA</p>
+                    </div>
+                </div>
+                <div class="quantity-controls">
+                    <button onclick="updateQuantity(${index}, ${item.quantity - 1})" class="bg-gray-200 rounded-full w-6 h-6">-</button>
+                    <span class="mx-2">${item.quantity}</span>
+                    <button onclick="updateQuantity(${index}, ${item.quantity + 1})" class="bg-gray-200 rounded-full w-6 h-6">+</button>
+                </div>
+            </div>
+        `;
+    });
+    
+    if (cartItems) cartItems.innerHTML = itemsHTML;
+    if (cartTotal) cartTotal.textContent = `${total.toLocaleString()} FCFA`;
+}
+document.getElementById('add-to-cart-btn')?.addEventListener('click', function() {
+    const button = document.getElementById('add-to-cart-btn');
+    button.classList.add('bg-green-600');
+    setTimeout(() => {
+        button.classList.remove('bg-green-600');
+    }, 1500);
+    // Récupérer les données du produit depuis la page de détails
+    const id = button.getAttribute('data-id'); // Ajoutez data-id dans le HTML si nécessaire
+    const product = {
+        nom: document.getElementById('vehicle-name').textContent,
+        prix: parseFloat(document.getElementById('vehicle-price').textContent.replace(' FCFA', '').replace(',', '')) || 0,
+        imagePrincipale: document.querySelector('#vehicle-images img')?.src || ''
+    };
+    addToCart(id, product);
+});
+        async function showLocationVehicleDetail(vehicleId) {
+       showPage('location-vehicle-detail');
+       
+       try {
+           const docRef = window.firebase.doc(window.firebase.db, 'vehicles_location', vehicleId);
+           const docSnap = await window.firebase.getDoc(docRef);
+           
+           if (docSnap.exists()) {
+               const vehicle = docSnap.data();
+               
+               // Images carousel
+               const imagesContainer = document.getElementById('location-vehicle-images');
+               if (imagesContainer) {
+                   imagesContainer.innerHTML = '';
+                   [vehicle.imagePrincipale, ...(vehicle.imagesDetails || [])].forEach(url => {
+                       if (url) {
+                           const img = document.createElement('img');
+                           img.src = url;
+                           img.className = 'w-full h-64 object-cover snap-center flex-shrink-0';
+                           imagesContainer.appendChild(img);
+                       }
+                   });
+                   let scrollAmount = 0;
+                   const scrollInterval = setInterval(() => {
+                       if (imagesContainer && document.getElementById('location-vehicle-detail').classList.contains('active')) {
+                           scrollAmount += imagesContainer.offsetWidth;
+                           if (scrollAmount >= imagesContainer.scrollWidth) {
+                               scrollAmount = 0;
+                           }
+                           imagesContainer.scrollTo({ left: scrollAmount, behavior: 'smooth' });
+                       } else {
+                           clearInterval(scrollInterval);
+                       }
+                   }, 3000);
+               }
+               
+               // Vehicle info
+               document.getElementById('location-vehicle-name').textContent = `${vehicle.marque} ${vehicle.modele} (${vehicle.annee})`;
+               document.getElementById('location-vehicle-price').textContent = `${vehicle.prixLocation.toLocaleString()} FCFA/jour`;
+               document.getElementById('location-vehicle-info').textContent = `${vehicle.carburant} • ${vehicle.transmission} • ${vehicle.capacite} places • Disponibilité: ${vehicle.disponibilite ? 'Disponible' : 'Non disponible'}`;
+               document.getElementById('location-vehicle-description').innerHTML = `
+                   <p class="font-semibold mb-2">Caractéristiques:</p>
+                   <p>${vehicle.caracteristiques || 'Non spécifié'}</p>
+                   <p class="font-semibold mt-4 mb-2">Détails:</p>
+                   <p>${vehicle.details || 'Non spécifié'}</p>
+               `;
+           } else {
+               document.getElementById('location-vehicle-name').textContent = 'Véhicule non trouvé';
+           }
+       } catch (error) {
+           console.error('Erreur chargement véhicule:', error);
+           document.getElementById('location-vehicle-name').textContent = 'Erreur de chargement';
+       }
+   }
+
+   window.showLocationVehicleDetail = showLocationVehicleDetail;
+        
+function updateQuantity(index, newQuantity) {
+    if (newQuantity < 1) {
+        cart.splice(index, 1);
+    } else {
+        cart[index].quantity = newQuantity;
+    }
+    
+    updateCartStorage();
+    updateCartCount();
+    updateCartDisplay();
+}
+
+function updateCartStorage() {
+    localStorage.setItem('gmbn_cart', JSON.stringify(cart));
+}
+
+// Commande et checkout
+function showCheckoutForm() {
+    if (cart.length === 0) {
+        alert('Votre panier est vide');
+        return;
+    }
+    
+    const checkoutTotal = document.getElementById('checkout-total');
+    if (checkoutTotal) {
+        const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+        const deliveryFee = total >= 10000 ? 0 : 500;
+        checkoutTotal.textContent = `${(total + deliveryFee).toLocaleString()} FCFA`;
+    }
+    
+    showPage('checkout');
+}
+
+async function handleCheckoutSubmit(e) {
+    e.preventDefault();
+    
+    const orderData = {
+        prenom: document.getElementById('checkout-prenom').value,
+        nom: document.getElementById('checkout-nom').value,
+        telephone: document.getElementById('checkout-phone').value,
+        adresse: document.getElementById('checkout-adresse').value,
+        produits: cart,
+        total: cart.reduce((sum, item) => sum + (item.price * item.quantity), 0),
+        fraisLivraison: cart.reduce((sum, item) => sum + (item.price * item.quantity), 0) >= 10000 ? 0 : 500,
+        statut: 'en attente',
+        date: new Date()
+    };
+    
+    try {
+        const docRef = await window.firebase.addDoc(
+            window.firebase.collection(window.firebase.db, 'orders'), 
+            orderData
+        );
+        
+        console.log('Commande passée avec ID: ', docRef.id);
+        
+        // Vider le panier
+        cart = [];
+        updateCartStorage();
+        updateCartCount();
+        
+        // Afficher la confirmation
+        showPage('confirmation');
+    } catch (error) {
+        console.error('Erreur lors de la commande: ', error);
+        alert('Erreur lors de la commande. Veuillez réessayer.');
+    }
+}
+function addToCart() {
+        const notification = document.getElementById('cart-notification');
+        if (notification) {
+            notification.classList.remove('hidden');
+            setTimeout(() => {
+                notification.classList.add('hidden');
+            }, 3000); // Masquer après 3 secondes
+        }
+        // Ajoutez ici la logique pour ajouter au panier si nécessaire
+    }
+// Fonctions utilitaires
+function showNotification(message) {
+    // Créer une notification toast
+    const toast = document.createElement('div');
+    toast.className = 'fixed bottom-4 right-4 bg-green-500 text-white px-4 py-2 rounded-lg shadow-lg';
+    toast.textContent = message;
+    document.body.appendChild(toast);
+    
+    // Supprimer après 3 secondes
+    setTimeout(() => {
+        document.body.removeChild(toast);
+    }, 3000);
+}
+
+function loadInitialData() {
+    // Charger le compte du panier
+    updateCartCount();
+    
+    // Charger les données si on est sur une page qui en a besoin
+    if (document.getElementById('admin-vente')?.classList.contains('active')) {
+        loadVenteVehicles();
+    } else if (document.getElementById('admin-boutique')?.classList.contains('active')) {
+        loadBoutiqueProducts();
+    } else if (document.getElementById('boutique')?.classList.contains('active')) {
+        loadBoutiqueProductsForCustomers();
+    }
+}
+
+// Fonctions de gestion (suppression, modification)
+async function deleteVehicle(id, type) {
+    if (!confirm('Êtes-vous sûr de vouloir supprimer ce véhicule ?')) return;
+    
+    try {
+        await window.firebase.deleteDoc(
+            window.firebase.doc(window.firebase.db, `vehicles_${type}`, id)
+        );
+        alert('Véhicule supprimé avec succès');
+        if (type === 'vente') {
+            loadVenteVehicles();
+        } else {
+            loadLocationVehicles();
+        }
+    } catch (error) {
+        console.error('Erreur lors de la suppression: ', error);
+        alert('Erreur lors de la suppression du véhicule');
+    }
+}
+
+async function deleteProduct(id) {
+    if (!confirm('Êtes-vous sûr de vouloir supprimer ce produit ?')) return;
+    
+    try {
+        await window.firebase.deleteDoc(
+            window.firebase.doc(window.firebase.db, 'products', id)
+        );
+        alert('Produit supprimé avec succès');
+        loadBoutiqueProducts();
+    } catch (error) {
+        console.error('Erreur lors de la suppression: ', error);
+        alert('Erreur lors de la suppression du produit');
+    }
+}
+
+// Exposer les fonctions globales
+window.showPage = showPage;
+window.addToCart = addToCart;
+window.updateQuantity = updateQuantity;
+window.showCheckoutForm = showCheckoutForm;
+window.deleteVehicle = deleteVehicle;
+window.deleteProduct = deleteProduct;
+        
+        async function loadServicesImages() {
+    const services = [
+        'tolerie', 'mecanique', 'peinture', 'froid', 'vidange',
+        'entretien', 'remorquage', 'diagnostic', 'location', 'vente'
+    ];
+
+    for (const service of services) {
+        const docRef = window.firebase.doc(window.firebase.db, 'services_images', service);
+        const docSnap = await window.firebase.getDoc(docRef);
+        const imageUrl = docSnap.exists() ? docSnap.data().imageUrl : `http://static.photos/automotive/640x360/${services.indexOf(service) + 1}`;
+        const input = document.getElementById(`service-image-${service}`);
+        const preview = document.getElementById(`preview-${service}`);
+        if (input && preview) {
+            input.value = imageUrl;
+            preview.src = imageUrl;
+        }
+    }
+}
+
+async function updateServiceImage(serviceId) {
+    const imageUrl = document.getElementById(`service-image-${serviceId}`).value;
+    if (!imageUrl) {
+        alert('Veuillez entrer une URL valide');
+        return;
+    }
+
+    try {
+        await window.firebase.setDoc(
+            window.firebase.doc(window.firebase.db, 'services_images', serviceId),
+            { imageUrl }
+        );
+        document.getElementById(`preview-${serviceId}`).src = imageUrl;
+        alert('Image du service mise à jour avec succès');
+        updateServicePageImages();
+    } catch (error) {
+        console.error('Erreur lors de la mise à jour de l\'image:', error);
+        alert('Erreur lors de la mise à jour de l\'image');
+    }
+}
+
+async function updateServicePageImages() {
+    const servicePages = document.querySelectorAll('.page[id^="service-"] .service-card');
+    for (const page of servicePages) {
+        const serviceId = page.parentElement.id.replace('service-', '');
+        const docRef = window.firebase.doc(window.firebase.db, 'services_images', serviceId);
+        const docSnap = await window.firebase.getDoc(docRef);
+        if (docSnap.exists()) {
+            page.style.backgroundImage = `url('${docSnap.data().imageUrl}')`;
+        }
+    }
+}
+
+// Charger les images au chargement de la page admin-autres
+document.addEventListener('DOMContentLoaded', () => {
+    if (document.getElementById('admin-autres')?.classList.contains('active')) {
+        loadServicesImages();
+    }
+    updateServicePageImages();
+});
+
+// Mettre à jour showPage pour charger les images des services
+const originalShowPage = window.showPage;
+window.showPage = function(pageId) {
+    originalShowPage(pageId);
+    if (pageId === 'admin-autres') {
+        loadServicesImages();
+    } else if (pageId.startsWith('service-')) {
+        updateServicePageImages();
+    }
+};
+    </script>
+    <script>
+     async function loadCommandes() {
+  const listeCommandes = document.getElementById('liste-commandes');
+  const listeCommandesLivrees = document.getElementById('liste-commandes-livrees');
+  if (!listeCommandes || !listeCommandesLivrees) return;
+
+  try {
+    const querySnapshot = await window.firebase.getDocs(
+      window.firebase.collection(window.firebase.db, 'orders')
+    );
+
+    listeCommandes.innerHTML = '';
+    listeCommandesLivrees.innerHTML = '';
+
+    querySnapshot.forEach((doc) => {
+      const order = doc.data();
+      const orderElement = createOrderCard(doc.id, order);
+      if (order.statut === 'livré') {
+        listeCommandesLivrees.appendChild(orderElement);
+      } else {
+        listeCommandes.appendChild(orderElement);
+      }
+    });
+  } catch (error) {
+    console.error('Erreur lors du chargement des commandes: ', error);
+    listeCommandes.innerHTML = '<p class="text-red-500">Erreur lors du chargement des commandes</p>';
+    listeCommandesLivrees.innerHTML = '<p class="text-red-500">Erreur lors du chargement des commandes</p>';
+  }
+}
+
+function createOrderCard(id, order) {
+  const card = document.createElement('div');
+  card.className = 'border rounded-lg p-4';
+  card.innerHTML = `
+    <div class="flex justify-between items-start mb-2">
+      <h4 class="font-semibold">${order.prenom} ${order.nom}</h4>
+      <span class="font-bold text-blue-600">${(order.total + order.fraisLivraison).toLocaleString()} FCFA</span>
+    </div>
+    <div class="text-sm text-gray-600 mb-3">
+      <p>Téléphone: ${order.telephone}</p>
+      <p>Adresse: ${order.adresse}</p>
+      <p>Statut: ${order.statut}</p>
+      <p>Date: ${new Date(order.date.seconds * 1000).toLocaleDateString('fr-FR')}</p>
+      <p>Produits: ${order.produits.map(p => `${p.name} (x${p.quantity})`).join(', ')}</p>
+    </div>
+    <div class="flex justify-end space-x-2">
+      <button onclick="toggleOrderStatus('${id}', '${order.statut}')" class="bg-yellow-500 text-white px-3 py-1 rounded text-sm">
+        ${order.statut === 'livré' ? 'Marquer comme en attente' : 'Marquer comme livré'}
+      </button>
+      <button onclick="deleteOrder('${id}')" class="bg-red-500 text-white px-3 py-1 rounded text-sm">
+        Supprimer
+      </button>
+    </div>
+  `;
+  return card;
+}
+
+async function toggleOrderStatus(id, currentStatus) {
+  const newStatus = currentStatus === 'livré' ? 'en attente' : 'livré';
+  try {
+    await window.firebase.updateDoc(
+      window.firebase.doc(window.firebase.db, 'orders', id),
+      { statut: newStatus }
+    );
+    alert(`Commande marquée comme ${newStatus}`);
+    loadCommandes();
+  } catch (error) {
+    console.error('Erreur lors de la mise à jour du statut: ', error);
+    alert('Erreur lors de la mise à jour du statut');
+  }
+}
+
+// Exposer la fonction globalement
+window.toggleOrderStatus = toggleOrderStatus;
+
+async function deleteOrder(id) {
+  if (!confirm('Êtes-vous sûr de vouloir supprimer cette commande ?')) return;
+
+  try {
+    await window.firebase.deleteDoc(
+      window.firebase.doc(window.firebase.db, 'orders', id)
+    );
+    alert('Commande supprimée avec succès');
+    loadCommandes();
+  } catch (error) {
+    console.error('Erreur lors de la suppression: ', error);
+    alert('Erreur lors de la suppression de la commande');
+  }
+}
+
+// Mettre à jour showPage pour inclure le chargement des commandes
+function showPage(pageId) {
+       document.querySelectorAll('.page').forEach(page => {
+           page.classList.remove('active');
+       });
+       const targetPage = document.getElementById(pageId);
+       if (targetPage) {
+           targetPage.classList.add('active');
+           if (pageId === 'admin-vente') {
+               loadVenteVehicles();
+           } else if (pageId === 'admin-location') {
+               loadLocationVehicles();
+           } else if (pageId === 'admin-boutique') {
+               loadBoutiqueProducts();
+           } else if (pageId === 'boutique') {
+               loadBoutiqueProductsForCustomers();
+           } else if (pageId === 'panier') {
+               updateCartDisplay();
+           } else if (pageId === 'admin-commandes') {
+               loadCommandes();
+           } else if (pageId === 'service-vente') {
+               loadVenteVehiclesClient();
+           } else if (pageId === 'service-location') {
+               loadLocationVehiclesClient();
+           }
+       }
+   }
+
+// Exposer la fonction globalement
+window.deleteOrder = deleteOrder;
+      
+      
+    </script>
+
+</body>
+</html>
