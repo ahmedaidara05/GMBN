@@ -859,7 +859,28 @@
       .search-results-page, .category-page {
     padding: 20px;
 }
+.admin-search {
+    position: relative;
+    margin-bottom: 20px;
+    max-width: 300px;
+}
 
+.admin-search input {
+    width: 100%;
+    padding: 10px 15px;
+    padding-right: 40px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 16px;
+}
+
+.admin-search .fa-search {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #888;
+}
 .no-products {
     text-align: center;
     padding: 40px;
@@ -1101,7 +1122,10 @@
                     <div class="admin-tab" onclick="showAdminTab('completed-orders')">Commandes effectuées</div>
                     <div class="admin-tab" onclick="showAdminTab('rejected-orders')">Commandes rejetées</div>
                 </div>
-                
+                <div class="admin-search">
+    <input type="text" id="admin-search-input" placeholder="Rechercher..." onkeyup="adminSearch()">
+    <i class="fas fa-search"></i>
+</div>
                 <div class="admin-content">
                     <!-- Gestion des produits -->
                     <div id="admin-products" class="admin-tab-content">
@@ -1710,7 +1734,43 @@ function generateUniqueOrderNumber(existingNumbers) {
             updateCartStorage();
             loadCart();
         }
+function adminSearch() {
+    const searchTerm = document.getElementById('admin-search-input').value.toLowerCase();
+    
+    if (currentAdminTab === 'products') {
+        // Recherche dans les produits
+        filterAdminProducts(searchTerm);
+    } else {
+        // Recherche dans les commandes
+        filterAdminOrders(searchTerm);
+    }
+}
 
+function filterAdminProducts(searchTerm) {
+    const productItems = document.querySelectorAll('#admin-products-list .product-item');
+    
+    productItems.forEach(item => {
+        const productText = item.textContent.toLowerCase();
+        if (productText.includes(searchTerm)) {
+            item.style.display = 'flex';
+        } else {
+            item.style.display = 'none';
+        }
+    });
+}
+
+function filterAdminOrders(searchTerm) {
+    const orderItems = document.querySelectorAll('.order-item');
+    
+    orderItems.forEach(item => {
+        const orderText = item.textContent.toLowerCase();
+        if (orderText.includes(searchTerm)) {
+            item.style.display = 'block';
+        } else {
+            item.style.display = 'none';
+        }
+    });
+} 
         // Fonctions de commande
         function showOrderModal() {
             if (cart.length === 0) {
@@ -2035,6 +2095,11 @@ function closeOrderConfirmation() {
             const order = { id: doc.id, ...doc.data() };
             const orderItem = document.createElement('div');
             orderItem.className = 'order-item';
+          
+           // Formater la date et l'heure 
+            const orderDate = new Date(order.date);
+            const formattedDate = orderDate.toLocaleDateString();
+            const formattedTime = orderDate.toLocaleTimeString();
             
             // Utiliser orderNumber au lieu de l'ID Firestore
             const displayId = order.orderNumber ? `Commande #${order.orderNumber}` : `Commande #${order.id.substring(0, 8)}`;
@@ -2055,7 +2120,7 @@ function closeOrderConfirmation() {
                 <div class="order-header">
                     <div>
                         <strong>${displayId}</strong>
-                        <div>${new Date(order.date).toLocaleDateString()}</div>
+                        <div>${formattedDate} à ${formattedTime}</div> <!-- Ajout de l'heure --> 
                     </div>
                     <div>
                         <strong>${parseInt(order.total).toLocaleString()} FCFA</strong>
