@@ -1711,7 +1711,68 @@ function createCustomerProductCard(id, product) {
         }, 3000); // Masquer après 3 secondes
     }
 }
+        // Fonction pour ouvrir une image en plein écran
+function openImage(src) {
+    const modal = document.getElementById('imageModal');
+    const modalImage = document.getElementById('modalImage');
+    
+    modalImage.src = src;
+    modal.classList.remove('hidden');
+    document.body.style.overflow = 'hidden'; // Désactive le défilement
+}
+
+// Fonction pour fermer la modale
+function closeModal() {
+    const modal = document.getElementById('imageModal');
+    modal.classList.add('hidden');
+    document.body.style.overflow = ''; // Réactive le défilement
+}
+
+// Fermer la modale avec la touche Échap
+document.addEventListener('keydown', function(event) {
+    if (event.key === 'Escape') {
+        closeModal();
+    }
+});
+
+// Rendre toutes les images des services cliquables
+// Rendre toutes les images cliquables SAUF celles des services
+document.addEventListener('DOMContentLoaded', function() {
+    // Sélectionner toutes les images du site
+    const allImages = document.querySelectorAll('img');
+    
+    allImages.forEach(img => {
+        // Vérifier si l'image est dans la section services de la page d'accueil
+        const isServiceImage = img.closest('#home .grid.grid-cols-2.gap-4');
         
+        // Si ce n'est pas une image de service, la rendre cliquable
+        if (!isServiceImage) {
+            img.classList.add('clickable-image');
+            img.onclick = function() { 
+                openImage(img.src); 
+            };
+        }
+    });
+    
+    // Pour les divs avec background-image (comme les cartes de service)
+    const divsWithBackground = document.querySelectorAll('[style*="background-image"]');
+    
+    divsWithBackground.forEach(div => {
+        // Vérifier si c'est une carte de service sur la page d'accueil
+        const isServiceCard = div.closest('#home .grid.grid-cols-2.gap-4');
+        
+        // Si ce n'est pas une carte de service, la rendre cliquable
+        if (!isServiceCard) {
+            const bgImage = div.style.backgroundImage;
+            const url = bgImage.replace('url("', '').replace('")', '');
+            
+            div.classList.add('clickable-image');
+            div.onclick = function() { 
+                openImage(url); 
+            };
+        }
+    });
+});
         async function showVehicleDetail(vehicleId) {
     showPage('vehicle-detail');
     
@@ -2404,9 +2465,15 @@ window.deleteOrder = deleteOrder;
       
     </script>
 <!-- Modal pour visionneuse d'image -->
+<!-- Modal pour visionneuse d'image -->
 <div id="imageModal" class="fixed inset-0 bg-black bg-opacity-90 z-50 hidden flex items-center justify-center">
-    <img id="modalImage" src="" class="max-w-full max-h-full object-contain">
-    <button onclick="closeModal()" class="absolute top-4 right-4 text-white text-3xl bg-black bg-opacity-50 rounded-full w-10 h-10 flex items-center justify-center">×</button>
+    <div class="relative">
+<button onclick="closeModal()" 
+        class="absolute -top-10 right-0 text-white text-3xl hover:text-red-500 transition">
+    ×
+</button>
+        <img id="modalImage" src="" class="max-w-full max-h-screen object-contain">
+    </div>
 </div>
 </body>
 </html>
