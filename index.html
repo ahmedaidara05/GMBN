@@ -195,9 +195,7 @@ header {
                 <i data-feather="phone" class="mr-1 w-4 h-4"></i>
                 <span class="text-sm"></span>
             </button>
-            <button id="darkModeToggle" class="p-2 rounded-full hover:bg-blue-700">
-                <i data-feather="moon"></i>
-            </button>
+            
         </div>
     </div>
 </header>
@@ -407,60 +405,18 @@ header {
         </div>
 
         <!-- Rendez-vous Page -->
-        <div id="rendezvous" class="page">
-            <h2 class="text-2xl font-bold mb-6">Prendre rendez-vous</h2>
-            <div class="bg-white rounded-lg shadow-md p-6">
-                <div class="mb-4">
-                    <label class="block text-gray-700 mb-2">Nom complet</label>
-                    <input type="text" id="fullName" class="w-full p-2 border rounded">
-                </div>
-                <div class="mb-4">
-                    <label class="block text-gray-700 mb-2">Numéro de téléphone</label>
-                    <input type="tel" id="phoneNumber" class="w-full p-2 border rounded">
-                </div>
-                <div class="mb-4">
-                    <label class="block text-gray-700 mb-2">Email</label>
-                    <input type="email" id="email" class="w-full p-2 border rounded">
-                </div>
-                <div class="mb-4">
-                    <label class="block text-gray-700 mb-2">Service</label>
-                    <select id="appointmentService" class="w-full p-2 border rounded">
-                        <option value="">Sélectionnez un service</option>
-                        <option value="tolerie">Tôlerie</option>
-                        <option value="mecanique">Mécanique</option>
-                        <option value="peinture">Peinture</option>
-                        <option value="froid">Froid</option>
-                        <option value="vidange">Vidange</option>
-                        <option value="entretien">Entretien général</option>
-                        <option value="remorquage">Remorquage</option>
-                        <option value="diagnostic">Diagnostic</option>
-                        <option value="location">Location</option>
-                        <option value="vente">Vente</option>
-                    </select>
-                </div>
-                <div class="mb-4">
-                    <label class="block text-gray-700 mb-2">Date</label>
-                    <input type="date" id="appointmentDate" class="w-full p-2 border rounded">
-                </div>
-                <div class="mb-4">
-                    <label class="block text-gray-700 mb-2">Heure</label>
-                    <input type="time" id="appointmentTime" class="w-full p-2 border rounded">
-                </div>
-                <button onclick="bookAppointment()" class="w-full bg-blue-600 text-white py-2 rounded-lg">
-                    Confirmer le rendez-vous
-                </button>
-            </div>
-        </div>
-
+      
         <!-- Contact Page -->
         <div id="contact" class="page">
             <h2 class="text-2xl font-bold mb-6">Contactez-nous</h2>
+<p>Pour prendre rendez-vous ou obtenir toute autre information</p>
+
             <div class="bg-white rounded-lg shadow-md p-6 mb-6">
                 <div class="flex items-center mb-4">
                     <i data-feather="phone" class="mr-2"></i>
                     <div>
                         <p class="font-semibold">Téléphone</p>
-                        <p>33 825 32 42 / 77 470 47 42</p>
+                        <p>33 825 32 42 / 77 480 09 30 / 77 470 47 42 / 77 532 33 56</p>
                     </div>
                 </div>
                 <div class="flex items-center mb-4">
@@ -473,8 +429,12 @@ header {
                 <div class="flex items-center mb-4">
                     <i data-feather="map-pin" class="mr-2"></i>
                     <div>
-                        <p class="font-semibold">Adresse</p>
-                        <p>Garage GMBN - Dakar, Sénégal</p>
+                        <p class="font-semibold">Adresse 1</p>
+                        <p>Niary Tali en Face Briche Doré - Dakar, Sénégal</p>
+                       <p class="font-semibold">Adresse 2</p>
+                        <p>Boop derriere Masalikou - Dakar, Sénégal</p>
+                       <p class="font-semibold">Adresse 3</p>
+                        <p>Liberté 6, derriere le station Shell - Dakar, Sénégal</p>
                     </div>
                 </div>
             </div>
@@ -490,8 +450,8 @@ header {
 
             <div class="bg-white rounded-lg shadow-md p-4">
                 <h3 class="font-semibold mb-2">Nos horaires</h3>
-                <p class="mb-1">Lundi - Vendredi: 8h - 18h</p>
-                <p class="mb-1">Samedi: 8h - 13h</p>
+                <p class="mb-1">Lundi - Vendredi: 9h - 16h</p>
+                <p class="mb-1">Samedi: 9h - 13h</p>
                 <p>Dimanche: Fermé</p>
             </div>
         </div>
@@ -757,6 +717,8 @@ header {
 <div id="admin" class="page">
     <h2 class="text-2xl font-bold mb-6">Espace Admin</h2>
     <div class="grid grid-cols-2 gap-4">
+          <button onclick="showPage('admin-rendezvous')" class="bg-blue-600 text-white py-4 rounded-lg">RENDEZ-VOUS</button>
+
         <button onclick="showPage('admin-vente')" class="bg-blue-600 text-white py-4 rounded-lg">VEHICULE EN VENTE</button>
         <button onclick="showPage('admin-location')" class="bg-blue-600 text-white py-4 rounded-lg">LOCATION</button>
     </div>
@@ -780,6 +742,24 @@ header {
       </div>
     </div>
   </div>
+      
+      <!-- Page Admin Rendez-vous -->
+<div id="admin-rendezvous" class="page">
+    <div class="flex items-center mb-4">
+        <button onclick="showPage('admin')" class="mr-2">
+            <i data-feather="arrow-left"></i>
+        </button>
+        <h2 class="text-xl font-bold">Gestion des Rendez-vous</h2>
+    </div>
+    
+    <div class="bg-white rounded-lg shadow-md p-6">
+        <h3 class="text-lg font-semibold mb-4">Rendez-vous en attente</h3>
+        <div id="liste-rendezvous" class="space-y-4">
+            <!-- Les rendez-vous seront chargés ici dynamiquement -->
+        </div>
+    </div>
+</div>
+      
 <!-- Admin Vente -->
 <div id="admin-vente" class="page">
     <div class="flex items-center mb-4">
@@ -1048,10 +1028,7 @@ header {
             <span class="text-xs mt-1">Services</span>
         </button>
        
-        <button onclick="showPage('rendezvous')" class="nav-item flex flex-col items-center p-2">
-            <i data-feather="calendar"></i>
-            <span class="text-xs mt-1">RDV</span>
-        </button>
+  
       <button onclick="showPage('boutique')" class="nav-item flex flex-col items-center p-2">
     <i data-feather="shopping-cart"></i>
     <span class="text-xs mt-1">Boutique</span>
@@ -1110,59 +1087,155 @@ header {
         }
 
         // Appointment booking
-        function bookAppointment() {
-            const fullName = document.getElementById('fullName').value;
-            const phoneNumber = document.getElementById('phoneNumber').value;
-            const email = document.getElementById('email').value;
-            const service = document.getElementById('appointmentService').value;
-            const date = document.getElementById('appointmentDate').value;
-            const time = document.getElementById('appointmentTime').value;
+       // Rendez-vous booking avec Firebase
+// Rendez-vous booking avec Firebase
+async function bookAppointment() {
+    const fullName = document.getElementById('fullName').value;
+    const phoneNumber = document.getElementById('phoneNumber').value;
+    const email = document.getElementById('email').value;
+    const service = document.getElementById('appointmentService').value;
+    const date = document.getElementById('appointmentDate').value;
+    const time = document.getElementById('appointmentTime').value;
 
-            if (!fullName || !phoneNumber || !service || !date || !time) {
-                alert('Veuillez remplir tous les champs obligatoires');
-                return;
-            }
+    if (!fullName || !phoneNumber || !service || !date || !time) {
+        alert('Veuillez remplir tous les champs obligatoires');
+        return;
+    }
 
-            // Save to localStorage
-            const appointment = {
-                fullName,
-                phoneNumber,
-                email,
-                service,
-                date,
-                time,
-                timestamp: new Date().toISOString()
-            };
+    try {
+        // Enregistrer dans Firebase
+        const appointmentData = {
+            fullName,
+            phoneNumber,
+            email: email || '',
+            service,
+            date,
+            time,
+            status: 'en attente',
+            timestamp: new Date().toISOString()
+        };
 
-            let appointments = JSON.parse(localStorage.getItem('appointments')) || [];
-            appointments.push(appointment);
-            localStorage.setItem('appointments', JSON.stringify(appointments));
+        const docRef = await window.firebase.addDoc(
+            window.firebase.collection(window.firebase.db, 'appointments'), 
+            appointmentData
+        );
 
-            // Show confirmation
-            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-            const formattedDate = new Date(date).toLocaleDateString('fr-FR', options);
-            
-            document.getElementById('appointmentDetails').textContent = 
-                `Votre rendez-vous pour ${service} est confirmé pour le ${formattedDate} à ${time}.`;
-            
-            document.getElementById('appointmentModal').classList.remove('hidden');
+        console.log('Rendez-vous enregistré avec ID: ', docRef.id);
+        
+        // Afficher confirmation
+        const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+        const formattedDate = new Date(date).toLocaleDateString('fr-FR', options);
+        
+        document.getElementById('appointmentDetails').textContent = 
+            `Votre rendez-vous pour ${service} est confirmé pour le ${formattedDate} à ${time}.`;
+        
+        document.getElementById('appointmentModal').classList.remove('hidden');
 
-            // Clear form
-            document.getElementById('fullName').value = '';
-            document.getElementById('phoneNumber').value = '';
-            document.getElementById('email').value = '';
-            document.getElementById('appointmentService').value = '';
-            document.getElementById('appointmentDate').value = '';
-            document.getElementById('appointmentTime').value = '';
+        // Clear form
+        document.getElementById('fullName').value = '';
+        document.getElementById('phoneNumber').value = '';
+        document.getElementById('email').value = '';
+        document.getElementById('appointmentService').value = '';
+        document.getElementById('appointmentDate').value = '';
+        document.getElementById('appointmentTime').value = '';
 
-            // Schedule notification
-            scheduleNotification(appointment);
-        }
+    } catch (error) {
+        console.error('Erreur lors de l\'enregistrement du rendez-vous: ', error);
+        alert('Erreur lors de la prise de rendez-vous. Veuillez réessayer.');
+    }
+}
 
-        function hideAppointmentModal() {
-            document.getElementById('appointmentModal').classList.add('hidden');
-            showPage('home');
-        }
+      // Charger les rendez-vous depuis Firebase
+async function loadAppointments() {
+    const listeRendezVous = document.getElementById('liste-rendezvous');
+    if (!listeRendezVous) return;
+
+    try {
+        const querySnapshot = await window.firebase.getDocs(
+            window.firebase.collection(window.firebase.db, 'appointments')
+        );
+
+        listeRendezVous.innerHTML = '';
+
+        querySnapshot.forEach((doc) => {
+            const appointment = doc.data();
+            const appointmentElement = createAppointmentCard(doc.id, appointment);
+            listeRendezVous.appendChild(appointmentElement);
+        });
+    } catch (error) {
+        console.error('Erreur lors du chargement des rendez-vous: ', error);
+        listeRendezVous.innerHTML = '<p class="text-red-500">Erreur lors du chargement des rendez-vous</p>';
+    }
+}
+
+// Créer une carte pour chaque rendez-vous
+function createAppointmentCard(id, appointment) {
+    const card = document.createElement('div');
+    card.className = 'border rounded-lg p-4';
+    card.innerHTML = `
+        <div class="flex justify-between items-start mb-2">
+            <h4 class="font-semibold">${appointment.fullName}</h4>
+            <span class="font-bold ${appointment.status === 'confirmé' ? 'text-green-600' : 'text-blue-600'}">${appointment.status}</span>
+        </div>
+        <div class="text-sm text-gray-600 mb-3">
+            <p>Téléphone: ${appointment.phoneNumber}</p>
+            <p>Email: ${appointment.email || 'Non spécifié'}</p>
+            <p>Service: ${appointment.service}</p>
+            <p>Date: ${appointment.date} à ${appointment.time}</p>
+            <p>Créé le: ${new Date(appointment.timestamp).toLocaleDateString('fr-FR')}</p>
+        </div>
+        <div class="flex justify-end space-x-2">
+            <button onclick="confirmAppointment('${id}')" class="bg-green-500 text-white px-3 py-1 rounded text-sm">
+                Confirmer
+            </button>
+            <button onclick="deleteAppointment('${id}')" class="bg-red-500 text-white px-3 py-1 rounded text-sm">
+                Supprimer
+            </button>
+        </div>
+    `;
+    return card;
+}
+
+// Confirmer un rendez-vous
+async function confirmAppointment(id) {
+    try {
+        await window.firebase.updateDoc(
+            window.firebase.doc(window.firebase.db, 'appointments', id),
+            { status: 'confirmé' }
+        );
+        alert('Rendez-vous confirmé avec succès');
+        loadAppointments();
+    } catch (error) {
+        console.error('Erreur lors de la confirmation: ', error);
+        alert('Erreur lors de la confirmation du rendez-vous');
+    }
+}
+
+// Supprimer un rendez-vous
+async function deleteAppointment(id) {
+    if (!confirm('Êtes-vous sûr de vouloir supprimer ce rendez-vous ?')) return;
+
+    try {
+        await window.firebase.deleteDoc(
+            window.firebase.doc(window.firebase.db, 'appointments', id)
+        );
+        alert('Rendez-vous supprimé avec succès');
+        loadAppointments();
+    } catch (error) {
+        console.error('Erreur lors de la suppression: ', error);
+        alert('Erreur lors de la suppression du rendez-vous');
+    }
+}
+
+// Exposer les fonctions globalement
+window.confirmAppointment = confirmAppointment;
+window.deleteAppointment = deleteAppointment;
+      
+ function hideAppointmentModal() {
+    document.getElementById('appointmentModal').classList.add('hidden');
+    showPage('home'); // Rediriger vers la page d'accueil
+}
+      
 function showAdminModal() {
     document.getElementById('adminModal').classList.remove('hidden');
 }
@@ -1308,18 +1381,16 @@ function initEventHandlers() {
 }
 
 // Fonctions de navigation
-function showPage(pageId) {
-    // Cacher toutes les pages
+    function showPage(pageId) {
     document.querySelectorAll('.page').forEach(page => {
         page.classList.remove('active');
     });
     
-    // Afficher la page demandée
     const targetPage = document.getElementById(pageId);
     if (targetPage) {
         targetPage.classList.add('active');
         
-        // Charger les données spécifiques à la page si nécessaire
+        // Charger les données spécifiques à la page
         if (pageId === 'admin-vente') {
             loadVenteVehicles();
         } else if (pageId === 'admin-location') {
@@ -1330,6 +1401,14 @@ function showPage(pageId) {
             loadBoutiqueProductsForCustomers();
         } else if (pageId === 'panier') {
             updateCartDisplay();
+        } else if (pageId === 'admin-commandes') {
+            loadCommandes();
+        } else if (pageId === 'service-vente') {
+            loadVenteVehiclesClient();
+        } else if (pageId === 'service-location') {
+            loadLocationVehiclesClient();
+        } else if (pageId === 'admin-rendezvous') {
+            loadAppointments(); // Charger les rendez-vous
         }
     }
 }
