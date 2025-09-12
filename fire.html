@@ -900,6 +900,53 @@
     margin-bottom: 20px;
     line-height: 1.5;
 }
+      /* Style pour la confirmation de commande */
+#order-confirmation {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 2000;
+}
+
+.confirmation-modal {
+    background: white;
+    padding: 40px;
+    border-radius: 15px;
+    text-align: center;
+    max-width: 500px;
+    width: 90%;
+    box-shadow: 0 5px 25px rgba(0,0,0,0.3);
+}
+ 
+.confirmation-icon {
+    color: #4CAF50;
+    font-size: 80px;
+    margin-bottom: 20px;
+}
+
+.confirmation-title {
+    color: #f68b1e;
+    margin-bottom: 15px;
+    font-size: 24px;
+}
+
+.confirmation-number {
+    font-size: 18px;
+    margin-bottom: 10px;
+    color: #333;
+}
+
+.confirmation-message {
+    font-size: 16px;
+    margin-bottom: 25px;
+    color: #666;
+}
     </style>
 </head>
 <body>
@@ -1441,7 +1488,18 @@ function displayCategoryProducts(products, category) {
                 container.appendChild(vehicleCard);
             });
         }
+function generateOrderNumber() {
+    // Génère un nombre aléatoire entre 700000 et 799999
+    return Math.floor(400000 + Math.random() * 500000);
+}
 
+function generateUniqueOrderNumber(existingNumbers) {
+    let newNumber;
+    do {
+        newNumber = generateOrderNumber();
+    } while (existingNumbers.includes(newNumber));
+    return newNumber;
+} 
         function createProductCard(product) {
             const card = document.createElement('div');
             card.className = 'product-card';
@@ -1667,34 +1725,42 @@ function displayCategoryProducts(products, category) {
             document.getElementById('orderModal').style.display = 'none';
         }
 
-       function placeOrder() {
+     function placeOrder() {
     const name = document.getElementById('customer-name').value;
     const phone = document.getElementById('customer-phone').value;
     const email = document.getElementById('customer-email').value;
     const address = document.getElementById('customer-address').value;
     
-    if (!name || !phone || !email || !address) {
-        alert('Veuillez remplir tous les champs!');
+    // Validation modifiée - seulement téléphone et adresse requis
+    if (!phone || !address) {
+        alert('Le numéro de téléphone et l\'adresse sont obligatoires!');
         return;
     }
     
     const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
     
+   // Récupérer les numéros de commande existants
+    const existingOrderNumbers = []; // Vous devrez récupérer ceux de la base
+    
+    const orderNumber = generateUniqueOrderNumber(existingOrderNumbers);
+    
     const order = {
+        orderNumber: orderNumber, // Ajouter le numéro de commande
         customer: { name, phone, email, address },
         items: [...cart],
         total: total,
         status: 'pending',
         date: new Date().toISOString()
     };
-    
+       
     db.collection('orders').add(order)
         .then(() => {
-            // Fermer le modal de commande
+            // Fermer le modal de commande 
             closeOrderModal();
             
             // Afficher une confirmation centrée
-            showOrderConfirmation();
+           // Dans placeOrder(), après l'ajout réussi en base de données:
+showOrderConfirmation(orderNumber);
             
             // Vider le panier
             cart = [];
@@ -1705,7 +1771,8 @@ function displayCategoryProducts(products, category) {
             alert('Une erreur s\'est produite. Veuillez réessayer.');
         });
 }
-function showOrderConfirmation() {
+      
+function showOrderConfirmation(orderNumber) {
     // Créer un overlay et modal de confirmation
     const overlay = document.createElement('div');
     overlay.style.cssText = `
@@ -1714,7 +1781,7 @@ function showOrderConfirmation() {
         left: 0;
         width: 100%;
         height: 100%;
-        background-color: rgba(0,0,0,0.7);
+        background-color: rgba(0,0,0,0.8);
         display: flex;
         justify-content: center;
         align-items: center;
@@ -1724,23 +1791,36 @@ function showOrderConfirmation() {
     const modal = document.createElement('div');
     modal.style.cssText = `
         background: white;
-        padding: 30px;
-        border-radius: 10px;
+        padding: 40px;
+        border-radius: 15px;
         text-align: center;
         max-width: 500px;
         width: 90%;
+        box-shadow: 0 5px 25px rgba(0,0,0,0.3);
     `;
     
     modal.innerHTML = `
-        <h2 style="color: #f68b1e; margin-bottom: 20px;">Commande Confirmée!</h2>
-        <p style="font-size: 18px; margin-bottom: 20px;">Votre commande a bien été passée! Votre colis sera livré en moins de 24h les jours ouvrables. Si urgent, conctacter nous, merci</p>
-        <button class="btn" onclick="closeOrderConfirmation()" style="margin-top: 10px;">Fermer</button>
+        <div style="color: #4CAF50; font-size: 80px; margin-bottom: 20px;">
+            <i class="fas fa-check-circle"></i>
+        </div>
+        <h2 style="color: #f68b1e; margin-bottom: 15px; font-size: 24px;">Commande Confirmée!</h2>
+        <p style="font-size: 18px; margin-bottom: 10px; color: #333;">
+            Votre numéro de commande: <strong>${orderNumber}</strong>
+        </p>
+        <p style="font-size: 16px; margin-bottom: 25px; color: #666;">
+            Votre colis sera livré en moins de 24h les jours ouvrables.
+        </p>
+        <button class="btn" onclick="closeOrderConfirmation()" 
+                style="padding: 12px 25px; font-size: 16px;">
+            Fermer
+        </button>
     `;
     
     overlay.appendChild(modal);
     overlay.id = 'order-confirmation';
     document.body.appendChild(overlay);
 }
+      
 function closeOrderConfirmation() {
     const confirmation = document.getElementById('order-confirmation');
     if (confirmation) {
@@ -1946,57 +2026,60 @@ function closeOrderConfirmation() {
             container.innerHTML = '';
             
             db.collection('orders').where('status', '==', status).get().then((querySnapshot) => {
-                if (querySnapshot.empty) {
-                    container.innerHTML = '<p>Aucune commande</p>';
-                    return;
-                }
-                
-                querySnapshot.forEach((doc) => {
-                    const order = { id: doc.id, ...doc.data() };
-                    const orderItem = document.createElement('div');
-                    orderItem.className = 'order-item';
-                    
-                    let actionsHTML = '';
-                    if (status === 'pending') {
-                        actionsHTML = `
-                            <button class="btn-edit" onclick="updateOrderStatus('${order.id}', 'completed')">Effectuer</button>
-                            <button class="btn-delete" onclick="updateOrderStatus('${order.id}', 'rejected')">Rejeter</button>
-                        `;
-                    } else {
-                        actionsHTML = `
-                            <button class="btn-delete" onclick="deleteOrder('${order.id}')">Supprimer</button>
-                        `;
-                    }
-                    
-                    orderItem.innerHTML = `
-                        <div class="order-header">
-                            <div>
-                                <strong>Commande #${order.id.substring(0, 8)}</strong>
-                                <div>${new Date(order.date).toLocaleDateString()}</div>
-                            </div>
-                            <div>
-                                <strong>${parseInt(order.total).toLocaleString()} FCFA</strong>
-                            </div>
-                        </div>
-                        <div class="order-details">
-                            <div><strong>Client:</strong> ${order.customer.name} (${order.customer.phone})</div>
-                            <div><strong>Adresse:</strong> ${order.customer.address}</div>
-                            <div><strong>Articles:</strong></div>
-                            ${order.items.map(item => `
-                                <div class="order-product">
-                                    <div>${item.quantity}x ${item.name}</div>
-                                    <div>${parseInt(item.price * item.quantity).toLocaleString()} FCFA</div>
-                                </div>
-                            `).join('')}
-                        </div>
-                        <div class="product-actions">
-                            ${actionsHTML}
-                        </div>
-                    `;
-                    container.appendChild(orderItem);
-                });
-            });
+        if (querySnapshot.empty) {
+            container.innerHTML = '<p>Aucune commande</p>';
+            return;
         }
+        
+        querySnapshot.forEach((doc) => {
+            const order = { id: doc.id, ...doc.data() };
+            const orderItem = document.createElement('div');
+            orderItem.className = 'order-item';
+            
+            // Utiliser orderNumber au lieu de l'ID Firestore
+            const displayId = order.orderNumber ? `Commande #${order.orderNumber}` : `Commande #${order.id.substring(0, 8)}`;
+            
+            let actionsHTML = '';
+            if (status === 'pending') {
+                actionsHTML = `
+                    <button class="btn-edit" onclick="updateOrderStatus('${order.id}', 'completed')">Effectuer</button>
+                    <button class="btn-delete" onclick="updateOrderStatus('${order.id}', 'rejected')">Rejeter</button>
+                `;
+            } else {
+                actionsHTML = `
+                    <button class="btn-delete" onclick="deleteOrder('${order.id}')">Supprimer</button>
+                `;
+            }
+            
+            orderItem.innerHTML = `
+                <div class="order-header">
+                    <div>
+                        <strong>${displayId}</strong>
+                        <div>${new Date(order.date).toLocaleDateString()}</div>
+                    </div>
+                    <div>
+                        <strong>${parseInt(order.total).toLocaleString()} FCFA</strong>
+                    </div>
+                </div>
+                <div class="order-details">
+                    <div><strong>Client:</strong> ${order.customer.name || ''} (${order.customer.phone})</div>
+                    <div><strong>Adresse:</strong> ${order.customer.address}</div>
+                    <div><strong>Articles:</strong></div>
+                    ${order.items.map(item => `
+                        <div class="order-product">
+                            <div>${item.quantity}x ${item.name}</div>
+                            <div>${parseInt(item.price * item.quantity).toLocaleString()} FCFA</div>
+                        </div>
+                    `).join('')}
+                </div>
+                <div class="product-actions">
+                    ${actionsHTML}
+                </div>
+            `;
+            container.appendChild(orderItem);
+        });
+    });
+}
 
         function updateOrderStatus(orderId, status) {
             db.collection('orders').doc(orderId).update({ status: status })
