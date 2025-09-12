@@ -104,6 +104,7 @@ window.alert = function(message) {
             border-radius: 4px 0 0 4px;
             border: none;
             font-size: 16px;
+          border-radius: 8px; 
         }
         
         .search-bar button {
@@ -118,7 +119,7 @@ window.alert = function(message) {
         }
         
         .cart-btn {
-            background-color: #2c3e50;
+            background-color: #1e40af;
             color: white;
             border: none;
             padding: 10px 15px;
@@ -131,7 +132,7 @@ window.alert = function(message) {
         
         .cart-btn i {
             margin-right: 5px;
-        }
+        } 
         
         .cart-count {
             background-color: #e74c3c;
@@ -251,11 +252,11 @@ window.alert = function(message) {
             margin: 30px 0;
         }
         
-        .product-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-            gap: 20px;
-        }
+       .product-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 15px;
+}
         
         .product-card {
             background-color: white;
@@ -674,18 +675,23 @@ window.alert = function(message) {
             border-bottom: 1px solid #ddd;
         }
         
-        .admin-tabs {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 20px;
-        }
-        
-        .admin-tab {
-            padding: 10px 20px;
-            background-color: #eee;
-            border-radius: 4px;
-            cursor: pointer;
-        }
+       .admin-tabs {
+    display: flex;
+    gap: 5px; /* Réduire l'espacement */
+    margin-bottom: 20px;
+    flex-wrap: wrap; /* Passage à la ligne si nécessaire */
+}
+
+.admin-tab {
+    padding: 8px 12px; /* Réduire le padding */
+    background-color: #eee;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px; /* Réduire la taille de police */
+    flex: 1;
+    min-width: 100px; /* Largeur minimale réduite */
+    text-align: center;
+}
         
         .admin-tab.active {
             background-color: #1e40af;
@@ -1145,7 +1151,15 @@ window.alert = function(message) {
     max-width: 90%;
     max-height: 90%;
 }
+.notification-content img {
+    border-radius: 12px;  
+}
 
+/* Optionnel : ajouter une ombre pour un effet plus élégant */
+.notification-content img {
+    border-radius: 12px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+}
 .close-notification {
     position: absolute;
     top: 15px;
@@ -1170,11 +1184,10 @@ window.alert = function(message) {
         <div class="container">
             <div class="header-top">
                 <div class="logo">
-                    <a href="#" onclick="showPage('home')">Boutique GMBN</a>
                 </div>
                 <div class="search-container">
                     <div class="search-bar">
-                        <input type="text" id="searchInput" placeholder="Rechercher sur GMBN.">
+                        <input type="text" id="searchInput" placeholder="Rechercher sur GMBN...">
                         <button onclick="performSearch()"><i class="fas fa-search"></i></button>
                     </div>
                     <button class="cart-btn" onclick="showPage('cart')">
@@ -1194,13 +1207,12 @@ window.alert = function(message) {
             <!-- Bannière -->
             <div class="banner">
                 <div class="banner-content">
-                    <h1></h1>
-                    <p>Découvrez nos produits et véhicules à prix imbattables</p>
+                    <h1>Boutique GMBN</h1>
+                    <p>Découvrez nos produits et véhicules à des prix imbattables</p>
                 </div>
             </div>
 
-            <!-- Catégories -->
-            <section class="categories">
+             <section class="categories">
                 <h2 class="section-title">Catégories</h2>
                 <div class="category-grid">
                    <div class="category-item" onclick="filterByCategory('Pièces')">
@@ -1341,7 +1353,7 @@ window.alert = function(message) {
     <i class="fas fa-search"></i>
 </div>
                 <div class="admin-content">
-                    <!-- Gestion des produits -->
+                    <!-- Gestion des produits --> 
                     <div id="admin-products" class="admin-tab-content">
                         <h3>Ajouter un produit</h3>
                         <form class="product-form" id="product-form">
@@ -1367,6 +1379,28 @@ window.alert = function(message) {
         <option value="Véhicules">Véhicules</option>
     </select>
 </div>
+                          <div class="form-group vehicle-fields" style="display: none;">
+    <label for="vehicle-year">Année de sortie</label>
+    <input type="number" id="vehicle-year" min="1900" max="2030">
+</div>
+
+<div class="form-group vehicle-fields" style="display: none;">
+    <label for="vehicle-mileage">Kilométrage</label>
+    <input type="number" id="vehicle-mileage" min="0">
+</div>
+
+<div class="form-group vehicle-fields" style="display: none;">
+    <label for="vehicle-fuel">Type de carburant</label>
+    <select id="vehicle-fuel">
+        <option value="">Sélectionner</option>
+        <option value="Essence">Essence</option>
+        <option value="Diesel">Diesel</option>
+        <option value="Électrique">Électrique</option>
+        <option value="Hybride">Hybride</option>  
+        <option value="GPL">GPL</option>
+    </select>
+</div>
+                          
                             <div class="form-group">
                                 <label for="product-description">Description</label>
                                 <input type="text" id="product-description" required>
@@ -1420,7 +1454,7 @@ window.alert = function(message) {
                         </div>
                     </div>
                   <div id="admin-notifications" class="admin-tab-content" style="display: none;">
-    <h3>Gérer les notifications promotionnelles</h3>
+    <h3>Ajouter une affiche</h3>
     
     <div class="notification-form">
         <div class="form-group">
@@ -1429,13 +1463,13 @@ window.alert = function(message) {
             <button class="btn" onclick="previewNotificationImage()">Prévisualiser</button>
             <img id="notification-preview" class="image-preview" src="" alt="Aperçu">
         </div>
-        <button class="btn" onclick="addNotification()">Ajouter la notification</button>
+        <button class="btn" onclick="addNotification()">Validé</button>
     </div>
     
     <div class="notification-list">
-        <h3>Notifications actuelles</h3>
+        <h3>Affiches actuelles</h3>
         <div id="notifications-container">
-            <!-- Les notifications seront chargées ici -->
+            <!-- Les notifications seront chargées  ici -->
         </div>
     </div>
 </div>
@@ -1721,31 +1755,38 @@ function displayCategoryProducts(products, category) {
             });
         }
 
-        function displayVehicles(vehicles) {
-            const container = document.getElementById('vehicles-container');
-            container.innerHTML = '';
-            
-            vehicles.forEach(vehicle => {
-                const vehicleCard = document.createElement('div');
-                vehicleCard.className = 'vehicle-card';
-                vehicleCard.innerHTML = `
-                    <div class="vehicle-image">
-                        <img src="${vehicle.image}" alt="${vehicle.name}">
-                    </div>
-                    <div class="vehicle-info">
-                        <h3 class="vehicle-title">${vehicle.name}</h3>
-                        <div class="vehicle-price">${parseInt(vehicle.price).toLocaleString()} FCFA</div>
-                        <div class="vehicle-details">
-                            <span><i class="fas fa-calendar-alt"></i> ${vehicle.year || 'N/A'}</span>
-                            <span><i class="fas fa-road"></i> ${vehicle.mileage || 'N/A'} km</span>
-                            <span><i class="fas fa-gas-pump"></i> ${vehicle.fuel || 'N/A'}</span>
-                        </div>
-                        <button class="add-to-cart" onclick="openProductModal('${vehicle.id}')">Voir détails</button>
-                    </div>
-                `;
-                container.appendChild(vehicleCard);
-            });
-        }
+function displayVehicles(vehicles) {
+    const container = document.getElementById('vehicles-container');
+    container.innerHTML = '';
+    
+    vehicles.forEach(vehicle => {
+        const vehicleCard = document.createElement('div');
+        vehicleCard.className = 'vehicle-card';
+        
+        // Ajouter les informations véhicule si elles existent
+        const year = vehicle.year ? vehicle.year : 'N/A';
+        const mileage = vehicle.mileage ? vehicle.mileage.toLocaleString() + ' km' : 'N/A';
+        const fuel = vehicle.fuel ? vehicle.fuel : 'N/A';
+        
+        vehicleCard.innerHTML = `
+            <div class="vehicle-image">
+                <img src="${vehicle.image}" alt="${vehicle.name}">
+            </div>
+            <div class="vehicle-info">
+                <h3 class="vehicle-title">${vehicle.name}</h3>
+                <div class="vehicle-price">${parseInt(vehicle.price).toLocaleString()} FCFA</div>
+                <div class="vehicle-details">
+                    <span><i class="fas fa-calendar-alt"></i> ${year}</span>
+                    <span><i class="fas fa-road"></i> ${mileage}</span>
+                    <span><i class="fas fa-gas-pump"></i> ${fuel}</span>
+                </div>
+                <button class="add-to-cart" onclick="openProductDetailPage('${vehicle.id}')">Voir détails</button>
+            </div>
+        `;
+        container.appendChild(vehicleCard);
+    });
+}
+      
 function generateOrderNumber() {
     // Génère un nombre aléatoire entre 700000 et 799999
     return Math.floor(400000 + Math.random() * 500000);
@@ -1805,6 +1846,34 @@ function generateUniqueOrderNumber(existingNumbers) {
 function displayProductDetails(product) {
     const container = document.getElementById('product-detail-content');
     
+    // Vérifier si c'est un véhicule et préparer les détails spécifiques
+    let vehicleDetails = '';
+    if (product.category === 'Véhicules') {
+        const year = product.year ? product.year : 'Non spécifiée';
+        const mileage = product.mileage ? product.mileage.toLocaleString() + ' km' : 'Non spécifié';
+        const fuel = product.fuel ? product.fuel : 'Non spécifié';
+        
+        vehicleDetails = `
+            <div class="vehicle-specs">
+                <h3>Spécifications du véhicule</h3>
+                <div class="spec-grid">
+                    <div class="spec-item">
+                        <i class="fas fa-calendar-alt"></i>
+                        <span>Année: <strong>${year}</strong></span>
+                    </div>
+                    <div class="spec-item">
+                        <i class="fas fa-road"></i>
+                        <span>Kilométrage: <strong>${mileage}</strong></span>
+                    </div>
+                    <div class="spec-item">
+                        <i class="fas fa-gas-pump"></i>
+                        <span>Carburant: <strong>${fuel}</strong></span>
+                    </div>
+                </div>
+            </div>
+        `;
+    }
+    
     container.innerHTML = `
         <div class="product-detail-header">
             <button class="back-button" onclick="showPage('home')">
@@ -1839,24 +1908,28 @@ function displayProductDetails(product) {
                 
                 <p class="product-description">${product.description}</p>
                 
+                ${vehicleDetails} <!-- Ici s'affichent les détails véhicule si c'est un véhicule -->
+                
                 <div class="product-actions">
                     <div class="quantity">
-                        <button onclick="decreaseQuantity()">-</button>
+                        <button onclick="decreaseDetailQuantity()">-</button>
                         <input type="number" id="detail-quantity" value="1" min="1">
-                        <button onclick="increaseQuantity()">+</button>
+                        <button onclick="increaseDetailQuantity()">+</button>
                     </div>
                     <button class="add-to-cart" onclick="addToCartFromDetailPage()">Ajouter au panier</button>
+                    <button class="buy-now" onclick="buyNowFromDetailPage()">Acheter maintenant</button>
                 </div>
                 
                 <div class="product-features">
                     <p><i class="fas fa-truck"></i> Livraison gratuite</p>
-                    <p><i class="fas fa-undo"></i> Retours sous 30 jours</p>
-                    <p><i class="fas fa-shield-alt"></i> Garantie 2 ans</p>
+                    <p><i class="fas fa-undo"></i> Retours sous 7 jours</p>
+                    <p><i class="fas fa-shield-alt"></i> Garantie 1 ans</p>
                 </div>
             </div>
         </div>
     `;
 }
+      
       function increaseDetailQuantity() {
     const quantityInput = document.getElementById('detail-quantity');
     quantityInput.value = parseInt(quantityInput.value) + 1;
@@ -2449,7 +2522,18 @@ function closeOrderConfirmation() {
                 document.getElementById(previewId).src = url;
             }
         }
-
+document.getElementById('product-category').addEventListener('change', function() {
+    const isVehicle = this.value === 'Véhicules';
+    document.querySelectorAll('.vehicle-fields').forEach(field => {
+        field.style.display = isVehicle ? 'block' : 'none';
+    });
+    
+    // Rendre les champs obligatoires seulement pour les véhicules
+    document.getElementById('vehicle-year').required = isVehicle;
+    document.getElementById('vehicle-mileage').required = isVehicle;
+    document.getElementById('vehicle-fuel').required = isVehicle;
+});
+      
         function saveProduct() {
             const productId = document.getElementById('product-id').value;
             const name = document.getElementById('product-name').value;
@@ -2459,6 +2543,7 @@ function closeOrderConfirmation() {
             const image = document.getElementById('product-image').value;
             const images = document.getElementById('product-images').value;
             
+          
             const productData = {
                 name,
                 price: parseInt(price),
@@ -2468,6 +2553,22 @@ function closeOrderConfirmation() {
                 images
             };
             
+          // AJOUTEZ CE CODE POUR LES VÉHICULES
+  if (category === 'Véhicules') {
+        const year = document.getElementById('vehicle-year').value;
+        const mileage = document.getElementById('vehicle-mileage').value;
+        const fuel = document.getElementById('vehicle-fuel').value;
+        
+        if (!year || !mileage || !fuel) {
+            alert('Veuillez remplir tous les champs pour les véhicules');
+            return;
+        }
+        
+        productData.year = year;
+        productData.mileage = mileage;
+        productData.fuel = fuel;
+    }
+          
             if (productId) {
                 // Mise à jour du produit existant
                 db.collection('products').doc(productId).update(productData)
@@ -2547,8 +2648,19 @@ function closeOrderConfirmation() {
                     document.getElementById('main-preview').src = product.image;
                     document.getElementById('gallery-preview').src = product.images ? product.images.split(',')[0] : '';
                     document.getElementById('product-submit').textContent = 'Mettre à jour';
+                  // REMPLIR LES CHAMPS VÉHICULE SI NÉCESSAIRE
+            if (product.category === 'Véhicules') {
+                document.getElementById('vehicle-year').value = product.year || '';
+                document.getElementById('vehicle-mileage').value = product.mileage || '';
+                document.getElementById('vehicle-fuel').value = product.fuel || '';
+                
+                // AFFICHER LES CHAMPS VÉHICULE
+                document.querySelectorAll('.vehicle-fields').forEach(field => {
+                    field.style.display = 'block';
+                }); 
+            }
                 }
-            });
+            }); 
         }
 
         function deleteProduct(productId) {
