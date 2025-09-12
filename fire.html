@@ -866,6 +866,40 @@
     font-size: 18px;
     color: #666;
 }
+      /* Style pour la confirmation de commande */
+#order-confirmation {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 2000;
+}
+
+.confirmation-modal {
+    background: white;
+    padding: 30px;
+    border-radius: 10px;
+    text-align: center;
+    max-width: 500px;
+    width: 90%;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+}
+
+.confirmation-modal h2 {
+    color: #f68b1e;
+    margin-bottom: 20px;
+}
+
+.confirmation-modal p {
+    font-size: 18px;
+    margin-bottom: 20px;
+    line-height: 1.5;
+}
     </style>
 </head>
 <body>
@@ -1633,41 +1667,88 @@ function displayCategoryProducts(products, category) {
             document.getElementById('orderModal').style.display = 'none';
         }
 
-        function placeOrder() {
-            const name = document.getElementById('customer-name').value;
-            const phone = document.getElementById('customer-phone').value;
-            const email = document.getElementById('customer-email').value;
-            const address = document.getElementById('customer-address').value;
+       function placeOrder() {
+    const name = document.getElementById('customer-name').value;
+    const phone = document.getElementById('customer-phone').value;
+    const email = document.getElementById('customer-email').value;
+    const address = document.getElementById('customer-address').value;
+    
+    if (!name || !phone || !email || !address) {
+        alert('Veuillez remplir tous les champs!');
+        return;
+    }
+    
+    const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+    
+    const order = {
+        customer: { name, phone, email, address },
+        items: [...cart],
+        total: total,
+        status: 'pending',
+        date: new Date().toISOString()
+    };
+    
+    db.collection('orders').add(order)
+        .then(() => {
+            // Fermer le modal de commande
+            closeOrderModal();
             
-            if (!name || !phone || !email || !address) {
-                alert('Veuillez remplir tous les champs!');
-                return;
-            }
+            // Afficher une confirmation centrée
+            showOrderConfirmation();
             
-            const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-            
-            const order = {
-                customer: { name, phone, email, address },
-                items: [...cart],
-                total: total,
-                status: 'pending',
-                date: new Date().toISOString()
-            };
-            
-            db.collection('orders').add(order)
-                .then(() => {
-                    alert('Votre commande a bien été passée! Votre colis sera livré en moins de 24h les jours ouvrables.');
-                    cart = [];
-                    updateCartStorage();
-                    closeOrderModal();
-                    showPage('home');
-                })
-                .catch(error => {
-                    console.error('Erreur lors de l\'enregistrement de la commande: ', error);
-                    alert('Une erreur s\'est produite. Veuillez réessayer.');
-                });
-        }
-
+            // Vider le panier
+            cart = [];
+            updateCartStorage();
+        })
+        .catch(error => {
+            console.error('Erreur lors de l\'enregistrement de la commande: ', error);
+            alert('Une erreur s\'est produite. Veuillez réessayer.');
+        });
+}
+function showOrderConfirmation() {
+    // Créer un overlay et modal de confirmation
+    const overlay = document.createElement('div');
+    overlay.style.cssText = `
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0,0,0,0.7);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 2000;
+    `;
+    
+    const modal = document.createElement('div');
+    modal.style.cssText = `
+        background: white;
+        padding: 30px;
+        border-radius: 10px;
+        text-align: center;
+        max-width: 500px;
+        width: 90%;
+    `;
+    
+    modal.innerHTML = `
+        <h2 style="color: #f68b1e; margin-bottom: 20px;">Commande Confirmée!</h2>
+        <p style="font-size: 18px; margin-bottom: 20px;">Votre commande a bien été passée! Votre colis sera livré en moins de 24h les jours ouvrables. Si urgent, conctacter nous, merci</p>
+        <button class="btn" onclick="closeOrderConfirmation()" style="margin-top: 10px;">Fermer</button>
+    `;
+    
+    overlay.appendChild(modal);
+    overlay.id = 'order-confirmation';
+    document.body.appendChild(overlay);
+}
+function closeOrderConfirmation() {
+    const confirmation = document.getElementById('order-confirmation');
+    if (confirmation) {
+        confirmation.remove();
+    }
+    showPage('home');
+}
+      
         // Fonctions d'administration
         function showAdminModal() {
             document.getElementById('adminModal').style.display = 'block';
