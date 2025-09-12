@@ -1,0 +1,2725 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AutoMarket - Produits et Véhicules</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+  <!-- SweetAlert2 - Remplace les alertes natives par des jolies notifications -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.js"></script>
+
+<script>
+// Cette petite fonction redirigera toutes les alertes vers SweetAlert2
+const originalAlert = window.alert;
+window.alert = function(message) {
+    Swal.fire({
+        title: 'Notification',
+        text: message,
+        icon: 'info',
+        confirmButtonText: 'OK',
+        confirmButtonColor: '#f68b1e',
+        showClass: {
+            popup: '',  // Désactive l'animation d'apparition
+            backdrop: '' // Désactive l'animation du fond
+        },
+        hideClass: {
+            popup: '',  // Désactive l'animation de disparition
+            backdrop: '' // Désactive l'animation du fond
+        }
+    });
+};
+</script>
+    <style>
+        /* Reset et styles de base */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f8f9fa;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+        
+        ul {
+            list-style: none;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+        
+        /* Header */
+        header {
+            background-color: #1e40af;
+            padding: 10px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 10px;
+        }
+        
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: white;
+        }
+        
+        .search-container {
+            display: flex;
+            flex-grow: 1;
+            margin: 0 20px;
+            align-items: center;
+        }
+        
+        .search-bar {
+            flex-grow: 1;
+            position: relative;
+        }
+        
+        .search-bar input {
+            width: 100%;
+            padding: 10px 15px;
+            border-radius: 4px 0 0 4px;
+            border: none;
+            font-size: 16px;
+        }
+        
+        .search-bar button {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: #f68b1e;
+            cursor: pointer;
+        }
+        
+        .cart-btn {
+            background-color: #2c3e50;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 0 4px 4px 0;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            white-space: nowrap;
+        }
+        
+        .cart-btn i {
+            margin-right: 5px;
+        }
+        
+        .cart-count {
+            background-color: #e74c3c;
+            color: white;
+            border-radius: 50%;
+            padding: 2px 6px;
+            font-size: 12px;
+            margin-left: 5px;
+        }
+        
+        .user-actions a {
+            color: white;
+            margin-left: 15px;
+            font-size: 14px;
+        }
+        
+        .user-actions a i {
+            margin-right: 5px;
+        }
+        
+        nav ul {
+            display: flex;
+            background-color: #e67e22;
+            padding: 8px 0;
+        }
+        
+        nav ul li {
+            margin-right: 20px;
+            color: white;
+            font-size: 14px;
+            cursor: pointer;
+        }
+        
+        /* Bannière */
+        .banner {
+            background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url('https://i.postimg.cc/V5P0Dmqk/5913292883186796964-1.jpg');
+            background-size: cover;
+            background-position: center;
+            height: 300px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            text-align: center;
+            margin-bottom: 30px;
+            border-radius: 8px;
+            margin-top: 15px;
+        }
+        
+        .banner-content h1 {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+        }
+        
+        .banner-content p {
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+        }
+        
+        .btn {
+            background-color: #1e40af;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 4px;
+            display: inline-block;
+            font-weight: bold;
+            transition: background-color 0.3s;
+            cursor: pointer;
+            border: none;
+        }
+        
+        .btn:hover {
+            background-color: #e67e22;
+        }
+        
+        /* Catégories */
+        .categories {
+            margin: 30px 0;
+        }
+        
+        .section-title {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #1e40af;
+            display: inline-block;
+        }
+        
+        .category-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 15px;
+        }
+        
+        .category-item {
+            background-color: white;
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+            cursor: pointer;
+        }
+        
+        .category-item:hover {
+            transform: translateY(-5px);
+        }
+        
+        .category-item i {
+            font-size: 2rem;
+            color: #1e40af;
+            margin-bottom: 10px;
+        }
+        
+        /* Produits */
+        .products {
+            margin: 30px 0;
+        }
+        
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 20px;
+        }
+        
+        .product-card {
+            background-color: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+        }
+        
+        .product-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .product-image {
+            height: 180px;
+            overflow: hidden;
+        }
+        
+        .product-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s;
+        }
+        
+        .product-card:hover .product-image img {
+            transform: scale(1.05);
+        }
+        
+        .product-info {
+            padding: 15px;
+        }
+        
+        .product-title {
+            font-size: 16px;
+            margin-bottom: 10px;
+            height: 40px;
+            overflow: hidden;
+        }
+        
+        .product-price {
+            font-weight: bold;
+            color: #1e40af;
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+        
+        .product-rating {
+            color: #ffc107;
+            margin-bottom: 10px;
+        }
+        
+        .product-actions {
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        .add-to-cart {
+            background-color: #1e40af;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        
+        /* Véhicules */
+        .vehicles {
+            margin: 30px 0;
+        }
+        
+        .vehicle-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+        }
+        
+        .vehicle-card {
+            background-color: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .vehicle-image {
+            height: 180px;
+            overflow: hidden;
+        }
+        
+        .vehicle-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .vehicle-info {
+            padding: 15px;
+        }
+        
+        .vehicle-title {
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+        
+        .vehicle-price {
+            font-weight: bold;
+            color: #1e40af;
+            font-size: 20px;
+            margin-bottom: 10px;
+        }
+        
+        .vehicle-details {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+            font-size: 14px;
+            color: #666;
+        }
+        
+        /* Footer */
+        footer {
+            background-color: #2c3e50;
+            color: white;
+            padding: 40px 0 20px;
+            margin-top: 50px;
+        }
+        
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+        
+        .footer-column h3 {
+            font-size: 18px;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #1e40af;
+            padding-bottom: 10px;
+            display: inline-block;
+        }
+        
+        .footer-column ul li {
+            margin-bottom: 10px;
+        }
+        
+        .footer-column ul li a:hover {
+            color: #1e40af;
+        }
+        
+        .social-icons {
+            display: flex;
+            gap: 15px;
+            margin-top: 15px;
+        }
+        
+        .social-icons a {
+            color: white;
+            font-size: 20px;
+        }
+        
+        .footer-bottom {
+            text-align: center;
+            padding-top: 20px;
+            border-top: 1px solid #3e546b;
+        }
+        
+        /* Modal de produit */
+        .product-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.7);
+            z-index: 1000;
+            overflow-y: auto;
+        }
+        
+        .modal-content {
+            background-color: white;
+            margin: 50px auto;
+            max-width: 900px;
+            border-radius: 8px;
+            overflow: hidden;
+            animation: modalFade 0.3s;
+        }
+        
+        @keyframes modalFade {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .modal-header {
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .close-modal {
+            font-size: 24px;
+            cursor: pointer;
+        }
+        
+        .modal-body {
+            padding: 20px;
+            display: flex;
+            flex-wrap: wrap;
+        }
+        
+        .modal-image {
+            flex: 1;
+            min-width: 300px;
+        }
+        
+        .modal-image img {
+            width: 100%;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+        
+        .image-gallery {
+            display: flex;
+            overflow-x: auto;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        
+        .image-gallery img {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 4px;
+            cursor: pointer;
+            opacity: 0.7;
+            transition: opacity 0.3s;
+        }
+        
+        .image-gallery img:hover, .image-gallery img.active {
+            opacity: 1;
+        }
+        
+        .modal-details {
+            flex: 1;
+            padding: 0 20px;
+            min-width: 300px;
+        }
+        
+        .modal-title {
+            font-size: 24px;
+            margin-bottom: 15px;
+        }
+        
+        .modal-price {
+            font-size: 28px;
+            color: #1e40af;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+        
+        .modal-rating {
+            margin-bottom: 15px;
+            color: #ffc107;
+        }
+        
+        .modal-description {
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+        
+        .modal-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        
+        .quantity {
+            display: flex;
+            align-items: center;
+            margin-right: 15px;
+        }
+        
+        .quantity button {
+            width: 30px;
+            height: 30px;
+            background-color: #eee;
+            border: none;
+            cursor: pointer;
+        }
+        
+        .quantity input {
+            width: 40px;
+            height: 30px;
+            text-align: center;
+            border: 1px solid #eee;
+            margin: 0 5px;
+        }
+        
+        .buy-now {
+            background-color: #e74c3c;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        
+        /* Modal d'image plein écran */
+        .image-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.9);
+            z-index: 1100;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .image-modal-content {
+            max-width: 90%;
+            max-height: 90%;
+        }
+        
+        .image-modal-content img {
+            width: 100%;
+            height: auto;
+            object-fit: contain;
+        }
+        
+        .close-image-modal {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            color: white;
+            font-size: 40px;
+            cursor: pointer;
+        }
+        
+        /* Modal de commande */
+        .order-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.7);
+            z-index: 1000;
+            overflow-y: auto;
+        }
+        
+        .order-modal-content {
+            background-color: white;
+            margin: 50px auto;
+            max-width: 600px;
+            border-radius: 8px;
+            overflow: hidden;
+            animation: modalFade 0.3s;
+        }
+        
+        .order-form {
+            padding: 20px;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        
+        .form-group input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        
+        /* Pages */
+        .page {
+            display: none;
+        }
+        
+        .active-page {
+            display: block;
+        }
+        
+        /* Admin */
+        .admin-panel {
+            padding: 20px;
+        }
+        
+        .admin-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .admin-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .admin-tab {
+            padding: 10px 20px;
+            background-color: #eee;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        
+        .admin-tab.active {
+            background-color: #1e40af;
+            color: white;
+        }
+        
+        .admin-content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .product-form {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+        
+        .form-full-width {
+            grid-column: 1 / -1;
+        }
+        
+        .image-preview {
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+            border-radius: 4px;
+            margin-top: 10px;
+        }
+        
+        .product-list {
+            margin-top: 20px;
+        }
+        
+        .product-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .product-item img {
+            width: 60px;
+            height: 60px;
+            object-fit: cover;
+            border-radius: 4px;
+        }
+        
+        .product-actions {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .btn-edit {
+            background-color: #3498db;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            border: none;
+        }
+        
+        .btn-delete {
+            background-color: #e74c3c;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            border: none;
+        }
+        
+        /* Commandes */
+        .order-list {
+            margin-top: 20px;
+        }
+        
+        .order-item {
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+        
+        .order-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .order-details {
+            margin-top: 10px;
+        }
+        
+        .order-product {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        
+        /* Panier */
+        .cart-page {
+            padding: 20px;
+        }
+        
+        .cart-items {
+            margin-bottom: 20px;
+        }
+        
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            margin-bottom: 15px;
+        }
+        
+        .cart-item-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .cart-item img {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 4px;
+        }
+        
+        .cart-summary {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .cart-total {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            text-align: right;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header-top {
+                flex-direction: column;
+            }
+            
+            .search-container {
+                width: 100%;
+                margin: 10px 0;
+            }
+            
+            .user-actions {
+                width: 100%;
+                display: flex;
+                justify-content: space-around;
+                margin-top: 10px;
+            }
+            
+            nav ul {
+                flex-wrap: wrap;
+            }
+            
+            .banner {
+                height: 200px;
+            }
+            
+            .banner-content h1 {
+                font-size: 1.8rem;
+            }
+            
+            .modal-body {
+                flex-direction: column;
+            }
+            
+            .modal-details {
+                padding: 20px 0;
+            }
+            
+            .product-form {
+                grid-template-columns: 1fr;
+            }
+        }
+      .search-results-page, .category-page {
+    padding: 20px;
+}
+.admin-search {
+    position: relative;
+    margin-bottom: 20px;
+    max-width: 300px;
+}
+
+.admin-search input {
+    width: 100%;
+    padding: 10px 15px;
+    padding-right: 40px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 16px;
+}
+
+.admin-search .fa-search {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #888;
+}
+.no-products {
+    text-align: center;
+    padding: 40px;
+    font-size: 18px;
+    color: #666;
+}
+      /* Style pour la confirmation de commande */
+#order-confirmation {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 2000;
+}
+
+.confirmation-modal {
+    background: white;
+    padding: 30px;
+    border-radius: 10px;
+    text-align: center;
+    max-width: 500px;
+    width: 90%;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+}
+
+.confirmation-modal h2 {
+    color: #1e40af;
+    margin-bottom: 20px;
+}
+
+.confirmation-modal p {
+    font-size: 18px;
+    margin-bottom: 20px;
+    line-height: 1.5;
+}
+      /* Style pour la confirmation de commande */
+#order-confirmation {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 2000;
+}
+
+.confirmation-modal {
+    background: white;
+    padding: 40px;
+    border-radius: 15px;
+    text-align: center;
+    max-width: 500px;
+    width: 90%;
+    box-shadow: 0 5px 25px rgba(0,0,0,0.3);
+}
+ 
+.confirmation-icon {
+    color: #4CAF50;
+    font-size: 80px;
+    margin-bottom: 20px;
+}
+
+.confirmation-title {
+    color: #1e40af;
+    margin-bottom: 15px;
+    font-size: 24px;
+}
+
+.confirmation-number {
+    font-size: 18px;
+    margin-bottom: 10px;
+    color: #333;
+}
+
+.confirmation-message {
+    font-size: 16px;
+    margin-bottom: 25px;
+    color: #666;
+}
+      /* Page détail produit */
+.product-detail-page {
+    padding: 20px 0;
+}
+
+.product-detail-header {
+    margin-bottom: 30px;
+    display: flex;
+    align-items: center;
+}
+
+.back-button {
+    background: none;
+    border: none;
+    color: #1e40af;
+    font-size: 16px;
+    cursor: pointer;
+    margin-right: 20px;
+    display: flex;
+    align-items: center;
+}
+
+.back-button i {
+    margin-right: 5px;
+}
+
+.product-detail-body {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+    margin-bottom: 50px;
+}
+
+.product-detail-images {
+    position: relative;
+}
+
+.main-image img {
+    width: 100%;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.image-gallery {
+    display: flex;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+.image-gallery img {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 4px;
+    cursor: pointer;
+    opacity: 0.7;
+    transition: opacity 0.3s;
+}
+
+.image-gallery img:hover {
+    opacity: 1;
+}
+
+.product-detail-info {
+    padding: 20px;
+}
+
+.product-detail-info .product-price {
+    font-size: 28px;
+    color: #1e40af;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.product-detail-info .product-description {
+    font-size: 16px;
+    line-height: 1.6;
+    margin: 20px 0;
+}
+
+.product-features {
+    margin-top: 30px;
+}
+
+.product-features p {
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+}
+
+.product-features i {
+    margin-right: 10px;
+    color: #1e40af;
+}
+
+.related-products {
+    margin-top: 50px;
+    padding-top: 30px;
+    border-top: 1px solid #eee;
+}
+
+.related-products h2 {
+    margin-bottom: 20px;
+    font-size: 24px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .product-detail-body {
+        grid-template-columns: 1fr;
+    }
+    
+    .product-detail-info {
+        padding: 0;
+    }
+}
+      /* Styles pour les notifications */
+.notification-item {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    margin-bottom: 10px;
+    gap: 15px;
+}
+
+.notification-form {
+    margin-bottom: 30px;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+}
+
+.notification-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.9);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 10000;
+}
+
+.notification-content {
+    position: relative;
+    max-width: 90%;
+    max-height: 90%;
+}
+
+.close-notification {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: white;
+    border: none;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    font-size: 24px;
+    font-weight: bold;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <div class="header-top">
+                <div class="logo">
+                    <a href="#" onclick="showPage('home')">Boutique GMBN</a>
+                </div>
+                <div class="search-container">
+                    <div class="search-bar">
+                        <input type="text" id="searchInput" placeholder="Rechercher sur GMBN.">
+                        <button onclick="performSearch()"><i class="fas fa-search"></i></button>
+                    </div>
+                    <button class="cart-btn" onclick="showPage('cart')">
+                        <i class="fas fa-shopping-cart"></i> Panier <span class="cart-count" id="cartCount">0</span>
+                    </button>
+                </div>
+              
+            </div>
+           
+        </div>
+    </header>
+
+    <!-- Pages -->
+    <div class="container">
+        <!-- Page d'accueil -->
+        <div id="home" class="page active-page">
+            <!-- Bannière -->
+            <div class="banner">
+                <div class="banner-content">
+                    <h1></h1>
+                    <p>Découvrez nos produits et véhicules à prix imbattables</p>
+                </div>
+            </div>
+
+            <!-- Catégories -->
+            <section class="categories">
+                <h2 class="section-title">Catégories</h2>
+                <div class="category-grid">
+                   <div class="category-item" onclick="filterByCategory('Pièces')">
+    <i class="fas fa-car"></i>
+    <p>Pièces moteur</p>
+</div>
+<div class="category-item" onclick="filterByCategory('Outillage')">
+    <i class="fas fa-tools"></i>
+    <p>Outillage</p>
+</div>
+<div class="category-item" onclick="filterByCategory('Lubrifiants')">
+    <i class="fas fa-oil-can"></i>
+    <p>Lubrifiants</p>
+</div>
+<div class="category-item" onclick="filterByCategory('Accessoires')">
+    <i class="fas fa-puzzle-piece"></i>
+    <p>Accessoires</p>
+</div>
+<div class="category-item" onclick="filterByCategory('Pneus')">
+    <i class="fas fa-tire"></i>
+    <p>Pneus</p>
+</div>
+<div class="category-item" onclick="filterByCategory('Batteries')">
+    <i class="fas fa-car-battery"></i>
+    <p>Batteries</p>
+</div>
+                </div>
+            </section>
+
+            <!-- Produits -->
+            <section class="products" id="products-section">
+                <h2 class="section-title">Produits</h2>
+                <div class="product-grid" id="products-container">
+                    <!-- Les produits seront chargés dynamiquement -->
+                </div>
+            </section>
+
+            <!-- Véhicules -->
+            <section class="vehicles">
+                <h2 class="section-title">Véhicules en vente</h2>
+                <div class="vehicle-grid" id="vehicles-container">
+                    <!-- Les véhicules seront chargés dynamiquement -->
+                </div>
+            </section>
+        </div>
+<!-- Page de résultats -->
+<div id="search-results" class="page">
+    <div class="search-results-page">
+       <ul>
+                   <li onclick="showPage('home')">
+  <i class="fas fa-arrow-left"></i>
+</li>
+
+                   
+                </ul>
+        <h2 class="section-title">Résultats de recherche</h2>
+        <div id="search-results-container" class="product-grid">
+            <!-- Les résultats de recherche seront chargés ici -->
+        </div>
+    </div>
+</div>
+
+      
+      <!-- Page de détail produit -->
+<div id="product-detail" class="page">
+    <div class="product-detail-page">
+        <div class="container">
+            <!-- Le contenu sera chargé dynamiquement par JavaScript -->
+            <div id="product-detail-content"></div>
+            
+            <!-- Section produits similaires -->
+            <div class="related-products">
+                <h2>Autres produits </h2>
+                <div class="product-grid" id="related-products-container">
+                    <!-- Produits similaires chargés dynamiquement -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+      
+<!-- Page de catégorie -->
+<div id="category-page" class="page">
+    <div class="category-page">
+        <ul>
+                    <li onclick="showPage('home')">
+  <i class="fas fa-arrow-left"></i>
+</li>
+
+                   
+                </ul>
+        <h2 class="section-title" id="category-title">Catégorie</h2>
+        <div id="category-products-container" class="product-grid">
+            <!-- Les produits de la catégorie seront chargés ici -->
+        </div>
+    </div>
+</div>
+        <!-- Page Panier -->
+        <div id="cart" class="page">
+            <div class="cart-page">
+               <ul>
+                    <li onclick="showPage('home')">
+  <i class="fas fa-arrow-left"></i>
+</li>
+
+                   
+                </ul>
+                <h2 class="section-title">Votre Panier</h2>
+                
+                <div class="cart-items" id="cart-items-container">
+                    <!-- Les articles du panier seront chargés dynamiquement -->
+                </div>
+                
+                <div class="cart-summary">
+                    <div class="cart-total" id="cart-total">Total: 0 FCFA</div>
+                    <button class="btn" onclick="showOrderModal()">Commander</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Page Admin -->
+        <div id="admin" class="page">
+            <div class="admin-panel">
+                <div class="admin-header">
+                    <h2>Espace Admin</h2>
+                    <button class="btn" onclick="logoutAdmin()">Déconnexion</button>
+                </div>
+                
+                <div class="admin-tabs">
+                    <div class="admin-tab active" onclick="showAdminTab('products')">Produits</div>
+                    <div class="admin-tab" onclick="showAdminTab('orders')">Commandes en attente</div>
+                    <div class="admin-tab" onclick="showAdminTab('completed-orders')">Commandes effectuées</div>
+                    <div class="admin-tab" onclick="showAdminTab('rejected-orders')">Commandes rejetées</div>
+                  <div class="admin-tab" onclick="showAdminTab('notifications')">Publicité</div>
+                </div>
+                <div class="admin-search">
+    <input type="text" id="admin-search-input" placeholder="Rechercher..." onkeyup="adminSearch()">
+    <i class="fas fa-search"></i>
+</div>
+                <div class="admin-content">
+                    <!-- Gestion des produits -->
+                    <div id="admin-products" class="admin-tab-content">
+                        <h3>Ajouter un produit</h3>
+                        <form class="product-form" id="product-form">
+                            <input type="hidden" id="product-id">
+                            <div class="form-group">
+                                <label for="product-name">Nom du produit</label>
+                                <input type="text" id="product-name" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="product-price">Prix (FCFA)</label>
+                                <input type="number" id="product-price" required>
+                            </div>
+                           <div class="form-group">
+    <label for="product-category">Catégorie</label>
+    <select id="product-category" required>
+        <option value="">Sélectionnez une catégorie</option>
+        <option value="Pièces moteur">Pièces </option>
+        <option value="Outillage">Outillage</option>
+        <option value="Lubrifiants">Lubrifiants</option>
+        <option value="Accessoires">Accessoires</option>
+        <option value="Pneus">Pneus</option>
+        <option value="Batteries">Batteries</option>
+        <option value="Véhicules">Véhicules</option>
+    </select>
+</div>
+                            <div class="form-group">
+                                <label for="product-description">Description</label>
+                                <input type="text" id="product-description" required>
+                            </div>
+                            <div class="form-group form-full-width">
+                                <label for="product-image">Image principale (URL)</label>
+                                <input type="text" id="product-image" onchange="previewImage(this, 'main-preview')" required>
+                                <img id="main-preview" class="image-preview" src="" alt="Aperçu">
+                            </div>
+                            <div class="form-group form-full-width">
+                                <label for="product-images">Images supplémentaires (URLs séparées par des virgules)</label>
+                                <input type="text" id="product-images" onchange="previewImage(this, 'gallery-preview')">
+                                <img id="gallery-preview" class="image-preview" src="" alt="Aperçu">
+                            </div>
+                            <div class="form-group form-full-width">
+                                <button type="submit" class="btn" id="product-submit">Ajouter le produit</button>
+                            </div>
+                        </form>
+                        
+                        <div class="product-list">
+                            <h3>Liste des produits</h3>
+                            <div id="admin-products-list">
+                                <!-- Les produits seront chargés dynamiquement -->
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Commandes en attente -->
+                    <div id="admin-orders" class="admin-tab-content" style="display: none;">
+                        <h3>Commandes en attente</h3>
+                        <div id="pending-orders-list">
+                            <!-- Les commandes en attente seront chargées dynamiquement -->
+                        </div>
+                    </div>
+                    
+                    <!-- Commandes effectuées -->
+                    <div id="admin-completed-orders" class="admin-tab-content" style="display: none;">
+                        <h3>Commandes effectuées</h3>
+                        <button class="btn" onclick="deleteAllOrders('completed')">Supprimer tous</button>
+                        <div id="completed-orders-list">
+                            <!-- Les commandes effectuées seront chargées dynamiquement -->
+                        </div>
+                    </div>
+                    
+                    <!-- Commandes rejetées -->
+                    <div id="admin-rejected-orders" class="admin-tab-content" style="display: none;">
+                        <h3>Commandes rejetées</h3>
+                        <button class="btn" onclick="deleteAllOrders('rejected')">Supprimer tous</button>
+                        <div id="rejected-orders-list">
+                            <!-- Les commandes rejetées seront chargées dynamiquement -->
+                        </div>
+                    </div>
+                  <div id="admin-notifications" class="admin-tab-content" style="display: none;">
+    <h3>Gérer les notifications promotionnelles</h3>
+    
+    <div class="notification-form">
+        <div class="form-group">
+            <label for="notification-image">URL de l'image (Postimages)</label>
+            <input type="text" id="notification-image" placeholder="https://postimg.cc/...">
+            <button class="btn" onclick="previewNotificationImage()">Prévisualiser</button>
+            <img id="notification-preview" class="image-preview" src="" alt="Aperçu">
+        </div>
+        <button class="btn" onclick="addNotification()">Ajouter la notification</button>
+    </div>
+    
+    <div class="notification-list">
+        <h3>Notifications actuelles</h3>
+        <div id="notifications-container">
+            <!-- Les notifications seront chargées ici -->
+        </div>
+    </div>
+</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Autres pages -->
+        <div id="account" class="page">
+            <h2 class="section-title">Mon Compte</h2>
+            <p>Page en construction</p>
+        </div>
+
+        <div id="help" class="page">
+            <h2 class="section-title">Aide</h2>
+            <p>Page en construction</p>
+        </div>
+    </div>
+
+    <!-- Footer -->
+   
+    <!-- Modal de produit -->
+    <div id="productModal" class="product-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Détails du produit</h2>
+                <span class="close-modal" onclick="closeProductModal()">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="modal-image">
+                    <img id="modalImg" src="" alt="Produit" onclick="openImageModal(this.src)">
+                    <div class="image-gallery" id="imageGallery">
+                        <!-- Les images de la galerie seront ajoutées dynamiquement -->
+                    </div>
+                </div>
+                <div class="modal-details">
+                    <h2 id="modalTitle" class="modal-title"></h2>
+                    <div id="modalPrice" class="modal-price"></div>
+                    <div id="modalRating" class="modal-rating"></div>
+                    <p id="modalDescription" class="modal-description"></p>
+                    
+                    <div class="modal-actions">
+                        <div class="quantity">
+                            <button onclick="decreaseQuantity()">-</button>
+                            <input type="number" id="quantityInput" value="1" min="1">
+                            <button onclick="increaseQuantity()">+</button>
+                        </div>
+                        <button class="add-to-cart" onclick="addToCartFromModal()">Ajouter au panier</button>
+                  </div>
+                    
+                    <div style="margin-top: 20px;">
+                        <p><i class="fas fa-truck"></i> Livraison gratuite</p>
+                        <p><i class="fas fa-undo"></i> Retours sous 30 jours</p>
+                        <p><i class="fas fa-shield-alt"></i> Garantie 2 ans</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal d'image plein écran -->
+    <div id="imageModal" class="image-modal">
+        <span class="close-image-modal" onclick="closeImageModal()">&times;</span>
+        <div class="image-modal-content">
+            <img id="fullscreenImage" src="" alt="Image plein écran">
+        </div>
+    </div>
+
+    <!-- Modal de commande -->
+    <div id="orderModal" class="order-modal">
+        <div class="order-modal-content">
+            <div class="modal-header">
+                <h2>Finaliser votre commande</h2>
+                <span class="close-modal" onclick="closeOrderModal()">&times;</span>
+            </div>
+            <div class="order-form">
+                <div class="form-group">
+                    <label for="customer-name">Nom complet</label>
+                    <input type="text" id="customer-name" required>
+                </div>
+                <div class="form-group">
+                    <label for="customer-phone">Numéro de téléphone</label>
+                    <input type="tel" id="customer-phone" required>
+                </div>
+                <div class="form-group">
+                    <label for="customer-email">Email</label>
+                    <input type="email" id="customer-email" required>
+                </div>
+                <div class="form-group">
+                    <label for="customer-address">Adresse de livraison</label>
+                    <input type="text" id="customer-address" required>
+                </div>
+                <button class="btn" onclick="placeOrder()">Valider ma commande</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal d'admin -->
+    <div id="adminModal" class="product-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Accès administrateur</h2>
+                <span class="close-modal" onclick="closeAdminModal()">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="admin-code">Code d'accès</label>
+                    <input type="password" id="admin-code" placeholder="Entrez le code administrateur">
+                </div>
+                <button class="btn" onclick="checkAdminCode()">Accéder</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Configuration Firebase
+        const firebaseConfig = {
+            apiKey: "AIzaSyCX1Q0i-L33RNZIVsJ8V1iRsDY6CJm1Lmc",
+            authDomain: "gmbn-9ba54.firebaseapp.com",
+            projectId: "gmbn-9ba54",
+            storageBucket: "gmbn-9ba54.firebasestorage.app",
+            messagingSenderId: "968684169673",
+            appId: "1:968684169673:web:d6b2796b396f8e62eda018",
+            measurementId: "G-MQXSQQQHBC"
+        };
+
+        // Initialiser Firebase
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+
+        // Variables globales
+        let currentProduct = null;
+        let cart = JSON.parse(localStorage.getItem('cart')) || [];
+        let products = [];
+        let currentAdminTab = 'products';
+
+        // Chargement initial
+        document.addEventListener('DOMContentLoaded', function() {
+            updateCartCount();
+            loadProducts();
+            checkAdminAccess();
+          checkNotifications();
+            
+            // Écouter la saisie dans la recherche
+            document.getElementById('searchInput').addEventListener('keyup', function(event) {
+                if (event.key === 'Enter') {
+                    performSearch();
+                } else if (this.value === '1997') {
+                    showAdminModal();
+                }
+            });
+            
+            // Écouter la soumission du formulaire produit
+            document.getElementById('product-form').addEventListener('submit', function(e) {
+                e.preventDefault();
+                saveProduct();
+            });
+        });
+
+        // Fonctions de navigation
+        function showPage(pageId) {
+            document.querySelectorAll('.page').forEach(page => {
+                page.classList.remove('active-page');
+            });
+            document.getElementById(pageId).classList.add('active-page');
+            
+            if (pageId === 'cart') {
+                loadCart();
+            } else if (pageId === 'admin') {
+                loadAdminProducts();
+                loadOrders();
+            }
+        }
+
+        function scrollToProducts() {
+            document.getElementById('products-section').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // Fonctions de recherche et filtrage
+ function performSearch() {
+    const searchTerm = document.getElementById('searchInput').value.toLowerCase().trim();
+    
+    if (searchTerm === '') return;
+    
+    // Recherche approximative avec pondération
+    const scoredProducts = products.map(product => {
+        let score = 0;
+        
+        // Recherche dans le nom
+        if (product.name.toLowerCase().includes(searchTerm)) score += 3;
+        
+        // Recherche dans la catégorie
+        if (product.category.toLowerCase().includes(searchTerm)) score += 2;
+        
+        // Recherche dans la description
+        if (product.description.toLowerCase().includes(searchTerm)) score += 1;
+        
+        // Recherche par mots
+        const searchWords = searchTerm.split(' ');
+        searchWords.forEach(word => {
+            if (product.name.toLowerCase().includes(word)) score += 2;
+            if (product.category.toLowerCase().includes(word)) score += 1.5;
+            if (product.description.toLowerCase().includes(word)) score += 0.5;
+        });
+        
+        return { product, score };
+    });
+    
+    // Filtrer et trier par score
+    const filteredProducts = scoredProducts
+        .filter(item => item.score > 0)
+        .sort((a, b) => b.score - a.score)
+        .map(item => item.product);
+    
+    // Afficher les résultats
+    displaySearchResults(filteredProducts, searchTerm);
+    showPage('search-results');
+}
+
+function displaySearchResults(products, searchTerm) {
+    const container = document.getElementById('search-results-container');
+    const title = document.querySelector('#search-results .section-title');
+    
+    title.textContent = `Résultats pour "${searchTerm}"`;
+    container.innerHTML = '';
+    
+    if (products.length === 0) {
+        container.innerHTML = '<p>Aucun produit trouvé pour votre recherche.</p>';
+        return;
+    }
+    
+    products.forEach(product => {
+        const productCard = createProductCard(product);
+        container.appendChild(productCard);
+    });
+}
+
+       function filterByCategory(category) {
+    const filteredProducts = products.filter(product => product.category === category);
+    displayCategoryProducts(filteredProducts, category);
+    showPage('category-page');
+}
+
+function displayCategoryProducts(products, category) {
+    const container = document.getElementById('category-products-container');
+    const title = document.getElementById('category-title');
+    
+    title.textContent = `Catégorie: ${category}`;
+    container.innerHTML = '';
+    
+    if (products.length === 0) {
+        container.innerHTML = '<p>Aucun produit dans cette catégorie.</p>';
+        return;
+    }
+    
+    products.forEach(product => {
+        const productCard = createProductCard(product);
+        container.appendChild(productCard);
+    });
+}
+
+        // Fonctions de produits
+        function loadProducts() {
+            db.collection('products').get().then((querySnapshot) => {
+                products = [];
+                querySnapshot.forEach((doc) => {
+                    products.push({ id: doc.id, ...doc.data() });
+                });
+                displayProducts(products);
+                displayVehicles(products.filter(product => product.category === 'Véhicules'));
+            });
+        }
+
+        function displayProducts(productsToDisplay) {
+            const container = document.getElementById('products-container');
+            container.innerHTML = '';
+            
+            productsToDisplay.forEach(product => {
+                if (product.category !== 'Véhicules') {
+                    const productCard = createProductCard(product);
+                    container.appendChild(productCard);
+                }
+            });
+        }
+
+        function displayVehicles(vehicles) {
+            const container = document.getElementById('vehicles-container');
+            container.innerHTML = '';
+            
+            vehicles.forEach(vehicle => {
+                const vehicleCard = document.createElement('div');
+                vehicleCard.className = 'vehicle-card';
+                vehicleCard.innerHTML = `
+                    <div class="vehicle-image">
+                        <img src="${vehicle.image}" alt="${vehicle.name}">
+                    </div>
+                    <div class="vehicle-info">
+                        <h3 class="vehicle-title">${vehicle.name}</h3>
+                        <div class="vehicle-price">${parseInt(vehicle.price).toLocaleString()} FCFA</div>
+                        <div class="vehicle-details">
+                            <span><i class="fas fa-calendar-alt"></i> ${vehicle.year || 'N/A'}</span>
+                            <span><i class="fas fa-road"></i> ${vehicle.mileage || 'N/A'} km</span>
+                            <span><i class="fas fa-gas-pump"></i> ${vehicle.fuel || 'N/A'}</span>
+                        </div>
+                        <button class="add-to-cart" onclick="openProductModal('${vehicle.id}')">Voir détails</button>
+                    </div>
+                `;
+                container.appendChild(vehicleCard);
+            });
+        }
+function generateOrderNumber() {
+    // Génère un nombre aléatoire entre 700000 et 799999
+    return Math.floor(400000 + Math.random() * 500000);
+}
+
+function generateUniqueOrderNumber(existingNumbers) {
+    let newNumber;
+    do {
+        newNumber = generateOrderNumber();
+    } while (existingNumbers.includes(newNumber));
+    return newNumber;
+} 
+       function createProductCard(product) {
+    const card = document.createElement('div');
+    card.className = 'product-card';
+    card.innerHTML = `
+        <div class="product-image">
+            <img src="${product.image}" alt="${product.name}">
+        </div>
+        <div class="product-info">
+            <h3 class="product-title">${product.name}</h3>
+            <div class="product-price">${parseInt(product.price).toLocaleString()} FCFA</div>
+            <div class="product-rating">
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star-half-alt"></i>
+            </div>
+            <div class="product-actions">
+                <button class="add-to-cart" onclick="addToCart('${product.id}'); event.stopPropagation();">Ajouter au panier</button>
+            </div>
+        </div>
+    `;
+    
+    // Ouvrir la page de détail au clic sur le produit
+    card.addEventListener('click', () => openProductDetailPage(product.id));
+    
+    return card;
+}
+
+        // Fonctions modales
+       function openProductDetailPage(productId) {
+    currentProduct = products.find(p => p.id === productId);
+    if (!currentProduct) return;
+    
+    // Afficher la page de détail
+    showPage('product-detail');
+    
+    // Charger les détails du produit
+    displayProductDetails(currentProduct);
+    
+    // Charger les produits similaires
+    displayRelatedProducts(currentProduct);
+}
+
+function displayProductDetails(product) {
+    const container = document.getElementById('product-detail-content');
+    
+    container.innerHTML = `
+        <div class="product-detail-header">
+            <button class="back-button" onclick="showPage('home')">
+                <i class="fas fa-arrow-left"></i> Retour
+            </button>
+            <h1>${product.name}</h1>
+        </div>
+        
+        <div class="product-detail-body">
+            <div class="product-detail-images">
+                <div class="main-image">
+                    <img src="${product.image}" alt="${product.name}" onclick="openImageModal(this.src)">
+                </div>
+                ${product.images ? `
+                <div class="image-gallery">
+                    ${product.images.split(',').map(imgUrl => `
+                        <img src="${imgUrl.trim()}" alt="${product.name}" onclick="openImageModal(this.src)">
+                    `).join('')}
+                </div>
+                ` : ''}
+            </div>
+            
+            <div class="product-detail-info">
+                <div class="product-price">${parseInt(product.price).toLocaleString()} FCFA</div>
+                <div class="product-rating">
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star-half-alt"></i>
+                </div>
+                
+                <p class="product-description">${product.description}</p>
+                
+                <div class="product-actions">
+                    <div class="quantity">
+                        <button onclick="decreaseQuantity()">-</button>
+                        <input type="number" id="detail-quantity" value="1" min="1">
+                        <button onclick="increaseQuantity()">+</button>
+                    </div>
+                    <button class="add-to-cart" onclick="addToCartFromDetailPage()">Ajouter au panier</button>
+                </div>
+                
+                <div class="product-features">
+                    <p><i class="fas fa-truck"></i> Livraison gratuite</p>
+                    <p><i class="fas fa-undo"></i> Retours sous 30 jours</p>
+                    <p><i class="fas fa-shield-alt"></i> Garantie 2 ans</p>
+                </div>
+            </div>
+        </div>
+    `;
+}
+      function increaseDetailQuantity() {
+    const quantityInput = document.getElementById('detail-quantity');
+    quantityInput.value = parseInt(quantityInput.value) + 1;
+}
+
+function decreaseDetailQuantity() {
+    const quantityInput = document.getElementById('detail-quantity');
+    if (parseInt(quantityInput.value) > 1) {
+        quantityInput.value = parseInt(quantityInput.value) - 1;
+    }
+}
+      function displayRelatedProducts(currentProduct) {
+    const container = document.getElementById('related-products-container');
+    
+    // Filtrer les produits de même catégorie (exclure le produit actuel)
+    const relatedProducts = products
+        .filter(p => p.id !== currentProduct.id && p.category === currentProduct.category)
+        .slice(0, 4); // Maximum 4 produits
+    
+    container.innerHTML = '';
+    
+    if (relatedProducts.length === 0) {
+        container.innerHTML = '<p>Aucun produit similaire trouvé.</p>';
+        return;
+    }
+    
+    relatedProducts.forEach(product => {
+        const productCard = createProductCard(product);
+        container.appendChild(productCard);
+    });
+}
+      
+
+        function addImageToGallery(imageUrl, galleryElement, isActive) {
+            const img = document.createElement('img');
+            img.src = imageUrl;
+            if (isActive) img.classList.add('active');
+            img.addEventListener('click', function() {
+                document.getElementById('modalImg').src = this.src;
+                document.querySelectorAll('#imageGallery img').forEach(img => img.classList.remove('active'));
+                this.classList.add('active');
+            });
+            galleryElement.appendChild(img);
+        }
+
+        function closeProductModal() {
+            document.getElementById('productModal').style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+
+        function openImageModal(imageUrl) {
+            document.getElementById('fullscreenImage').src = imageUrl;
+            document.getElementById('imageModal').style.display = 'flex';
+        }
+
+        function closeImageModal() {
+            document.getElementById('imageModal').style.display = 'none';
+        }
+
+        function increaseQuantity() {
+            const quantityInput = document.getElementById('quantityInput');
+            quantityInput.value = parseInt(quantityInput.value) + 1;
+        }
+
+        function decreaseQuantity() {
+            const quantityInput = document.getElementById('quantityInput');
+            if (parseInt(quantityInput.value) > 1) {
+                quantityInput.value = parseInt(quantityInput.value) - 1;
+            }
+        }
+function addToCartFromDetailPage() {
+    if (!currentProduct) return;
+    
+    const quantity = parseInt(document.getElementById('detail-quantity').value);
+    addToCartWithQuantity(currentProduct.id, quantity);
+    showNotification('Produit ajouté au panier!', 'success');
+}
+
+function buyNowFromDetailPage() {
+    addToCartFromDetailPage();
+    showPage('cart');
+}
+
+function addToCartWithQuantity(productId, quantity) {
+    const product = products.find(p => p.id === productId);
+    if (!product) return;
+    
+    const existingItem = cart.find(item => item.id === productId);
+    
+    if (existingItem) {
+        existingItem.quantity += quantity;
+    } else {
+        cart.push({
+            id: product.id,
+            name: product.name,
+            price: product.price,
+            image: product.image,
+            quantity: quantity
+        });
+    }
+    
+    updateCartStorage();
+}
+        // Fonctions panier
+        function addToCart(productId) {
+            const product = products.find(p => p.id === productId);
+            if (!product) return;
+            
+            const existingItem = cart.find(item => item.id === productId);
+            
+            if (existingItem) {
+                existingItem.quantity += 1;
+            } else {
+                cart.push({
+                    id: product.id,
+                    name: product.name,
+                    price: product.price,
+                    image: product.image,
+                    quantity: 1
+                });
+            }
+            
+            updateCartStorage();
+            alert('Produit ajouté au panier!');
+        }
+
+        function addToCartFromModal() {
+            if (!currentProduct) return;
+            
+            const quantity = parseInt(document.getElementById('quantityInput').value);
+            const existingItem = cart.find(item => item.id === currentProduct.id);
+            
+            if (existingItem) {
+                existingItem.quantity += quantity;
+            } else {
+                cart.push({
+                    id: currentProduct.id,
+                    name: currentProduct.name,
+                    price: currentProduct.price,
+                    image: currentProduct.image,
+                    quantity: quantity
+                });
+            }
+            
+            updateCartStorage();
+            closeProductModal();
+            alert('Produit ajouté au panier!');
+        }
+
+       function buyNow() {
+    addToCartFromModal();
+    showPage('cart');
+}
+
+        function updateCartStorage() {
+            localStorage.setItem('cart', JSON.stringify(cart));
+            updateCartCount();
+        }
+
+        function updateCartCount() {
+            const totalItems = cart.reduce((total, item) => total + item.quantity, 0);
+            document.getElementById('cartCount').textContent = totalItems;
+        }
+
+        function loadCart() {
+            const container = document.getElementById('cart-items-container');
+            container.innerHTML = '';
+            
+            if (cart.length === 0) {
+                container.innerHTML = '<p>Votre panier est vide.</p>';
+                document.getElementById('cart-total').textContent = 'Total: 0 FCFA';
+                return;
+            }
+            
+            let total = 0;
+            
+            cart.forEach((Fitem, index) => {
+                const itemTotal = item.price * item.quantity;
+                total += itemTotal;
+                
+                const cartItem = document.createElement('div');
+                cartItem.className = 'cart-item';
+                cartItem.innerHTML = `
+                    <div class="cart-item-info">
+                        <img src="${item.image}" alt="${item.name}">
+                        <div>
+                            <h3>${item.name}</h3>
+                            <p>${parseInt(item.price).toLocaleString()} FCFA x ${item.quantity}</p>
+                        </div>
+                    </div>
+                    <div class="quantity">
+    <button onclick="decreaseDetailQuantity()">-</button>
+    <input type="number" id="detail-quantity" value="1" min="1">
+    <button onclick="increaseDetailQuantity()">+</button>
+</div>
+                    <div>
+    <button onclick="decreaseDetailQuantity()">-</button>
+    <input type="number" id="detail-quantity" value="1" min="1">
+    <button onclick="increaseDetailQuantity()">+</button>
+                        <button class="btn-delete" onclick="removeFromCart(${index})"><i class="fas fa-trash"></i></button>
+                    </div>
+                `;
+                container.appendChild(cartItem);
+            });
+            
+            document.getElementById('cart-total').textContent = `Total: ${parseInt(total).toLocaleString()} FCFA`;
+        }
+
+        function changeQuantity(index, newQuantity) {
+            if (newQuantity < 1) {
+                removeFromCart(index);
+                return;
+            }
+            
+            cart[index].quantity = newQuantity;
+            updateCartStorage();
+            loadCart();
+        }
+
+        function removeFromCart(index) {
+            cart.splice(index, 1);
+            updateCartStorage();
+            loadCart();
+        }
+      
+      // Fonctions pour les notifications
+function previewNotificationImage() {
+    const url = document.getElementById('notification-image').value;
+    if (url) {
+        document.getElementById('notification-preview').src = url;
+    }
+}
+
+function addNotification() {
+    const imageUrl = document.getElementById('notification-image').value;
+    
+    if (!imageUrl) {
+        alert('Veuillez entrer une URL d\'image');
+        return;
+    }
+    
+    // Ajouter à Firebase
+    db.collection('notifications').add({
+        imageUrl: imageUrl,
+        createdAt: new Date().toISOString(),
+        active: true
+    })
+    .then(() => {
+        alert('Notification ajoutée avec succès!');
+        document.getElementById('notification-image').value = '';
+        document.getElementById('notification-preview').src = '';
+        loadNotifications();
+    })
+    .catch(error => {
+        console.error('Erreur:', error);
+        alert('Une erreur s\'est produite');
+    });
+}
+
+      function checkNotifications() {
+    // Vérifier les notifications non vues
+    const viewedNotifications = JSON.parse(localStorage.getItem('viewedNotifications') || '[]');
+    
+    db.collection('notifications').where('active', '==', true).get()
+    .then(querySnapshot => {
+        const notifications = [];
+        querySnapshot.forEach(doc => {
+            notifications.push({ id: doc.id, ...doc.data() });
+        });
+        
+        // Filtrer les notifications non vues
+        const unviewedNotifications = notifications.filter(notif => 
+            !viewedNotifications.includes(notif.id)
+        );
+        
+        // Afficher la première notification non vue
+        if (unviewedNotifications.length > 0) {
+            showNotificationModal(unviewedNotifications[0]);
+        }
+    });
+}
+
+function showNotificationModal(notification) {
+    const modal = document.createElement('div');
+    modal.className = 'notification-modal';
+    modal.style.cssText = `
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0,0,0,0.8);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 2000;
+    `;
+    
+    modal.innerHTML = `
+        <div class="notification-content" style="position: relative;">
+            <img src="${notification.imageUrl}" alt="Promotion" style="max-width: 90vw; max-height: 80vh;">
+            <button class="close-notification" onclick="closeNotification('${notification.id}')" 
+                    style="position: absolute; top: 10px; right: 10px; background: #fff; border: none; border-radius: 50%; width: 30px; height: 30px; font-weight: bold; cursor: pointer;">
+                ×
+            </button>
+        </div>
+    `;
+    
+    document.body.appendChild(modal);
+}
+
+function closeNotification(notificationId) {
+    // Marquer comme vue
+    const viewedNotifications = JSON.parse(localStorage.getItem('viewedNotifications') || '[]');
+    if (!viewedNotifications.includes(notificationId)) {
+        viewedNotifications.push(notificationId);
+        localStorage.setItem('viewedNotifications', JSON.stringify(viewedNotifications));
+    }
+    
+    // Fermer la modal
+    const modal = document.querySelector('.notification-modal');
+    if (modal) {
+        modal.remove();
+    }
+    
+    // Vérifier s'il y a d'autres notifications
+    checkNotifications();
+}
+      
+function loadNotifications() {
+    db.collection('notifications').where('active', '==', true).get()
+    .then(querySnapshot => {
+        const container = document.getElementById('notifications-container');
+        container.innerHTML = '';
+        
+        if (querySnapshot.empty) {
+            container.innerHTML = '<p>Aucune notification active</p>';
+            return;
+        }
+        
+        querySnapshot.forEach(doc => {
+            const notification = { id: doc.id, ...doc.data() };
+            const notificationItem = document.createElement('div');
+            notificationItem.className = 'notification-item';
+            notificationItem.innerHTML = `
+                <img src="${notification.imageUrl}" alt="Notification" style="width: 100px; height: 60px; object-fit: cover;">
+                <button class="btn-delete" onclick="deleteNotification('${notification.id}')">Supprimer</button>
+            `;
+            container.appendChild(notificationItem);
+        });
+    });
+}
+
+function deleteNotification(notificationId) {
+    if (confirm('Supprimer cette notification?')) {
+        db.collection('notifications').doc(notificationId).delete()
+        .then(() => {
+            alert('Notification supprimée');
+            loadNotifications();
+        })
+        .catch(error => {
+            console.error('Erreur:', error);
+            alert('Erreur lors de la suppression');
+        });
+    }
+}
+      
+function adminSearch() {
+    const searchTerm = document.getElementById('admin-search-input').value.toLowerCase();
+    
+    if (currentAdminTab === 'products') {
+        // Recherche dans les produits
+        filterAdminProducts(searchTerm);
+    } else {
+        // Recherche dans les commandes
+        filterAdminOrders(searchTerm);
+    }
+}
+
+function filterAdminProducts(searchTerm) {
+    const productItems = document.querySelectorAll('#admin-products-list .product-item');
+    
+    productItems.forEach(item => {
+        const productText = item.textContent.toLowerCase();
+        if (productText.includes(searchTerm)) {
+            item.style.display = 'flex';
+        } else {
+            item.style.display = 'none';
+        }
+    });
+}
+
+function filterAdminOrders(searchTerm) {
+    const orderItems = document.querySelectorAll('.order-item');
+    
+    orderItems.forEach(item => {
+        const orderText = item.textContent.toLowerCase();
+        if (orderText.includes(searchTerm)) {
+            item.style.display = 'block';
+        } else {
+            item.style.display = 'none';
+        }
+    });
+} 
+        // Fonctions de commande
+        function showOrderModal() {
+            if (cart.length === 0) {
+                alert('Votre panier est vide!');
+                return;
+            }
+            
+            document.getElementById('orderModal').style.display = 'block';
+        }
+
+        function closeOrderModal() {
+            document.getElementById('orderModal').style.display = 'none';
+        }
+
+     function placeOrder() {
+    const name = document.getElementById('customer-name').value;
+    const phone = document.getElementById('customer-phone').value;
+    const email = document.getElementById('customer-email').value;
+    const address = document.getElementById('customer-address').value;
+    
+    // Validation modifiée - seulement téléphone et adresse requis
+    if (!phone || !address) {
+        alert('Le numéro de téléphone et l\'adresse sont obligatoires!');
+        return;
+    }
+    
+    const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+    
+   // Récupérer les numéros de commande existants
+    const existingOrderNumbers = []; // Vous devrez récupérer ceux de la base
+    
+    const orderNumber = generateUniqueOrderNumber(existingOrderNumbers);
+    
+    const order = {
+        orderNumber: orderNumber, // Ajouter le numéro de commande
+        customer: { name, phone, email, address },
+        items: [...cart],
+        total: total,
+        status: 'pending',
+        date: new Date().toISOString()
+    };
+       
+    db.collection('orders').add(order)
+        .then(() => {
+            // Fermer le modal de commande 
+            closeOrderModal();
+            
+            // Afficher une confirmation centrée
+           // Dans placeOrder(), après l'ajout réussi en base de données:
+showOrderConfirmation(orderNumber);
+            
+            // Vider le panier
+            cart = [];
+            updateCartStorage();
+        })
+        .catch(error => {
+            console.error('Erreur lors de l\'enregistrement de la commande: ', error);
+            alert('Une erreur s\'est produite. Veuillez réessayer.');
+        });
+}
+      
+function showOrderConfirmation(orderNumber) {
+    // Créer un overlay et modal de confirmation
+    const overlay = document.createElement('div');
+    overlay.style.cssText = `
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0,0,0,0.8);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 2000;
+    `;
+    
+    const modal = document.createElement('div');
+    modal.style.cssText = `
+        background: white;
+        padding: 40px;
+        border-radius: 15px;
+        text-align: center;
+        max-width: 500px;
+        width: 90%;
+        box-shadow: 0 5px 25px rgba(0,0,0,0.3);
+    `;
+    
+    modal.innerHTML = `
+        <div style="color: #4CAF50; font-size: 80px; margin-bottom: 20px;">
+            <i class="fas fa-check-circle"></i>
+        </div>
+        <h2 style="color: #f68b1e; margin-bottom: 15px; font-size: 24px;">Commande Confirmée!</h2>
+        <p style="font-size: 18px; margin-bottom: 10px; color: #333;">
+            Votre numéro de commande: <strong>${orderNumber}</strong>
+        </p>
+        <p style="font-size: 16px; margin-bottom: 25px; color: #666;">
+            Votre colis sera livré en moins de 24h les jours ouvrables.
+        </p>
+        <button class="btn" onclick="closeOrderConfirmation()" 
+                style="padding: 12px 25px; font-size: 16px;">
+            Fermer
+        </button>
+    `;
+    
+    overlay.appendChild(modal);
+    overlay.id = 'order-confirmation';
+    document.body.appendChild(overlay);
+}
+      
+function closeOrderConfirmation() {
+    const confirmation = document.getElementById('order-confirmation');
+    if (confirmation) {
+        confirmation.remove();
+    }
+    showPage('home');
+}
+      
+        // Fonctions d'administration
+        function showAdminModal() {
+            document.getElementById('adminModal').style.display = 'block';
+        }
+
+        function closeAdminModal() {
+            document.getElementById('adminModal').style.display = 'none';
+            document.getElementById('admin-code').value = '';
+        }
+
+        function checkAdminCode() {
+            const code = document.getElementById('admin-code').value;
+            if (code === 'ADMIN123') {
+                localStorage.setItem('adminAccess', 'granted');
+                closeAdminModal();
+                showPage('admin');
+            } else {
+                alert('Code incorrect!');
+            }
+        }
+
+        function checkAdminAccess() {
+            if (localStorage.getItem('adminAccess') === 'granted') {
+                showPage('admin');
+            }
+        }
+
+        function logoutAdmin() {
+            localStorage.removeItem('adminAccess');
+            showPage('home');
+        }
+
+        function showAdminTab(tabName) {
+            currentAdminTab = tabName;
+            
+            // Mettre à jour les onglets
+            document.querySelectorAll('.admin-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            // Afficher le contenu correspondant
+            document.querySelectorAll('.admin-tab-content').forEach(content => {
+                content.style.display = 'none';
+            });
+            
+            if (tabName === 'products') {
+                document.getElementById('admin-products').style.display = 'block';
+                loadAdminProducts();
+            } else if (tabName === 'orders') {
+                document.getElementById('admin-orders').style.display = 'block';
+                loadOrders();
+            } else if (tabName === 'completed-orders') {
+                document.getElementById('admin-completed-orders').style.display = 'block';
+                loadOrders('completed');
+            } else if (tabName === 'rejected-orders') {
+                document.getElementById('admin-rejected-orders').style.display = 'block';
+                loadOrders('rejected');
+            } else if (tabName === 'notifications') {
+        document.getElementById('admin-notifications').style.display = 'block';
+        loadNotifications(); // ← AJOUTEZ CETTE LIGNE
+    }
+        }
+
+        function previewImage(input, previewId) {
+            const url = input.value;
+            if (url) {
+                document.getElementById(previewId).src = url;
+            }
+        }
+
+        function saveProduct() {
+            const productId = document.getElementById('product-id').value;
+            const name = document.getElementById('product-name').value;
+            const price = document.getElementById('product-price').value;
+            const category = document.getElementById('product-category').value;
+            const description = document.getElementById('product-description').value;
+            const image = document.getElementById('product-image').value;
+            const images = document.getElementById('product-images').value;
+            
+            const productData = {
+                name,
+                price: parseInt(price),
+                category,
+                description,
+                image,
+                images
+            };
+            
+            if (productId) {
+                // Mise à jour du produit existant
+                db.collection('products').doc(productId).update(productData)
+                    .then(() => {
+                        alert('Produit mis à jour avec succès!');
+                        resetProductForm();
+                        loadAdminProducts();
+                  loadProducts();
+                    })
+                    .catch(error => {
+                        console.error('Erreur lors de la mise à jour: ', error);
+                        alert('Une erreur s\'est produite lors de la mise à jour.');
+                    });
+            } else {
+                // Ajout d'un nouveau produit
+                db.collection('products').add(productData)
+                    .then(() => {
+                        alert('Produit ajouté avec succès!');
+                        resetProductForm();
+                        loadAdminProducts();
+                    })
+                    .catch(error => {
+                        console.error('Erreur lors de l\'ajout: ', error);
+                        alert('Une erreur s\'est produite lors de l\'ajout.');
+                    });
+            }
+        }
+
+        function resetProductForm() {
+            document.getElementById('product-id').value = '';
+            document.getElementById('product-name').value = '';
+            document.getElementById('product-price').value = '';
+            document.getElementById('product-category').value = '';
+            document.getElementById('product-description').value = '';
+            document.getElementById('product-image').value = '';
+            document.getElementById('product-images').value = '';
+            document.getElementById('main-preview').src = '';
+            document.getElementById('gallery-preview').src = '';
+            document.getElementById('product-submit').textContent = 'Ajouter le produit';
+        }
+
+        function loadAdminProducts() {
+            db.collection('products').get().then((querySnapshot) => {
+                const container = document.getElementById('admin-products-list');
+                container.innerHTML = '';
+                
+                querySnapshot.forEach((doc) => {
+                    const product = { id: doc.id, ...doc.data() };
+                    const productItem = document.createElement('div');
+                    productItem.className = 'product-item';
+                    productItem.innerHTML = `
+                        <div>
+                            <img src="${product.image}" alt="${product.name}">
+                            <span>${product.name} - ${parseInt(product.price).toLocaleString()} FCFA</span>
+                        </div>
+                        <div class="product-actions">
+                            <button class="btn-edit" onclick="editProduct('${product.id}')">Modifier</button>
+                            <button class="btn-delete" onclick="deleteProduct('${product.id}')">Supprimer</button>
+                        </div>
+                    `;
+                    container.appendChild(productItem);
+                });
+            });
+        }
+
+        function editProduct(productId) {
+            db.collection('products').doc(productId).get().then((doc) => {
+                if (doc.exists) {
+                    const product = doc.data();
+                    document.getElementById('product-id').value = productId;
+                    document.getElementById('product-name').value = product.name;
+                    document.getElementById('product-price').value = product.price;
+                    document.getElementById('product-category').value = product.category;
+                    document.getElementById('product-description').value = product.description;
+                    document.getElementById('product-image').value = product.image;
+                    document.getElementById('product-images').value = product.images || '';
+                    document.getElementById('main-preview').src = product.image;
+                    document.getElementById('gallery-preview').src = product.images ? product.images.split(',')[0] : '';
+                    document.getElementById('product-submit').textContent = 'Mettre à jour';
+                }
+            });
+        }
+
+        function deleteProduct(productId) {
+            if (confirm('Êtes-vous sûr de vouloir supprimer ce produit?')) {
+                db.collection('products').doc(productId).delete()
+                    .then(() => {
+                        alert('Produit supprimé avec succès!');
+                        loadAdminProducts();
+                    })
+                    .catch(error => {
+                        console.error('Erreur lors de la suppression: ', error);
+                        alert('Une erreur s\'est produite lors de la suppression.');
+                    });
+            }
+        }
+
+        function loadOrders(status = 'pending') {
+            let containerId;
+            if (status === 'pending') {
+                containerId = 'pending-orders-list';
+            } else if (status === 'completed') {
+                containerId = 'completed-orders-list';
+            } else if (status === 'rejected') {
+                containerId = 'rejected-orders-list';
+            }
+            
+            const container = document.getElementById(containerId);
+            container.innerHTML = '';
+            
+            db.collection('orders').where('status', '==', status).get().then((querySnapshot) => {
+        if (querySnapshot.empty) {
+            container.innerHTML = '<p>Aucune commande</p>';
+            return;
+        }
+        
+        querySnapshot.forEach((doc) => {
+            const order = { id: doc.id, ...doc.data() };
+            const orderItem = document.createElement('div');
+            orderItem.className = 'order-item';
+          
+           // Formater la date et l'heure 
+            const orderDate = new Date(order.date);
+            const formattedDate = orderDate.toLocaleDateString();
+            const formattedTime = orderDate.toLocaleTimeString();
+            
+            // Utiliser orderNumber au lieu de l'ID Firestore
+            const displayId = order.orderNumber ? `Commande #${order.orderNumber}` : `Commande #${order.id.substring(0, 8)}`;
+            
+            let actionsHTML = '';
+            if (status === 'pending') {
+                actionsHTML = `
+                    <button class="btn-edit" onclick="updateOrderStatus('${order.id}', 'completed')">Effectuer</button>
+                    <button class="btn-delete" onclick="updateOrderStatus('${order.id}', 'rejected')">Rejeter</button>
+                `;
+            } else {
+                actionsHTML = `
+                    <button class="btn-delete" onclick="deleteOrder('${order.id}')">Supprimer</button>
+                `;
+            }
+            
+            orderItem.innerHTML = `
+                <div class="order-header">
+                    <div>
+                        <strong>${displayId}</strong>
+                        <div>${formattedDate} à ${formattedTime}</div> <!-- Ajout de l'heure --> 
+                    </div>
+                    <div>
+                        <strong>${parseInt(order.total).toLocaleString()} FCFA</strong>
+                    </div>
+                </div>
+                <div class="order-details">
+                    <div><strong>Client:</strong> ${order.customer.name || ''} (${order.customer.phone})</div>
+                    <div><strong>Adresse:</strong> ${order.customer.address}</div>
+                    <div><strong>Articles:</strong></div>
+                    ${order.items.map(item => `
+                        <div class="order-product">
+                            <div>${item.quantity}x ${item.name}</div>
+                            <div>${parseInt(item.price * item.quantity).toLocaleString()} FCFA</div>
+                        </div>
+                    `).join('')}
+                </div>
+                <div class="product-actions">
+                    ${actionsHTML}
+                </div>
+            `;
+            container.appendChild(orderItem);
+        });
+    });
+}
+
+        function updateOrderStatus(orderId, status) {
+            db.collection('orders').doc(orderId).update({ status: status })
+                .then(() => {
+                    alert('Statut de la commande mis à jour!');
+                    loadOrders('pending');
+                    if (status === 'completed') {
+                        loadOrders('completed');
+                    } else if (status === 'rejected') {
+                        loadOrders('rejected');
+                    }
+                })
+                .catch(error => {
+                    console.error('Erreur lors de la mise à jour: ', error);
+                    alert('Une erreur s\'est produite lors de la mise à jour.');
+                });
+        }
+
+        function deleteOrder(orderId) {
+            if (confirm('Êtes-vous sûr de vouloir supprimer cette commande?')) {
+                db.collection('orders').doc(orderId).delete()
+                    .then(() => {
+                        alert('Commande supprimée avec succès!');
+                        if (currentAdminTab === 'completed-orders') {
+                            loadOrders('completed');
+                        } else if (currentAdminTab === 'rejected-orders') {
+                            loadOrders('rejected');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Erreur lors de la suppression: ', error);
+                        alert('Une erreur s\'est produite lors de la suppression.');
+                    });
+            }
+        }
+
+        function deleteAllOrders(status) {
+            if (confirm('Êtes-vous sûr de vouloir supprimer toutes les commandes?')) {
+                db.collection('orders').where('status', '==', status).get().then((querySnapshot) => {
+                    const batch = db.batch();
+                    querySnapshot.forEach((doc) => {
+                        batch.delete(doc.ref);
+                    });
+                    return batch.commit();
+                })
+                .then(() => {
+                    alert('Toutes les commandes ont été supprimées!');
+                    if (status === 'completed') {
+                        loadOrders('completed');
+                    } else if (status === 'rejected') {
+                        loadOrders('rejected');
+                    }
+                })
+                .catch(error => {
+                    console.error('Erreur lors de la suppression: ', error);
+                    alert('Une erreur s\'est produite lors de la suppression.');
+                });
+            }
+        }
+
+        // Fermer les modals en cliquant à l'extérieur
+        window.onclick = function(event) {
+            const productModal = document.getElementById('productModal');
+            if (event.target === productModal) {
+                closeProductModal();
+            }
+            
+            const imageModal = document.getElementById('imageModal');
+            if (event.target === imageModal) {
+                closeImageModal();
+            }
+            
+            const orderModal = document.getElementById('orderModal');
+            if (event.target === orderModal) {
+                closeOrderModal();
+            }
+            
+            const adminModal = document.getElementById('adminModal');
+            if (event.target === adminModal) {
+                closeAdminModal();
+            }
+        };
+    </script>
+</body>
+</html>
