@@ -280,22 +280,7 @@ header {
                         <h4 class="font-bold">Diagnostic</h4>
                     </div>
                 </div>
-                <div class="service-card rounded-lg shadow-md p-4 text-white" 
-                     style="background-image: url('https://i.postimg.cc/SR07nH6G/5913292883186796971.jpg')"
-                     onclick="navigateToService('location')"
-                     data-aos="fade-up">
-                    <div class="service-card-content">
-                        <h4 class="font-bold">Location</h4>
-                    </div>
-                </div>
-                <div class="service-card rounded-lg shadow-md p-4 text-white" 
-                     style="background-image: url('https://i.postimg.cc/JnXjCKfH/5913292883186796965.jpg')"
-                     onclick="navigateToService('vente')"
-                     data-aos="fade-up">
-                    <div class="service-card-content">
-                        <h4 class="font-bold">Véhicule en vente</h4>
-                    </div>
-                </div>
+               
             </div>
 
            <div class="bg-white rounded-lg shadow-md p-6 mb-6" data-aos="fade-up">
@@ -603,11 +588,10 @@ header {
            <button onclick="goBack()" class="mr-2">
                <i data-feather="arrow-left"></i>
            </button>
-           <h2 class="text-xl font-bold">Location</h2>
+           <h2 class="text-xl font-bold">Véhicules en location</h2>
        </div>
-       <div class="service-card rounded-lg shadow-md mb-6 h-48" style="background-image: url('https://i.postimg.cc/SR07nH6G/5913292883186796971.jpg')"></div>
+      
        <div class="bg-white rounded-lg shadow-md p-6">
-           <h3 class="text-lg font-semibold mb-4">Véhicules en location</h3>
            <div id="liste-location-client" class="space-y-4">
                <!-- Les véhicules seront chargés ici dynamiquement -->
            </div>
@@ -622,11 +606,9 @@ header {
         <button onclick="goBack()" class="mr-2">
             <i data-feather="arrow-left"></i>
         </button>
-        <h2 class="text-xl font-bold">Vente</h2>
+        <h2 class="text-xl font-bold">Véhicules en vente</h2>
     </div>
-    <div class="service-card rounded-lg shadow-md mb-6 h-48" style="background-image: url('https://i.postimg.cc/JnXjCKfH/5913292883186796965.jpg')"></div>
     <div class="bg-white rounded-lg shadow-md p-6">
-        <h3 class="text-lg font-semibold mb-4">Véhicules en vente</h3>
         <div id="liste-vente-client" class="space-y-4">
             <!-- Les véhicules seront chargés ici dynamiquement -->
         </div>
@@ -658,8 +640,34 @@ header {
 </div>
               <!-- bOUTIQUE ahmed said aidara -->
 
-<!-- Boutique Page -->
-<!-- Boutique Page -->
+  <!-- Rendez-vous maintenant location et vente  Page -->
+        <div id="rendezvous" class="page">
+            <h2 class="text-2xl font-bold mb-6">Véhicule en location</h2>
+           <div class="flex justify-center">
+                    <img src="https://i.postimg.cc/JnXjCKfH/5913292883186796965.jpg" alt="Notre équipe" class="rounded-lg w-full max-w-md">
+                </div>
+              <div class="service-card rounded-lg shadow-md p-4 text-white" 
+                     style= #0000;
+                     onclick="navigateToService('location')"
+                     data-aos="fade-up">
+                    <div class="service-card-content">
+                        <h4 class="font-bold">Entré</h4>
+                    </div>
+                </div>
+                      <h2 class="text-2xl font-bold mb-6">Véhicule en vente</h2>
+ <div class="flex justify-center">
+                    <img src="https://i.postimg.cc/SR07nH6G/5913292883186796971.jpg" alt="Notre équipe" class="rounded-lg w-full max-w-md">
+                </div>
+                <div class="service-card rounded-lg shadow-md p-4 text-white" 
+                     style= #0000;
+                     onclick="navigateToService('vente')"
+                     data-aos="fade-up">
+                    <div class="service-card-content">
+                        <h4 class="font-bold">Visitez</h4>
+                    </div>
+                </div>
+        </div>
+      <!-- Boutique Page -->
 <div id="boutique" class="page">
     <!-- Iframe pour la boutique - sans en-tête redondant -->
     <iframe 
@@ -1028,7 +1036,11 @@ header {
             <span class="text-xs mt-1">Services</span>
         </button>
        
-  
+   <button onclick="showPage('rendezvous')" class="nav-item flex flex-col items-center p-2">
+           <i data-feather="truck"></i>
+<span class="text-xs mt-1">Automobile</span>
+
+        </button>
       <button onclick="showPage('boutique')" class="nav-item flex flex-col items-center p-2">
     <i data-feather="shopping-cart"></i>
     <span class="text-xs mt-1">Boutique</span>
