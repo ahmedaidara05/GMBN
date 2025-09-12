@@ -1251,12 +1251,7 @@ window.alert = function(message) {
             </section>
 
             <!-- Véhicules -->
-            <section class="vehicles">
-                <h2 class="section-title">Véhicules en vente</h2>
-                <div class="vehicle-grid" id="vehicles-container">
-                    <!-- Les véhicules seront chargés dynamiquement -->
-                </div>
-            </section>
+           
         </div>
 <!-- Page de résultats -->
 <div id="search-results" class="page">
@@ -1364,7 +1359,7 @@ window.alert = function(message) {
                             </div>
                             <div class="form-group">
                                 <label for="product-price">Prix (FCFA)</label>
-                                <input type="number" id="product-price" required>
+                                <input type="number" id="product-price">
                             </div>
                            <div class="form-group">
     <label for="product-category">Catégorie</label>
@@ -1376,7 +1371,6 @@ window.alert = function(message) {
         <option value="Accessoires">Accessoires</option>
         <option value="Pneus">Pneus</option>
         <option value="Batteries">Batteries</option>
-        <option value="Véhicules">Véhicules</option>
     </select>
 </div>
                           <div class="form-group vehicle-fields" style="display: none;">
@@ -1403,7 +1397,7 @@ window.alert = function(message) {
                           
                             <div class="form-group">
                                 <label for="product-description">Description</label>
-                                <input type="text" id="product-description" required>
+                                <input type="text" id="product-description">
                             </div>
                             <div class="form-group form-full-width">
                                 <label for="product-image">Image principale (URL)</label>
@@ -1917,7 +1911,6 @@ function displayProductDetails(product) {
                         <button onclick="increaseDetailQuantity()">+</button>
                     </div>
                     <button class="add-to-cart" onclick="addToCartFromDetailPage()">Ajouter au panier</button>
-                    <button class="buy-now" onclick="buyNowFromDetailPage()">Acheter maintenant</button>
                 </div>
                 
                 <div class="product-features">
@@ -2553,22 +2546,6 @@ document.getElementById('product-category').addEventListener('change', function(
                 images
             };
             
-          // AJOUTEZ CE CODE POUR LES VÉHICULES
-  if (category === 'Véhicules') {
-        const year = document.getElementById('vehicle-year').value;
-        const mileage = document.getElementById('vehicle-mileage').value;
-        const fuel = document.getElementById('vehicle-fuel').value;
-        
-        if (!year || !mileage || !fuel) {
-            alert('Veuillez remplir tous les champs pour les véhicules');
-            return;
-        }
-        
-        productData.year = year;
-        productData.mileage = mileage;
-        productData.fuel = fuel;
-    }
-          
             if (productId) {
                 // Mise à jour du produit existant
                 db.collection('products').doc(productId).update(productData)
@@ -2648,19 +2625,8 @@ document.getElementById('product-category').addEventListener('change', function(
                     document.getElementById('main-preview').src = product.image;
                     document.getElementById('gallery-preview').src = product.images ? product.images.split(',')[0] : '';
                     document.getElementById('product-submit').textContent = 'Mettre à jour';
-                  // REMPLIR LES CHAMPS VÉHICULE SI NÉCESSAIRE
-            if (product.category === 'Véhicules') {
-                document.getElementById('vehicle-year').value = product.year || '';
-                document.getElementById('vehicle-mileage').value = product.mileage || '';
-                document.getElementById('vehicle-fuel').value = product.fuel || '';
-                
-                // AFFICHER LES CHAMPS VÉHICULE
-                document.querySelectorAll('.vehicle-fields').forEach(field => {
-                    field.style.display = 'block';
-                }); 
-            }
                 }
-            }); 
+            });
         }
 
         function deleteProduct(productId) {
