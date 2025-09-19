@@ -641,35 +641,40 @@ header {
               <!-- bOUTIQUE ahmed said aidara -->
 
   <!-- Rendez-vous maintenant location et vente  Page -->
-        <div id="rendezvous" class="page">
-            <h2 class="text-2xl font-bold mb-6">Véhicule en location</h2>
-           <div class="flex justify-center">
-                    <img src="https://i.postimg.cc/Y9VkyWRp/3.png" alt="Notre équipe" class="rounded-lg w-full max-w-md">
-                </div>
-             <div class="service-card rounded-lg shadow-md p-4 text-white cursor-pointer flex items-center justify-center"
-     style="background-color: #5171ab;"
-     onclick="navigateToService('location')"
-     data-aos="fade-up">
-    <div class="service-card-content text-center">
-        <h4 class="font-bold">Entré</h4>
-    </div>
-</div>
-
-                      <h2 class="text-2xl font-bold mb-6">Véhicule en vente</h2>
- <div class="flex justify-center">
-                    <img src="https://i.postimg.cc/bN1DkyYG/4.png" alt="Notre équipe" class="rounded-lg w-full max-w-md">
-                </div>
-               <div class="service-card rounded-lg shadow-md p-4 text-white cursor-pointer flex items-center justify-center"
-     style="background-color: #5171ab;"
-     onclick="navigateToService('vente')"
-     data-aos="fade-up">
-    <div class="service-card-content text-center">
-        <h4 class="font-bold">Visitez</h4>
-    </div>
-</div>
-
+     <!-- Rendez-vous maintenant location et vente Page -->
+<div id="rendezvous" class="page">
+    <h2 class="text-2xl font-bold mb-6 text-center">Nos véhicules</h2>
+    
+    <!-- Section Location -->
+    <div class="bg-white rounded-xl shadow-lg overflow-hidden mb-8 transition-transform duration-300 hover:shadow-xl" data-aos="fade-up">
+        <div class="flex justify-center p-4">
+            <img src="https://i.postimg.cc/HncmQdnL/5913292883186796965.jpg" alt="Location de véhicules" class="rounded-lg w-full max-w-md object-cover h-48">
         </div>
-      <!-- Boutique Page -->
+        <div class="p-6 text-center">
+            <h3 class="text-xl font-semibold mb-4">Véhicules en location</h3>
+            <button onclick="navigateToService('location')" 
+                    class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-6 rounded-full transition-all duration-300 transform hover:scale-105 shadow-md">
+                Découvrir nos véhicules
+            </button>
+        </div>
+    </div>
+
+    <!-- Section Vente -->
+    <div class="bg-white rounded-xl shadow-lg overflow-hidden transition-transform duration-300 hover:shadow-xl" data-aos="fade-up">
+        <div class="flex justify-center p-4">
+            <img src="https://i.postimg.cc/wjKqQyhY/5913292883186796971.jpg" alt="Véhicules en vente" class="rounded-lg w-full max-w-md object-cover h-48">
+        </div>
+        <div class="p-6 text-center">
+            <h3 class="text-xl font-semibold mb-4">Véhicules en vente</h3>
+            <button onclick="navigateToService('vente')" 
+                    class="bg-green-600 hover:bg-green-700 text-white font-medium py-3 px-6 rounded-full transition-all duration-300 transform hover:scale-105 shadow-md">
+                Voir les offres
+            </button>
+        </div>
+    </div>
+</div>
+
+       <!-- Boutique Page -->
 <div id="boutique" class="page">
     <!-- Iframe pour la boutique - sans en-tête redondant -->
     <iframe 
