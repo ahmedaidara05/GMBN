@@ -2568,5 +2568,109 @@ window.deleteOrder = deleteOrder;
         <img id="modalImage" src="" class="max-w-full max-h-screen object-contain">
     </div>
 </div>
+  <script>
+  // Enregistrement du Service Worker
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('/sw.js')
+        .then(registration => {
+          console.log('Service Worker enregistré avec succès:', registration);
+          
+          // Vérifier les mises à jour
+          registration.addEventListener('updatefound', () => {
+            const newWorker = registration.installing;
+            console.log('Nouvelle version du Service Worker trouvée');
+            
+            newWorker.addEventListener('statechange', () => {
+              if (newWorker.state === 'installed') {
+                if (navigator.serviceWorker.controller) {
+                  console.log('Nouveau contenu disponible, veuillez actualiser');
+                  showUpdateNotification();
+                }
+              }
+            });
+          });
+        })
+        .catch(error => {
+          console.log('Échec de l\'enregistrement du Service Worker:', error);
+        });
+    });
+  }
+
+  // Gestion de l'installation de l'application
+  let deferredPrompt;
+  const installButton = document.createElement('button');
+  
+  window.addEventListener('beforeinstallprompt', (e) => {
+    // Empêche le navigateur de montrer automatiquement l'invite d'installation
+    e.preventDefault();
+    // Stocke l'événement pour qu'il puisse être déclenché plus tard
+    deferredPrompt = e;
+    
+    // Affiche un bouton d'installation personnalisé
+    showInstallButton();
+  });
+
+  window.addEventListener('appinstalled', () => {
+    // Masque le bouton d'installation
+    hideInstallButton();
+    console.log('Application installée avec succès');
+    // Envoyer un événement analytics si nécessaire
+  });
+
+  function showInstallButton() {
+    installButton.textContent = '📱 Installer l\'app';
+    installButton.style.cssText = `
+      position: fixed;
+      bottom: 80px;
+      right: 20px;
+      padding: 12px 16px;
+      background: linear-gradient(90deg, #1e40af, #3b82f6);
+      color: white;
+      border: none;
+      border-radius: 25px;
+      cursor: pointer;
+      z-index: 1000;
+      box-shadow: 0 4px 12px rgba(30, 64, 175, 0.3);
+      font-weight: 600;
+      font-size: 14px;
+    `;
+    
+    installButton.addEventListener('click', async () => {
+      // Cache le bouton d'installation
+      hideInstallButton();
+      // Montre l'invite d'installation
+      deferredPrompt.prompt();
+      // Attend que l'utilisateur réponde à l'invite
+      const { outcome } = await deferredPrompt.userChoice;
+      console.log(`User response to the install prompt: ${outcome}`);
+      // On n'a plus besoin de l'événement
+      deferredPrompt = null;
+    });
+    
+    document.body.appendChild(installButton);
+  }
+
+  function hideInstallButton() {
+    if (installButton.parentNode) {
+      installButton.parentNode.removeChild(installButton);
+    }
+  }
+
+  function showUpdateNotification() {
+    // Vous pouvez implémenter une notification discrète
+    // pour informer l'utilisateur qu'une mise à jour est disponible
+    console.log('Nouvelle version disponible');
+  }
+
+  // Vérifier si l'app est déjà installée
+  window.addEventListener('load', () => {
+    if (window.matchMedia('(display-mode: standalone)').matches) {
+      console.log('App lancée en mode standalone');
+      // Cacher le bouton d'installation si l'app est déjà installée
+      hideInstallButton();
+    }
+  });
+</script>
 </body>
-</html>
+</html> 
