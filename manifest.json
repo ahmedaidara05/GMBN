@@ -1,0 +1,26 @@
+{
+  "name": "ETS-NIASSE ET FRERES",
+  "short_name": "ETS-NIASSE ET FRERES",
+  "description": "Votre expert en mécanique automobile depuis 1997 - Tôlerie, Mécanique, Peinture, Location et Vente de véhicules",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#1e40af",
+  "theme_color": "#1e40af",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "https://i.postimg.cc/85RsLkrb/LOGO.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "https://i.postimg.cc/85RsLkrb/LOGO.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["automotive", "business", "utilities"],
+  "lang": "fr"
+}
